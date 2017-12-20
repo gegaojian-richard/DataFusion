@@ -1,5 +1,6 @@
 package com.iip.datafusion;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.iip.datafusion.util.dbutil.DataSourceRouter;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -9,7 +10,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.web.context.request.RequestContextListener;
 
 @SpringBootApplication
-@EnableAutoConfiguration(exclude = {DataSourceAutoConfiguration.class})
+//@EnableAutoConfiguration(exclude = {DataSourceAutoConfiguration.class})
 public class DatafusionApplication {
 
 	public static void main(String[] args) {
