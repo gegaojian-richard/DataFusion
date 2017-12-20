@@ -1,4 +1,4 @@
-package com.iip.datafusion.cms;
+package datafusion;
 
 import com.iip.datafusion.util.dbutil.DataSourceProperties;
 import com.iip.datafusion.util.dbutil.DataSourceRouterManager;
