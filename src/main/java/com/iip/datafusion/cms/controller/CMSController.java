@@ -1,12 +1,15 @@
-package com.iip.datafusion.cms;
+package com.iip.datafusion.cms.controller;
 
 import com.iip.datafusion.util.dbutil.DataSourceProperties;
 import com.iip.datafusion.util.dbutil.DataSourceRouterManager;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpSession;
 
@@ -15,10 +18,15 @@ public class CMSController {
     @Autowired
     JdbcTemplate jdbcTemplate;
 
-    @RequestMapping("test")
+    @RequestMapping("/test")
     @ResponseBody
     public String test(HttpSession session){
+       // System.out.println( "test, this sessionid is: " + session.getId());
         return "test, this sessionid is: " + session.getId();
+    }
+    @RequestMapping("/hello")
+    public String hello() {
+        return "Hello Spring-Boot";
     }
 
     @RequestMapping("/addConnection1")
