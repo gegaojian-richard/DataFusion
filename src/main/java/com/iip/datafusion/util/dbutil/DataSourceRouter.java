@@ -47,13 +47,22 @@ public class DataSourceRouter extends AbstractRoutingDataSource {
         defaultDataSourceProperties.setUrl("");
         defaultDataSourceProperties.setId("primary");
         defaultDataSourceProperties.setDisplayName("primary");
-        defaultDataSourceProperties.setDriverClassName("com.mysql.jdbc.Driver");
-     //   defaultDataSourceProperties.setUrl("jdbc:mysql://localhost:3306/wenda?useUnicode=true&characterEncoding=gbk&serverTimezone=GMT");
-        defaultDataSourceProperties.setUrl("jdbc:mysql://localhost:3306/kjb?useUnicode=true&characterEncoding=gbk&serverTimezone=GMT");
+        defaultDataSourceProperties.setDriverClassName("com.mysql.jdbc.Driver"); 
+      /**
+ master
+  
+        defaultDataSourceProperties.setUrl("jdbc:mysql://localhost:3306/wenda?useUnicode=true&characterEncoding=gbk&serverTimezone=GMT");
+     //   defaultDataSourceProperties.setUrl("jdbc:mysql://localhost:3306/kjb?useUnicode=true&characterEncoding=gbk&serverTimezone=GMT");
+     
         defaultDataSourceProperties.setUsername("root");
         defaultDataSourceProperties.setPassword("tangsy");
+
+        defaultDataSourceProperties.setUrl("jdbc:mysql://localhost:3306/test?useUnicode=true&characterEncoding=gbk&serverTimezone=GMT");
+        defaultDataSourceProperties.setUsername("root");
+        defaultDataSourceProperties.setPassword("123456");
+master
         customDataSource.put("primary", createDataSource(defaultDataSourceProperties));
-        setTargetDataSources(customDataSource);
+        setTargetDataSources(customDataSource);**/
 //        setDefaultTargetDataSource(createDataSource(defaultDataSourceProperties));
 //        afterPropertiesSet();
     }
