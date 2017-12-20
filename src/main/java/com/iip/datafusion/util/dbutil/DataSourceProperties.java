@@ -1,18 +1,33 @@
 package com.iip.datafusion.util.dbutil;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class DataSourceProperties {
+    @JsonProperty("id")
     private String id;
+    @JsonProperty("displayName")
     private String displayName;
+    @JsonProperty("type")
     private String driverClassName;
+    @JsonProperty("url")
     private String url;
+    @JsonProperty("user")
     private String username;
+    @JsonProperty("pwd")
     private String password;
 
     public DataSourceProperties() {
         super();
     }
 
-    public DataSourceProperties(String id, String displayName, String driverClassName, String url, String username, String password) {
+    @JsonCreator
+    public DataSourceProperties(@JsonProperty("id")String id,
+                                @JsonProperty("displayName")String displayName,
+                                @JsonProperty("type")String driverClassName,
+                                @JsonProperty("url")String url,
+                                @JsonProperty("user")String username,
+                                @JsonProperty("pwd")String password) {
         this.id = id;
         this.displayName = displayName;
         this.driverClassName = driverClassName;
