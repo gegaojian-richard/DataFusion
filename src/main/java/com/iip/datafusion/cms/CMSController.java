@@ -48,6 +48,7 @@ public class CMSController {
     }
 
     @RequestMapping("/addto1")
+    @ResponseBody
     public String addto1(){
         DataSourceRouterManager.setCurrentDataSourceKey("ds1");
         jdbcTemplate.execute("INSERT INTO courses_info VALUE ('1802', '马克思2', '马克思思想')");
@@ -55,6 +56,7 @@ public class CMSController {
     }
 
     @RequestMapping("/addto2")
+    @ResponseBody
     public String addto2(){
         DataSourceRouterManager.setCurrentDataSourceKey("ds2");
         jdbcTemplate.execute("INSERT INTO person(name, phoneNum) VALUE ('Richard2', '1300000000')");

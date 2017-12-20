@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-//@Scope(value = WebApplicationContext.SCOPE_SESSION, proxyMode = ScopedProxyMode.TARGET_CLASS)
+@Scope(value = WebApplicationContext.SCOPE_SESSION, proxyMode = ScopedProxyMode.TARGET_CLASS)
 public class DataSourceRouterManager {
     private static DataSourceRouter dataSourceRouter; // 全局DataSource路由
 
@@ -51,7 +51,15 @@ public class DataSourceRouterManager {
     }
 
     public static void addDataSource(DataSourceProperties properties){
-        dataSourceRouter.addDataSource(properties);
+        dataSourceRouter.addDataSource(properties, dataSourceIds);
         dataSourceIds.add(properties.getId());
     };
+
+    public static List<String> getDataSourceDisplayNames(){
+        return dataSourceRouter.getDisplayNameByIDs(dataSourceIds);
+    }
+
+    public static List<DataSourceProperties> getDataSourceProperties(){
+        return dataSourceRouter.getDataSourcePropertiesByIDs(dataSourceIds);
+    }
 }
