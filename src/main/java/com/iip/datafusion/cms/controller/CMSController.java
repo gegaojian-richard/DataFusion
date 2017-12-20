@@ -1,71 +1,43 @@
 package com.iip.datafusion.cms.controller;
 
+import com.iip.datafusion.cms.service.Service;
 import com.iip.datafusion.util.dbutil.DataSourceProperties;
-import com.iip.datafusion.util.dbutil.DataSourceRouterManager;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpSession;
+/**
+ * Created by jingwei on 2017/12/12.
+ */
+@org.springframework.stereotype.Controller
+public class CmsController {
 
-@Controller
-public class CMSController {
     @Autowired
-    JdbcTemplate jdbcTemplate;
+    Service service;
 
-    @RequestMapping("/test")
+    //创建连接
+    @RequestMapping(path={"/cms/creationDataBase"},method = RequestMethod.POST)
     @ResponseBody
-    public String test(HttpSession session){
-       // System.out.println( "test, this sessionid is: " + session.getId());
-        return "test, this sessionid is: " + session.getId();
-    }
-    @RequestMapping("/hello")
-    public String hello() {
-        return "Hello Spring-Boot";
-    }
+    public String setCon(@RequestBody DataSourceProperties c){ return service.creCon(c); }
 
-    @RequestMapping("/addConnection1")
+
+    //删除连接
+    @RequestMapping(path={"/cms/deletionDataBase"},method = RequestMethod.POST)
     @ResponseBody
-    public String addConnection1(){
-        DataSourceProperties properties1 = new DataSourceProperties();
-        properties1.setId("ds1");
-        properties1.setDisplayName("ds1");
-        properties1.setDriverClassName("com.mysql.jdbc.Driver");
-        properties1.setUrl("jdbc:mysql://localhost:3306/education_system?useUnicode=true&characterEncoding=gbk&serverTimezone=GMT");
-        properties1.setUsername("root");
-        DataSourceRouterManager.addDataSource(properties1);
-        return "addConnection1 ok";
-    }
+    public String delCon(@RequestParam(value = "nick") String nick){ return service.delCon(nick); }
 
-    @RequestMapping("/addConnection2")
+
+    //获取当前连接的所有数据库
+    @RequestMapping(path={"/cms/currentDataBase"},method = RequestMethod.GET)
     @ResponseBody
-    public String addConnection2(){
-        DataSourceProperties properties2 = new DataSourceProperties();
-        properties2.setId("ds2");
-        properties2.setDisplayName("ds2");
-        properties2.setDriverClassName("com.mysql.jdbc.Driver");
-        properties2.setUrl("jdbc:mysql://localhost:3306/peopleDB?useUnicode=true&characterEncoding=gbk&serverTimezone=GMT");
-        properties2.setUsername("root");
-        DataSourceRouterManager.addDataSource(properties2);
-        return "addConnection2 ok";
+    public String getCur(String nick){
+        return service.getCurrentConnection();
     }
 
-    @RequestMapping("/addto1")
-    public String addto1(){
-        DataSourceRouterManager.setCurrentDataSourceKey("ds1");
-        jdbcTemplate.execute("INSERT INTO courses_info VALUE ('1802', '马克思2', '马克思思想')");
-        return "addto1 ok";
+    //获取某个数据库的具体信息
+    @RequestMapping(path={"/cms/descriptionDataBase"},method = RequestMethod.GET)
+    @ResponseBody
+    public String desCon(@RequestParam("nick") String nick){
+        return service.desCon(nick);
     }
 
-    @RequestMapping("/addto2")
-    public String addto2(){
-        DataSourceRouterManager.setCurrentDataSourceKey("ds2");
-        jdbcTemplate.execute("INSERT INTO person(name, phoneNum) VALUE ('Richard2', '1300000000')");
-        return "addto2 ok";
-    }
 }
