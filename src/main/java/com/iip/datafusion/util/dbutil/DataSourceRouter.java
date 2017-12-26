@@ -56,15 +56,14 @@ public class DataSourceRouter extends AbstractRoutingDataSource {
      
         defaultDataSourceProperties.setUsername("root");
         defaultDataSourceProperties.setPassword("tangsy");
-
-        defaultDataSourceProperties.setUrl("jdbc:mysql://localhost:3306/test?useUnicode=true&characterEncoding=gbk&serverTimezone=GMT");
+       **/
+        defaultDataSourceProperties.setUrl("jdbc:mysql://localhost:3306/education_system?useUnicode=true&characterEncoding=gbk&serverTimezone=GMT");
         defaultDataSourceProperties.setUsername("root");
         defaultDataSourceProperties.setPassword("123456");
-master
         customDataSource.put("primary", createDataSource(defaultDataSourceProperties));
-        setTargetDataSources(customDataSource);**/
-//        setDefaultTargetDataSource(createDataSource(defaultDataSourceProperties));
-//        afterPropertiesSet();
+        setTargetDataSources(customDataSource);
+        setDefaultTargetDataSource(createDataSource(defaultDataSourceProperties));
+        afterPropertiesSet();
     }
 
     // 添加数据源
