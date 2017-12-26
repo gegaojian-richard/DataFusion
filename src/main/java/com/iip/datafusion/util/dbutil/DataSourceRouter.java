@@ -29,6 +29,8 @@ public class DataSourceRouter extends AbstractRoutingDataSource {
 
     @Autowired
     private Environment environment;
+    @Autowired
+    DataSourceRouterManager dataSourceRouterManager;
 
     private Map<Object, Object> customDataSource = new HashMap<>();
 
@@ -39,7 +41,7 @@ public class DataSourceRouter extends AbstractRoutingDataSource {
     // AbstractRoutingDataSource通过此方法确定当前的DataSource
     @Override
     protected Object determineCurrentLookupKey() {
-        return DataSourceRouterManager.getCurrentDataSourceKey(); // 返回线程当前持有的DataSource的ID
+        return dataSourceRouterManager.getCurrentDataSourceKey(); // 返回线程当前持有的DataSource的ID
     }
 
     public DataSourceRouter(){
@@ -48,7 +50,7 @@ public class DataSourceRouter extends AbstractRoutingDataSource {
         defaultDataSourceProperties.setId("primary");
         defaultDataSourceProperties.setDisplayName("primary");
         defaultDataSourceProperties.setDriverClassName("com.mysql.jdbc.Driver");
-        defaultDataSourceProperties.setUrl("jdbc:mysql://localhost:3306/test?useUnicode=true&characterEncoding=gbk&serverTimezone=GMT");
+        defaultDataSourceProperties.setUrl("jdbc:mysql://localhost:3306/kjb?useUnicode=true&characterEncoding=gbk&serverTimezone=GMT");
         defaultDataSourceProperties.setUsername("root");
         defaultDataSourceProperties.setPassword("123456");
         customDataSource.put("primary", createDataSource(defaultDataSourceProperties));

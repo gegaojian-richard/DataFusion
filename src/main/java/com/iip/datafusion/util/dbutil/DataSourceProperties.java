@@ -11,7 +11,7 @@ public class DataSourceProperties {
     @JsonProperty("type")
     private String driverClassName;
     @JsonProperty("url")
-    private String url;
+    private String url;     //  host:port/dataBaseName
     @JsonProperty("user")
     private String username;
     @JsonProperty("pwd")
