@@ -15,6 +15,9 @@ public class CMSController {
     @Autowired
     JdbcTemplate jdbcTemplate;
 
+    @Autowired
+    DataSourceRouterManager dataSourceRouterManager;
+
     @RequestMapping("test")
     @ResponseBody
     public String test(HttpSession session){
@@ -30,7 +33,7 @@ public class CMSController {
         properties1.setDriverClassName("com.mysql.jdbc.Driver");
         properties1.setUrl("jdbc:mysql://localhost:3306/education_system?useUnicode=true&characterEncoding=gbk&serverTimezone=GMT");
         properties1.setUsername("root");
-        DataSourceRouterManager.addDataSource(properties1);
+        dataSourceRouterManager.addDataSource(properties1);
         return "addConnection1 ok";
     }
 
@@ -43,11 +46,12 @@ public class CMSController {
         properties2.setDriverClassName("com.mysql.jdbc.Driver");
         properties2.setUrl("jdbc:mysql://localhost:3306/peopleDB?useUnicode=true&characterEncoding=gbk&serverTimezone=GMT");
         properties2.setUsername("root");
-        DataSourceRouterManager.addDataSource(properties2);
+        dataSourceRouterManager.addDataSource(properties2);
         return "addConnection2 ok";
     }
 
     @RequestMapping("/addto1")
+    @ResponseBody
     public String addto1(){
         DataSourceRouterManager.setCurrentDataSourceKey("ds1");
         jdbcTemplate.execute("INSERT INTO courses_info VALUE ('1802', '马克思2', '马克思思想')");
@@ -55,6 +59,7 @@ public class CMSController {
     }
 
     @RequestMapping("/addto2")
+    @ResponseBody
     public String addto2(){
         DataSourceRouterManager.setCurrentDataSourceKey("ds2");
         jdbcTemplate.execute("INSERT INTO person(name, phoneNum) VALUE ('Richard2', '1300000000')");

@@ -31,6 +31,9 @@ public class Service {
     @Autowired
     JdbcTemplate jdbcTemplate;
 
+    @Autowired
+    DataSourceRouterManager dataSourceRouterManager;
+
 //    public static class conBean{
 //
 //        @JsonProperty("host")
@@ -112,15 +115,16 @@ public class Service {
 //            e.printStackTrace();
 //            return null;
 //        }
-        if(DataSourceRouterManager.containsDataSource(c.getId()))
+        if(dataSourceRouterManager.containsDataSource(c.getId()))
             return "id existed!";
 
-        DataSourceRouterManager.addDataSource(c);
+        dataSourceRouterManager.addDataSource(c);
         return "ok!";
     }
 
     public String delCon(String id){
-        DataSourceRouterManager.dataSourceIds.remove(id);
+        dataSourceRouterManager.dataSourceIds.remove(id);
+        // todo: 并没有真正删除datasource
         return " ok! ";
     }
 
@@ -167,10 +171,10 @@ public class Service {
 //            conList.add(DataSourceRouterManager.dataSourceIds.get(key))
 //        }
         String jsonStr = "{\n\"databases\":[";
-        if(!DataSourceRouterManager.dataSourceIds.isEmpty())
-            jsonStr += "\n{\"name\":\"" + DataSourceRouterManager.dataSourceIds.get(0) + "\"}";
-        for(int i=1;i< DataSourceRouterManager.dataSourceIds.size();i++){
-            jsonStr += ",\n{\"name\":\"" +DataSourceRouterManager.dataSourceIds.get(i)+"\"}";
+        if(!dataSourceRouterManager.dataSourceIds.isEmpty())
+            jsonStr += "\n{\"name\":\"" + dataSourceRouterManager.dataSourceIds.get(0) + "\"}";
+        for(int i=1;i< dataSourceRouterManager.dataSourceIds.size();i++){
+            jsonStr += ",\n{\"name\":\"" +dataSourceRouterManager.dataSourceIds.get(i)+"\"}";
         }
         jsonStr += "\n]\n}";
         return jsonStr;
