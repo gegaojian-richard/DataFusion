@@ -10,6 +10,15 @@ public class ColumnStructure {
     private int digits;
     private int nullable;
 
+    public ColumnStructure(String columnName){
+        this.columnName =columnName;
+        this.columnType = "";
+    }
+
+    public ColumnStructure(){
+        super();
+    }
+
     public String getColumnName() {
         return columnName;
     }
