@@ -58,5 +58,4 @@ public class EntityController {
                                @RequestParam (value="newValue")String newValue){
         return entityService.updateEntity(entityId,property,newValue);
     }
-
 }
