@@ -64,19 +64,4 @@ public class UmsController {
         return new Result(1,null,"账户已登出");
     }
 
-
-
-        @Autowired private UmsService.Count count;
-        @RequestMapping("/greeting")
-        @ResponseBody
-        public String greetingForm() {
-            Integer i;
-            if(count.getI() == null) i = 0;
-            else {
-                i=count.getI();
-                i++;
-            }
-            return "greeting: "+i;
-        }
-
 }

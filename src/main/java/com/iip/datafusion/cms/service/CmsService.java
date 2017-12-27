@@ -15,6 +15,7 @@ import com.iip.datafusion.ums.model.LoginTicket;
 import com.iip.datafusion.util.dbutil.DataSourceProperties;
 import com.iip.datafusion.util.dbutil.DataSourceRouter;
 import com.iip.datafusion.util.dbutil.DataSourceRouterManager;
+import com.iip.datafusion.util.jsonutil.JsonParse;
 import com.iip.datafusion.util.jsonutil.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -40,6 +41,8 @@ import java.util.Map;
 public class CmsService {
     @Autowired
     CmsDao cmsDao;
+    @Autowired
+    JsonParse jsonParse;
 
     public Result  creCon(DataSourceProperties c){
         switch (c.getDriverClassName()){
@@ -69,9 +72,7 @@ public class CmsService {
 //        JSONObject jsonObject = JSONObject.fromObject(dataBaseStructure);
 
         try {
-            ObjectMapper objectMapper = new ObjectMapper();
-            String json = objectMapper.writeValueAsString(dataBaseStructure);
-
+            String json = jsonParse.getMapper().writeValueAsString(dataBaseStructure);
             return new Result(1, null, json);
         }
         catch (JsonProcessingException e){

@@ -120,18 +120,7 @@ public class UmsService {
     }
 
     public void logout(String ticket) {
-        loginTicketDao.updateStatus(ticket,1);
+        loginTicketDao.updateStatus(ticket, 1);
     }
 
-    @Component
-    @Scope(value = "session",proxyMode = ScopedProxyMode.TARGET_CLASS)
-    public class Count {
-         Integer i;
-        public Count() {
-            this.i = 0;
-        }
-        public Integer getI(){
-            return i;
-        }
-    }
 }
