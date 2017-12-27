@@ -1,4 +1,8 @@
 
+/*
+ * Base structure
+ */
+
 /* Move down content because we have a fixed navbar that is 50px tall */
 body {
   padding-top: 50px;
@@ -49,23 +53,25 @@ body {
     -webkit-transition: -webkit-transform 1s;
     -o-transition: -o-transform 1s;
   }
-
-  .moveout {
+  .moveout{
     transform: translateX(200px);
     -moz-transform: translateX(200px);
     -webkit-transform: translateX(200px);
     -o-transform: translateX(200px);
   }
-
-  .movein {
+  .movein{
     transform: translateX(-200px);
     -moz-transform: translateX(-200px);
     -webkit-transform: translateX(-200px);
     -o-transform: translateX(-200px);
   }
-  #datasource_menu{
-    margin-right: 30px;
-    min-width: 120px;
+  #side-label{
+    left:0;
+    width: 5px;
+    height: 100%;
+    position: absolute;
+    cursor: e-resize;
+    z-index: 1000;
   }
 }
 
@@ -105,44 +111,5 @@ body {
   display: inline-block;
   border-radius: 50%;
 }
- .entity-item{
-   display:table;
-   width:100%;
- }
- .entity-item-head{
-   display:table-header-group;
-   width:100%;
- }
 
- .entity-item-head ul{
-   display: table-row;
-   width: 100%;
- }
- .entity-item-head li{
-   display: table-cell;
-   height: 40px;
-   line-height: 40px;
-   background: #605F5F;
-   color: #fff;
-   text-align: center;
-   text-transform: uppercase;
-   font-family: "moderat", sans-serif;
-   letter-spacing: .25em;
- }
-.entity-item-head li{
-  padding: 0 10px;
-}
-.entity-item-list {
-  display: table-row-group; }
-.entity-item-list > li {
-  position: relative;
-  display: table-row;
-  padding: 32px 0;
-  background: #fff; }
-.entity-item-list > li > div {
-  position: relative;
-  display: table-cell;
-  text-align: center;
-  vertical-align: top;
-  border-bottom: 1px solid #e9e9e9;
-  height: 100%; }
+
