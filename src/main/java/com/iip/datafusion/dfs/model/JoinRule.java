@@ -1,5 +1,6 @@
 package com.iip.datafusion.dfs.model;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.ArrayList;
@@ -22,6 +23,20 @@ public class JoinRule {
     public JoinRule() {
         super();
     }
+
+    @JsonCreator
+    public JoinRule(@JsonProperty("s2t") Map<String, String> s2t,
+                    @JsonProperty("join_units") List<String> joinUnits,
+                    @JsonProperty("relations") List<Map<String, String>> relations,
+                    @JsonProperty("target_table_name") String targetTableName,
+                    @JsonProperty("target_datasource_id") String targetDataSourceID) {
+        this.s2t = s2t;
+        this.joinUnits = joinUnits;
+        this.relations = relations;
+        this.targetTableName = targetTableName;
+        this.targetDataSourceID = targetDataSourceID;
+    }
+
 
     public Map<String, String> getS2t() {
         return s2t;
