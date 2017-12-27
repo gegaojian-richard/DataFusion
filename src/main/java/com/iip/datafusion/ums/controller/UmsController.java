@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -40,19 +41,28 @@ public class UmsController {
         }
     }
 
-    @RequestMapping(path={"/ums/login"},method = RequestMethod.POST)
+    @RequestMapping(path={"/ums/login"},method = {RequestMethod.POST,RequestMethod.GET})
     @ResponseBody
     public Result login(@RequestParam("username") String username,
                         @RequestParam("password") String password,
+                        @CookieValue(value="DFU", defaultValue = "default") String ticket,
                         HttpServletResponse response){
-        Map map = umsService.login(username,password);
+        Map map;
+        if (ticket=="default") {
+            map = umsService.login(username, password);
+        }else {
+            map = umsService.autoLogin(username,password,ticket);
+        }
         //同上
         if(map.containsKey("ticket")){
             Cookie cookie= new Cookie("DFU",map.get("ticket").toString());
             cookie.setPath("/");
             response.addCookie(cookie);
-            return new Result(1,null,null);
-        }else {
+            return new Result(1,null,"login success.now user is "+map.get("username"));
+        }else if(map.containsKey("success")){
+            return new Result(1,null,map.get("success").toString());
+        }
+        else {
             return new Result(0,map.get("msg").toString(), null);
         }
     }

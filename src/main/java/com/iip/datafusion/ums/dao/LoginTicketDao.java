@@ -59,8 +59,14 @@ public class LoginTicketDao {
 
     public void updateStatus(String ticket, Object i) {
         dataSourceRouterManager.setCurrentDataSourceKey("primary");
-        boolean b = jdbcTemplate.update("update ticket set status=? where ticket=?",
-                new Object[]{i,ticket})>0;
-        return;
+        jdbcTemplate.update("update ticket set status=? where ticket=?",
+                new Object[]{i,ticket});
     }
+
+    public void deleteTicket(String ticket) {
+        dataSourceRouterManager.setCurrentDataSourceKey("primary");
+        jdbcTemplate.update("delete from ticket where ticket=?",
+                new Object[]{ticket});
+    }
+
 }

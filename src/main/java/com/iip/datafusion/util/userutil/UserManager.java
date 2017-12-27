@@ -13,4 +13,25 @@ import org.springframework.web.context.WebApplicationContext;
 public class UserManager {
     private int userId;
     private String userName;
+
+    public UserManager(){
+        this.userId=0;
+        this.userName="";
+    }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
 }

@@ -7,7 +7,6 @@ import com.iip.datafusion.cms.model.DataBaseStructure;
 import com.iip.datafusion.cms.model.TableStructure;
 import com.iip.datafusion.util.dbutil.DataSourceRouterManager;
 import com.iip.datafusion.util.jsonutil.Result;
-import net.sf.json.JSONObject;
 
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
@@ -78,9 +77,12 @@ public class test {
                 dataBaseStructure.addTable(tableStructure);
             }
 
-            JSONObject jsonObject = JSONObject.fromObject(dataBaseStructure);
+            ObjectMapper mapper = new ObjectMapper();
 
-            return jsonObject.toString();
+            String jsonObject = mapper.writeValueAsString(dataBaseStructure);
+
+
+            return jsonObject;
 
         }
         catch (Exception e){
