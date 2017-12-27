@@ -70,10 +70,10 @@ public class CmsDao {
 
     public Result getCurrentConnection() {
         String jsonStr = "{\"databases\":[";
-        if(!dataSourceRouterManager.getDataSourceIds().isEmpty())
-            jsonStr += "{\"name\":\"" + dataSourceRouterManager.getDataSourceIds().get(0) + "\"}";
-        for(int i=1;i< dataSourceRouterManager.getDataSourceIds().size();i++){
-            jsonStr += ",{\"name\":\"" +dataSourceRouterManager.getDataSourceIds().get(i)+"\"}";
+        if(!dataSourceRouterManager.getDataSourceDisplayNames().isEmpty())
+            jsonStr += "{\"name\":\"" + dataSourceRouterManager.getDataSourceDisplayNames().get(0) + "\"}";
+        for(int i=1;i< dataSourceRouterManager.getDataSourceDisplayNames().size();i++){
+            jsonStr += ",{\"name\":\"" +dataSourceRouterManager.getDataSourceDisplayNames().get(i)+"\"}";
         }
         jsonStr += "]}";
         Result result = new Result(1,null,jsonStr);

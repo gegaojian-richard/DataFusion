@@ -2,6 +2,7 @@ package com.iip.datafusion.cms.service;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.iip.datafusion.cms.dao.CmsDao;
 import com.iip.datafusion.cms.model.ColumnStructure;
@@ -15,8 +16,6 @@ import com.iip.datafusion.util.dbutil.DataSourceProperties;
 import com.iip.datafusion.util.dbutil.DataSourceRouter;
 import com.iip.datafusion.util.dbutil.DataSourceRouterManager;
 import com.iip.datafusion.util.jsonutil.Result;
-import jdk.management.resource.internal.inst.DatagramSocketRMHooks;
-import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
@@ -39,8 +38,6 @@ import java.util.Map;
  */
 @org.springframework.stereotype.Service
 public class CmsService {
-    @Autowired
-    JdbcTemplate jdbcTemplate;
     @Autowired
     CmsDao cmsDao;
 
@@ -69,9 +66,17 @@ public class CmsService {
             return new Result(0,"cannot connect to "+id,null);
         }
 
-        JSONObject jsonObject = JSONObject.fromObject(dataBaseStructure);
-        Result result = new Result(1,null,jsonObject.toString());
-        return result;
+//        JSONObject jsonObject = JSONObject.fromObject(dataBaseStructure);
+
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            String json = objectMapper.writeValueAsString(dataBaseStructure);
+
+            return new Result(1, null, json);
+        }
+        catch (JsonProcessingException e){
+            return new Result(0,"json解析失败",null);
+        }
     }
 
     public Result getCurrentConnection(){

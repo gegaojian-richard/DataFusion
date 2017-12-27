@@ -35,8 +35,23 @@ public class test {
 //
 //        System.out.println(desCon(connection));
 
-        Result result = new Result(1,null,"{\"name\":\"jingwei\"}");
-        System.out.println(result.toString());
+        DataBaseStructure structure = new DataBaseStructure();
+        for(int i=0;i<9;i++) {
+            TableStructure tableStructure = new TableStructure("t"+i);
+            for(int j=0;j<9;j++) {
+                tableStructure.addColumn(new ColumnStructure("c"+j));
+            }
+            structure.addTable(tableStructure);
+        }
+
+        try {
+
+            ObjectMapper objectMapper = new ObjectMapper();
+            String json = objectMapper.writeValueAsString(structure);
+            System.out.println(json);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     public static String  desCon(Connection connection){
