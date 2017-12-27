@@ -6,6 +6,7 @@ import com.iip.datafusion.ums.model.LoginTicket;
 import com.iip.datafusion.ums.model.MD5;
 import com.iip.datafusion.ums.model.User;
 import com.iip.datafusion.util.jsonutil.Result;
+import com.iip.datafusion.util.userutil.UserManager;
 import com.sun.org.apache.regexp.internal.RE;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -29,6 +30,8 @@ public class UmsService {
     UserDao userDao;
     @Autowired
     LoginTicketDao loginTicketDao;
+    @Autowired
+    UserManager userManager;
 
     public Map<String ,Object> register(String username, String password){
         Map<String,Object> map = new HashMap();
@@ -78,6 +81,11 @@ public class UmsService {
         String ticket= addLoginTicket(user.getId());
         map.put("ticket",ticket);
 
+        //为当前的session创建一个userManager存储用户的id name等信息
+        userManager.setUserName(username);
+        userManager.setUserId(user.getId());
+        map.put("username",userManager.getUserName());
+
         return map;
     }
 
@@ -120,18 +128,31 @@ public class UmsService {
     }
 
     public void logout(String ticket) {
-        loginTicketDao.updateStatus(ticket,1);
+        loginTicketDao.updateStatus(ticket, 1);
     }
 
-    @Component
-    @Scope(value = "session",proxyMode = ScopedProxyMode.TARGET_CLASS)
-    public class Count {
-         Integer i;
-        public Count() {
-            this.i = 0;
+    public Map autoLogin(String username, String password, String ticket) {
+        Map<String ,Object> map = new HashMap<>();
+        LoginTicket loginTicket = loginTicketDao.getObjectByTicket(ticket);
+        User user = userDao.getUserById(loginTicket.getUserId());
+
+        //如果ticket未过期，且和用户名符合，自动登录成功
+        if(loginTicket.getExpired().after(new Date()) && user.getUsername().equals(username)){
+            map.put("success","自动登录成功");
+            return map;
         }
-        public Integer getI(){
-            return i;
+        //如果ticket超时 则用当前的用户名，密码登录，并删除原ticket
+        else if(loginTicket.getExpired().before(new Date())){
+            loginTicketDao.deleteTicket(ticket);
+            map = login(username,password);
+            return map;
         }
+        //如果用户名与ticket不符合，说明换了一个用户登录，重新写入ticket，但数据库中ticket不删除
+//        else if(!user.getUsername().equals(username)){
+        else{
+            map = login(username,password);
+            return map;
+        }
+
     }
 }
