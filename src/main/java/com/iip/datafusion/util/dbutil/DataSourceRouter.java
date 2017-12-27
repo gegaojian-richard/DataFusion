@@ -2,20 +2,6 @@ package com.iip.datafusion.util.dbutil;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import org.springframework.beans.MutablePropertyValues;
-import org.springframework.beans.PropertyValues;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.support.BeanDefinitionRegistry;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceBuilder;
-import org.springframework.boot.bind.RelaxedDataBinder;
-import org.springframework.boot.bind.RelaxedPropertyResolver;
-import org.springframework.context.EnvironmentAware;
-import org.springframework.context.annotation.ImportBeanDefinitionRegistrar;
-import org.springframework.context.annotation.Scope;
-import org.springframework.core.convert.ConversionService;
-import org.springframework.core.convert.support.DefaultConversionService;
-import org.springframework.core.env.Environment;
-import org.springframework.core.type.AnnotationMetadata;
 import org.springframework.jdbc.datasource.lookup.AbstractRoutingDataSource;
 import org.springframework.stereotype.Component;
 
@@ -30,17 +16,11 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Component(value = "dataSource")
 public class DataSourceRouter extends AbstractRoutingDataSource {
 
-    @Autowired
-    private Environment environment;
-    
     private volatile AtomicInteger DATASOURCE_COUNT = new AtomicInteger();
 
     private Map<Object, Object> customDataSource = new HashMap<>();
+
     private Map<String, DataSourceProperties> customDataSourceProperties = new HashMap<>();
-
-    private ConversionService conversionService = new DefaultConversionService(); // 类型转换器
-    private PropertyValues dataSourcePropertyValues;
-
 
     // AbstractRoutingDataSource通过此方法确定当前的DataSource
     @Override
@@ -49,26 +29,21 @@ public class DataSourceRouter extends AbstractRoutingDataSource {
     }
 
     public DataSourceRouter(){
+        // 创建主数据库DataSource
         DataSourceProperties defaultDataSourceProperties = new DataSourceProperties();
         defaultDataSourceProperties.setUrl("");
         defaultDataSourceProperties.setId("primary");
         defaultDataSourceProperties.setDisplayName("primary");
-        defaultDataSourceProperties.setDriverClassName("com.mysql.jdbc.Driver"); 
-
-        defaultDataSourceProperties.setUrl("jdbc:mysql://localhost:3306/wenda?useUnicode=true&characterEncoding=gbk&serverTimezone=GMT");
-     //   defaultDataSourceProperties.setUrl("jdbc:mysql://localhost:3306/kjb?useUnicode=true&characterEncoding=gbk&serverTimezone=GMT");
-     
+        defaultDataSourceProperties.setDriverClassName("com.mysql.jdbc.Driver");
+        defaultDataSourceProperties.setUrl("jdbc:mysql://localhost:3306/kjb?useUnicode=true&characterEncoding=gbk&serverTimezone=GMT");
         defaultDataSourceProperties.setUsername("root");
-//        defaultDataSourceProperties.setPassword("tangsy");
-//
-//        defaultDataSourceProperties.setUrl("jdbc:mysql://localhost:3306/test?useUnicode=true&characterEncoding=gbk&serverTimezone=GMT");
-//        defaultDataSourceProperties.setUsername("root");
-//        defaultDataSourceProperties.setPassword("123456");
+        defaultDataSourceProperties.setPassword("123456");
+        customDataSourceProperties.put("primary", defaultDataSourceProperties);
         customDataSource.put("primary", createDataSource(defaultDataSourceProperties));
         setTargetDataSources(customDataSource);
+
+        // 初始化DataSource计数
         DATASOURCE_COUNT.set(0);
-//        setDefaultTargetDataSource(createDataSource(defaultDataSourceProperties));
-//        afterPropertiesSet();
     }
 
     // 添加数据源
@@ -77,11 +52,11 @@ public class DataSourceRouter extends AbstractRoutingDataSource {
         Map<String, String> result = new HashMap<>();
         // 1. 判断是否已经存在
         if(!contained(properties, dataSourceIds).isEmpty()) return;
-        
+
         String dataSourceID = "db_" + DATASOURCE_COUNT.incrementAndGet();
-        
+
         properties.setId(dataSourceID);
-        
+
         customDataSourceProperties.put(dataSourceID, properties);
 
         // 2. 创建DataSource并添加至TargetDataSource
@@ -140,13 +115,13 @@ public class DataSourceRouter extends AbstractRoutingDataSource {
 
         // 检查该用户对应的DataSource的displayName是否有重复
         for (String dsID: dataSourceIds
-             ) {
+                ) {
             if(customDataSourceProperties.get(dsID).getDisplayName() == properties.getDisplayName()){
                 result.put("msg", "displayName 重名！");
             }
         }
         for (DataSourceProperties dsp: customDataSourceProperties.values()
-             ) {
+                ) {
             if (dsp.getUrl() == properties.getUrl() && dsp.getDriverClassName() == properties.getDriverClassName()){
                 result.put("msg", dsp.getId()); // 如果已经存在 将已经存在的dataSource的id返回
             }
@@ -157,7 +132,7 @@ public class DataSourceRouter extends AbstractRoutingDataSource {
     public List<String> getDisplayNameByIDs(List<String> dataSourceIds){
         List<String> result = new ArrayList<>();
         for (String dsID: dataSourceIds
-             ) {
+                ) {
             result.add(customDataSourceProperties.get(dsID).getDisplayName());
         }
 

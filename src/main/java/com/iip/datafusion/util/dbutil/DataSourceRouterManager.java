@@ -16,16 +16,14 @@ public class DataSourceRouterManager {
     private static DataSourceRouter dataSourceRouter; // 全局DataSource路由
 
     private static final ThreadLocal<String> currentDataSourceID = new ThreadLocal<String>(); // 每个线程会持有自己的
-    public static List<String> dataSourceIds = new ArrayList<>();
-    static {
-        dataSourceIds.add("primary");
-    }
+    public List<String> dataSourceIds = new ArrayList<>(); // 每个session不同
 
     @Autowired
     private DataSourceRouter _dataSourceRouter; // 静态变量无法自动注入，通过实例变量来协助完成注入
 
     public DataSourceRouterManager() {
         dataSourceRouter = _dataSourceRouter;
+        dataSourceIds.add("primary");
     }
 
     @PostConstruct
@@ -46,20 +44,20 @@ public class DataSourceRouterManager {
         currentDataSourceID.remove();
     }
 
-    public static boolean containsDataSource(String dataSourceId){
+    public boolean containsDataSource(String dataSourceId){
         return dataSourceIds.contains(dataSourceId);
     }
 
-    public static void addDataSource(DataSourceProperties properties){
+    public void addDataSource(DataSourceProperties properties){
         dataSourceRouter.addDataSource(properties, dataSourceIds);
         dataSourceIds.add(properties.getId());
     };
 
-    public static List<String> getDataSourceDisplayNames(){
+    public List<String> getDataSourceDisplayNames(){
         return dataSourceRouter.getDisplayNameByIDs(dataSourceIds);
     }
 
-    public static List<DataSourceProperties> getDataSourceProperties(){
+    public List<DataSourceProperties> getDataSourceProperties(){
         return dataSourceRouter.getDataSourcePropertiesByIDs(dataSourceIds);
     }
 }
