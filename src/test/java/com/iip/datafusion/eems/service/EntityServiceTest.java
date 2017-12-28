@@ -23,7 +23,7 @@ public class EntityServiceTest {
     @Test
     public void insertEntity() throws Exception{
         Entity  testEntity=new Entity();
-        testEntity.setDisplayName("prople");
+        testEntity.setDisplayName("people");
         testEntity.setTableName("people");
         testEntity.setDbPosition("jdbc:mysql://localhost:3306/");
         testEntity.setEntityType(0);
