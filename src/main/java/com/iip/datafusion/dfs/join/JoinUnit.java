@@ -6,6 +6,10 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Created by GeGaojian on 2017/12/22.
+ */
+
 public class JoinUnit {
     private Map<String, String> S2TMap = new LinkedHashMap<>();  // 原字段与目标字段映射表
     private String databaseID; // 数据库标识
