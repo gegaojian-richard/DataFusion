@@ -68,8 +68,7 @@ public class CmsController {
     @ResponseBody
     public Result previewCon(@RequestParam("display") String display,
                              @RequestParam("table") String table,
-                             @RequestParam(value = "num",defaultValue = "10")String  num){
+                             @RequestParam(value = "num",defaultValue = "50")String  num){
         return service.previewCon(display,table,num);
     }
-
 }

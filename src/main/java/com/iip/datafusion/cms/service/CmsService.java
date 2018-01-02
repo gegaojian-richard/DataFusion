@@ -41,8 +41,6 @@ import java.util.Map;
 public class CmsService {
     @Autowired
     CmsDao cmsDao;
-    @Autowired
-    JsonParse jsonParse;
 
     public Result  creCon(DataSourceProperties c){
         switch (c.getDriverClassName()){
@@ -72,7 +70,7 @@ public class CmsService {
 //        JSONObject jsonObject = JSONObject.fromObject(dataBaseStructure);
 
         try {
-            String json = jsonParse.getMapper().writeValueAsString(dataBaseStructure);
+            String json = JsonParse.getMapper().writeValueAsString(dataBaseStructure);
             return new Result(1, null, json);
         }
         catch (JsonProcessingException e){
