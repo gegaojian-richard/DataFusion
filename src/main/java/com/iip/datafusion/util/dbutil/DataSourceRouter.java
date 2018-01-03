@@ -31,14 +31,16 @@ public class DataSourceRouter extends AbstractRoutingDataSource {
     public DataSourceRouter(){
         // 创建主数据库DataSource
         DataSourceProperties defaultDataSourceProperties = new DataSourceProperties();
-        defaultDataSourceProperties.setUrl("");
         defaultDataSourceProperties.setId("primary");
         defaultDataSourceProperties.setDisplayName("primary");
         defaultDataSourceProperties.setDriverClassName("com.mysql.jdbc.Driver"); 
         defaultDataSourceProperties.setUrl("jdbc:mysql://114.212.84.208:3306/kjb?useUnicode=true&characterEncoding=gbk&serverTimezone=GMT");
+//        defaultDataSourceProperties.setUrl("jdbc:mysql://localhost:3306/kjb?useUnicode=true&characterEncoding=gbk&serverTimezone=GMT");
         defaultDataSourceProperties.setUsername("root");
         defaultDataSourceProperties.setPassword("iipconfig");
-        customDataSourceProperties.put("primary", defaultDataSourceProperties)
+//        defaultDataSourceProperties.setUsername("root");
+//        defaultDataSourceProperties.setPassword("tangsy");
+        customDataSourceProperties.put("primary", defaultDataSourceProperties);
         customDataSource.put("primary", createDataSource(defaultDataSourceProperties));
         setTargetDataSources(customDataSource);
 

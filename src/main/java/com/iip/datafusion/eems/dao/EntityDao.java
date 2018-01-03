@@ -71,7 +71,8 @@ public class EntityDao{
     public List<Entity> getEntityByUserId(Integer userId){
         DataSourceRouterManager.setCurrentDataSourceKey("primary");
         StringBuilder sbstr=new StringBuilder("SELECT e.* from entity e left join userentity u on (e.id=u.entityId) where u.userId=?");
-        List<Entity> list=jdbcTemplate.query(sbstr.toString(),new Object[]{userId},new BeanPropertyRowMapper(Entity.class));
+        List<Entity> list=jdbcTemplate.query(sbstr.toString(),
+                new Object[]{userId},new BeanPropertyRowMapper(Entity.class));
         return list;
     }
 

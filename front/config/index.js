@@ -61,14 +61,11 @@ module.exports = {
      * Source Maps
      */
     proxyTable: {
-      '/kjb/entity/delete':{
-        target:'http://localhost:8080'
+      '/kjb/entity':{
+        target:'http://127.0.0.1:8080'
       },
-      '/kjb/entity/show':{
-        target:'http://localhost:8080'
-      },
-      '/kjb/entity/update':{
-        target:'http://localhost:8080'
+      '/kjb/ums':{
+        target:'http://127.0.0.1:8080'
       }
     },
 

@@ -9,8 +9,13 @@ import 'bootstrap/dist/js/bootstrap.min'
 import App from './App'
 import router from './router'
 import Vuex from 'vuex'
+import axios from 'axios'
 import './assets/css/base.css'
-
+import global_ from './components/Global.vue'
+Vue.prototype.GLOBAL = global_;
+axios.defaults.baseURL=global_.BASE_URL;
+Vue.prototype.$ajax = axios;
+axios.defaults.withCredentials = true;
 Vue.use(Vuex);
 Vue.config.productionTip = false
 const store=new Vuex.Store({

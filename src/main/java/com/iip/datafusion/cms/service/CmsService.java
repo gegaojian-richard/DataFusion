@@ -18,6 +18,7 @@ import com.iip.datafusion.util.dbutil.DataSourceRouterManager;
 import com.iip.datafusion.util.jsonutil.JsonParse;
 import com.iip.datafusion.util.jsonutil.Result;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.AutoConfigurationPackage;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.jdbc.support.rowset.SqlRowSetMetaData;
@@ -41,6 +42,8 @@ import java.util.Map;
 public class CmsService {
     @Autowired
     CmsDao cmsDao;
+    @Autowired
+    DataSourceRouterManager dataSourceRouterManager;
 
     public Result  creCon(DataSourceProperties c){
         switch (c.getDriverClassName()){
@@ -60,8 +63,14 @@ public class CmsService {
         return new Result(1,null,null);
     }
 
-    public Result  desCon(String id){
+    public Result  desCon(String nick){
         DataBaseStructure dataBaseStructure = new DataBaseStructure();
+        List<DataSourceProperties> list = dataSourceRouterManager.getDataSourceProperties();
+        String id="";
+        for(DataSourceProperties dataSourceProperties:list){
+            if(dataSourceProperties.getDisplayName().equals(nick))
+                id = dataSourceProperties.getId();
+        }
         dataBaseStructure = cmsDao.getDatabaseStructure(id);
         if(dataBaseStructure==null){
             return new Result(0,"cannot connect to "+id,null);

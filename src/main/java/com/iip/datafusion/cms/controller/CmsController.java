@@ -52,7 +52,7 @@ public class CmsController {
     //获取当前连接的所有数据库
     @RequestMapping(path={"/cms/currentDataBase"},method = RequestMethod.GET)
     @ResponseBody
-    public Result getCur(String nick){
+    public Result getCur(){
         return service.getCurrentConnection();
     }
 
