@@ -1,5 +1,6 @@
 package com.iip.datafusion.dfs.model;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.ArrayList;
@@ -7,15 +8,23 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Created by GeGaojian on 2017/12/22.
+ */
+
 public class JoinRule {
     @JsonProperty("s2t")
-    private Map<String, String> s2t = new LinkedHashMap<>();  // 原字段与目标字段映射表
+    private List<FieldMapEntry> fieldMapEntries = new ArrayList<>();  // 原字段与目标字段映射表
+
     @JsonProperty("join_units")
     private List<String> joinUnits = new ArrayList<>(); // 参与join的表
+
     @JsonProperty("relations")
-    private List<Map<String,String>> relations = new ArrayList<>(); // join关系 MapEntry{left:.., right:..}
+    private List<Relation> relations = new ArrayList<>(); // join关系 MapEntry{left:.., right:..}
+
     @JsonProperty("target_table_name")
     private String targetTableName;
+
     @JsonProperty("target_datasource_id")
     private String targetDataSourceID;
 
@@ -23,12 +32,25 @@ public class JoinRule {
         super();
     }
 
-    public Map<String, String> getS2t() {
-        return s2t;
+    @JsonCreator
+    public JoinRule(@JsonProperty("s2t") List<FieldMapEntry> fieldMapEntries,
+                    @JsonProperty("join_units") List<String> joinUnits,
+                    @JsonProperty("relations") List<Relation> relations,
+                    @JsonProperty("target_table_name") String targetTableName,
+                    @JsonProperty("target_datasource_id") String targetDataSourceID) {
+        this.fieldMapEntries = fieldMapEntries;
+        this.joinUnits = joinUnits;
+        this.relations = relations;
+        this.targetTableName = targetTableName;
+        this.targetDataSourceID = targetDataSourceID;
     }
 
-    public void setS2t(Map<String, String> s2t) {
-        this.s2t = s2t;
+    public List<FieldMapEntry> getFieldMapEntries() {
+        return fieldMapEntries;
+    }
+
+    public void setFieldMapEntries(List<FieldMapEntry> fieldMapEntries) {
+        this.fieldMapEntries = fieldMapEntries;
     }
 
     public List<String> getJoinUnits() {
@@ -39,11 +61,11 @@ public class JoinRule {
         this.joinUnits = joinUnits;
     }
 
-    public List<Map<String, String>> getRelations() {
+    public List<Relation> getRelations() {
         return relations;
     }
 
-    public void setRelations(List<Map<String, String>> relations) {
+    public void setRelations(List<Relation> relations) {
         this.relations = relations;
     }
 
@@ -61,5 +83,16 @@ public class JoinRule {
 
     public void setTargetDataSourceID(String targetDataSourceID) {
         this.targetDataSourceID = targetDataSourceID;
+    }
+
+    @Override
+    public String toString() {
+        return "JoinRule{" +
+                "fieldMapEntries=" + fieldMapEntries +
+                ", joinUnits=" + joinUnits +
+                ", relations=" + relations +
+                ", targetTableName='" + targetTableName + '\'' +
+                ", targetDataSourceID='" + targetDataSourceID + '\'' +
+                '}';
     }
 }
