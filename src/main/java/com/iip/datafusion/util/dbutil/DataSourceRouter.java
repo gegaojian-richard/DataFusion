@@ -3,7 +3,6 @@ package com.iip.datafusion.util.dbutil;
 import com.iip.datafusion.util.jsonutil.Result;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import org.apache.commons.collections.map.HashedMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.datasource.lookup.AbstractRoutingDataSource;
@@ -85,6 +84,7 @@ public class DataSourceRouter extends AbstractRoutingDataSource {
         }
 
         result.setStatus(1);
+        //TODO 成功无需返回数据
         result.setData("{\"dbid\":\"" + properties.getId() + "\"}");
 
         return result;
