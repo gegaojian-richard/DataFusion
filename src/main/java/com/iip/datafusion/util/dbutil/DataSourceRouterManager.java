@@ -1,5 +1,6 @@
 package com.iip.datafusion.util.dbutil;
 
+import com.iip.datafusion.util.jsonutil.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
@@ -9,6 +10,7 @@ import org.springframework.web.context.WebApplicationContext;
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Component
 @Scope(value = WebApplicationContext.SCOPE_SESSION, proxyMode = ScopedProxyMode.TARGET_CLASS)
@@ -48,10 +50,11 @@ public class DataSourceRouterManager {
         return dataSourceIds.contains(dataSourceId);
     }
 
-    public void addDataSource(DataSourceProperties properties){
-        dataSourceRouter.addDataSource(properties, dataSourceIds);
-        dataSourceIds.add(properties.getId());
-    };
+    public Result addDataSource(DataSourceProperties properties){
+        //dataSourceIds.add(properties.getId()) 应该在addDataSource里面，检查不重复之后才加
+        Map map = dataSourceRouter.addDataSource(properties, dataSourceIds);
+//        dataSourceIds.add(properties.getId());
+    }
 
     public List<String> getDataSourceDisplayNames(){
         return dataSourceRouter.getDisplayNameByIDs(dataSourceIds);

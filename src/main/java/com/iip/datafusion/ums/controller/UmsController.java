@@ -41,6 +41,7 @@ public class UmsController {
         }
     }
 
+    //TODO string的==改为equal()
     @RequestMapping(path={"/ums/login"},method = {RequestMethod.POST,RequestMethod.GET})
     @ResponseBody
     public Result login(@RequestParam("username") String username,
@@ -48,7 +49,7 @@ public class UmsController {
                         @CookieValue(value="DFU", defaultValue = "default") String ticket,
                         HttpServletResponse response){
         Map map;
-        if (ticket=="default") {
+        if (ticket.equals("default")) {
             map = umsService.login(username, password);
         }else {
             map = umsService.autoLogin(username,password,ticket);

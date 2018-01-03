@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -70,10 +71,11 @@ public class CmsDao {
 
     public Result getCurrentConnection() {
         String jsonStr = "{\"databases\":[";
-        if(!dataSourceRouterManager.getDataSourceDisplayNames().isEmpty())
-            jsonStr += "{\"name\":\"" + dataSourceRouterManager.getDataSourceDisplayNames().get(0) + "\"}";
-        for(int i=1;i< dataSourceRouterManager.getDataSourceDisplayNames().size();i++){
-            jsonStr += ",{\"name\":\"" +dataSourceRouterManager.getDataSourceDisplayNames().get(i)+"\"}";
+        List<String > displayNames = dataSourceRouterManager.getDataSourceDisplayNames();
+        if(!displayNames.isEmpty())
+            jsonStr += "{\"name\":\"" + displayNames.get(0) + "\"}";
+        for(int i=1;i< displayNames.size();i++){
+            jsonStr += ",{\"name\":\"" +displayNames.get(i)+"\"}";
         }
         jsonStr += "]}";
         Result result = new Result(1,null,jsonStr);

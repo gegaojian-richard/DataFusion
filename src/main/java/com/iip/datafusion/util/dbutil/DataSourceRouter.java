@@ -47,15 +47,20 @@ public class DataSourceRouter extends AbstractRoutingDataSource {
     }
 
     // 添加数据源
-    public void addDataSource(DataSourceProperties properties, List<String> dataSourceIds){
+    public void addDataSource(DataSourceProperties properties, List<String> dataSourceIds) {
 
         Map<String, String> result = new HashMap<>();
         // 1. 判断是否已经存在
-        if(!contained(properties, dataSourceIds).isEmpty()) return;
+
+        if (!contained(properties, dataSourceIds).isEmpty()) {
+            return null;
+        }
 
         String dataSourceID = "db_" + DATASOURCE_COUNT.incrementAndGet();
 
         properties.setId(dataSourceID);
+
+        dataSourceIds.add(dataSourceID);
 
         customDataSourceProperties.put(dataSourceID, properties);
 
@@ -116,13 +121,13 @@ public class DataSourceRouter extends AbstractRoutingDataSource {
         // 检查该用户对应的DataSource的displayName是否有重复
         for (String dsID: dataSourceIds
                 ) {
-            if(customDataSourceProperties.get(dsID).getDisplayName() == properties.getDisplayName()){
+            if(customDataSourceProperties.get(dsID).getDisplayName().equals(properties.getDisplayName())){
                 result.put("msg", "displayName 重名！");
             }
         }
         for (DataSourceProperties dsp: customDataSourceProperties.values()
                 ) {
-            if (dsp.getUrl() == properties.getUrl() && dsp.getDriverClassName() == properties.getDriverClassName()){
+            if (dsp.getUrl().equals(properties.getUrl()) && dsp.getDriverClassName().equals(properties.getDriverClassName())){
                 result.put("msg", dsp.getId()); // 如果已经存在 将已经存在的dataSource的id返回
             }
         }
@@ -135,7 +140,6 @@ public class DataSourceRouter extends AbstractRoutingDataSource {
                 ) {
             result.add(customDataSourceProperties.get(dsID).getDisplayName());
         }
-
         return result;
     }
 
