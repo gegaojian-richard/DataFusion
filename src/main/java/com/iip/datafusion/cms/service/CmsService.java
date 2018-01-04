@@ -18,7 +18,6 @@ import com.iip.datafusion.util.dbutil.DataSourceRouterManager;
 import com.iip.datafusion.util.jsonutil.JsonParse;
 import com.iip.datafusion.util.jsonutil.Result;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.AutoConfigurationPackage;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.jdbc.support.rowset.SqlRowSetMetaData;
@@ -65,11 +64,12 @@ public class CmsService {
 
     public Result  desCon(String nick){
         DataBaseStructure dataBaseStructure = new DataBaseStructure();
-        List<DataSourceProperties> list = dataSourceRouterManager.getDataSourceProperties();
-        String id="";
-        for(DataSourceProperties dataSourceProperties:list){
-            if(dataSourceProperties.getDisplayName().equals(nick))
-                id = dataSourceProperties.getId();
+        List<DataSourceProperties> list =  dataSourceRouterManager.getDataSourceProperties();
+        String id = "";
+        for(DataSourceProperties item:list){
+            if(item.getDisplayName().equals(nick)){
+                id = item.getId();
+            }
         }
         dataBaseStructure = cmsDao.getDatabaseStructure(id);
         if(dataBaseStructure==null){
