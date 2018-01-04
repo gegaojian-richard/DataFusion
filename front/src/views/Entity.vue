@@ -34,7 +34,7 @@
                     <input v-model="editArr.displayName" type="text" v-if="item.displayName==nowEditCol">
                   </div>
                   <div class="entity-tab">
-                    {{item.dbPostion}}
+                    {{item.dbPosition}}
                     <input v-model="editArr.dbPosition" type="text" v-if="item.displayName==nowEditCol">
                   </div>
                   <div class="entity-tab">
@@ -245,6 +245,7 @@
           'entityType':this.addOne.entityType,
           'properties':this.addOne.properties
         };
+
         this.entityEvent.push(addOne);
         this.resetEntity();
       },
@@ -262,7 +263,7 @@
         axios.get("kjb/entity/show").then((response) => {
           let res = response.data;
           if (res.status == 1) {
-              entityEvent=res.data;
+              this.entityEvent=JSON.parse(res.data);
           }
         })
       },
