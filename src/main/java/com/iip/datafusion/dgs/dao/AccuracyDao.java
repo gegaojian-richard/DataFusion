@@ -21,6 +21,13 @@ public class AccuracyDao {
         return sqlRowSet;
     }
 
+    public SqlRowSet selectData(String dataSourceId, String selectClause,String tableName,String whereClause){
+        DataSourceRouterManager.setCurrentDataSourceKey(dataSourceId);
+        String sql = "SELECT " + selectClause + " FROM " + tableName + " WHERE " + whereClause;
+        SqlRowSet sqlRowSet = jdbcTemplate.queryForRowSet(sql);
+        return sqlRowSet;
+    }
+
     public boolean updateData(String dataSourceId,String tableName,String columnName,String newValue,String whereClause){
         DataSourceRouterManager.setCurrentDataSourceKey(dataSourceId);
         String sql = "UPDATE " + tableName +" SET " + columnName + " = ? " + " WHERE " + whereClause;
@@ -29,7 +36,7 @@ public class AccuracyDao {
         else return false;
     }
 
-    public boolean updateData2(String dataSourceId,String tableName,String setClause,String whereClause)
+    public boolean updateData(String dataSourceId, String tableName, String setClause, String whereClause)
     {
         DataSourceRouterManager.setCurrentDataSourceKey(dataSourceId);
         String sql = "UPDATE " + tableName +" SET " + setClause + " WHERE " + whereClause;

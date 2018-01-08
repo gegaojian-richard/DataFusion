@@ -15,12 +15,16 @@ public class AccuracyService {
         return accuracyDao.selectData(dataSourceId,tableName,whereClause);
     }
 
+    public SqlRowSet selectData(String dataSourceId, String selectClause,String tableName,String whereClause){
+        return accuracyDao.selectData(dataSourceId,selectClause,tableName,whereClause);
+    }
+
     public boolean updateData(String dataSourceId,String tableName,String columnName,String newValue,String whereClause){
         return accuracyDao.updateData(dataSourceId,tableName,columnName,newValue,whereClause);
     }
 
-    public boolean updateData2(String dataSourceId,String tableName,String setClause,String whereClause){
-        return accuracyDao.updateData2(dataSourceId,tableName,setClause,whereClause);
+    public boolean updateData(String dataSourceId, String tableName, String setClause, String whereClause){
+        return accuracyDao.updateData(dataSourceId,tableName,setClause,whereClause);
     }
 
     public SqlRowSet getPrimaryKey(String dataSourceId,String tableName){
