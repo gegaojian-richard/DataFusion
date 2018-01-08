@@ -2180,7 +2180,7 @@ html {
 }
 
 .md-modal .md-modal-inner {
-  padding: 60px 50px;
+  padding: 40px 30px;
 }
 
 .md-modal .btn-wrap {
@@ -2321,7 +2321,7 @@ html {
   }
 
   .md-modal .btn-wrap {
-    display: -ms-flex;
+    /*display: -ms-flex;*/
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;

@@ -52,7 +52,7 @@ public class CmsController {
     //获取当前连接的所有数据库
     @RequestMapping(path={"/cms/currentDataBase"},method = RequestMethod.GET)
     @ResponseBody
-    public Result getCur(String nick){
+    public Result getCur(){
         return service.getCurrentConnection();
     }
 
@@ -68,8 +68,7 @@ public class CmsController {
     @ResponseBody
     public Result previewCon(@RequestParam("display") String display,
                              @RequestParam("table") String table,
-                             @RequestParam(value = "num",defaultValue = "10")String  num){
+                             @RequestParam(value = "num",defaultValue = "50")String  num){
         return service.previewCon(display,table,num);
     }
-
 }

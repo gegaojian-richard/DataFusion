@@ -33,6 +33,7 @@ public class UmsController {
         //若返回msg 说明出现问题
         if(map.containsKey("ticket")){
             Cookie cookie= new Cookie("DFU",map.get("ticket").toString());
+            // todo: 目前整个系统虽然分了多个子系统，但是在web应用服务器中仍然是一个应用，我认为暂时不需要全局共享的cookie - GeGaojian - 2018/01/01
             cookie.setPath("/");
             response.addCookie(cookie);
             return new Result(1,null,"注册成功");
@@ -48,7 +49,7 @@ public class UmsController {
                         @CookieValue(value="DFU", defaultValue = "default") String ticket,
                         HttpServletResponse response){
         Map map;
-        if (ticket=="default") {
+        if (ticket.equals("default")) {
             map = umsService.login(username, password);
         }else {
             map = umsService.autoLogin(username,password,ticket);

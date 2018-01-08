@@ -42,7 +42,7 @@ public class CmsService {
     @Autowired
     CmsDao cmsDao;
     @Autowired
-    JsonParse jsonParse;
+    DataSourceRouterManager dataSourceRouterManager;
 
     public Result  creCon(DataSourceProperties c){
         switch (c.getDriverClassName()){
@@ -62,8 +62,15 @@ public class CmsService {
         return new Result(1,null,null);
     }
 
-    public Result  desCon(String id){
+    public Result  desCon(String nick){
         DataBaseStructure dataBaseStructure = new DataBaseStructure();
+        List<DataSourceProperties> list =  dataSourceRouterManager.getDataSourceProperties();
+        String id = "";
+        for(DataSourceProperties item:list){
+            if(item.getDisplayName().equals(nick)){
+                id = item.getId();
+            }
+        }
         dataBaseStructure = cmsDao.getDatabaseStructure(id);
         if(dataBaseStructure==null){
             return new Result(0,"cannot connect to "+id,null);
@@ -72,7 +79,7 @@ public class CmsService {
 //        JSONObject jsonObject = JSONObject.fromObject(dataBaseStructure);
 
         try {
-            String json = jsonParse.getMapper().writeValueAsString(dataBaseStructure);
+            String json = JsonParse.getMapper().writeValueAsString(dataBaseStructure);
             return new Result(1, null, json);
         }
         catch (JsonProcessingException e){

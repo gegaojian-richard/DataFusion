@@ -1,7 +1,10 @@
 package com.iip.datafusion.util.dbutil;
 
+import com.iip.datafusion.util.jsonutil.Result;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.datasource.lookup.AbstractRoutingDataSource;
 import org.springframework.stereotype.Component;
 
@@ -13,8 +16,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
+/**
+ * Created by GeGaojian on 2017/12/12.
+ * DataSource全局路由
+ */
+
 @Component(value = "dataSource")
 public class DataSourceRouter extends AbstractRoutingDataSource {
+    // 2017/12/29:尝试使用@Value注解将主数据库配置信息从配置文件中导入，但是@Value注解在构造函数完成后才会对成员变量注入值，失败！！
 
     private volatile AtomicInteger DATASOURCE_COUNT = new AtomicInteger();
 
@@ -28,18 +37,11 @@ public class DataSourceRouter extends AbstractRoutingDataSource {
         return DataSourceRouterManager.getCurrentDataSourceKey(); // 返回线程当前持有的DataSource的ID
     }
 
-    public DataSourceRouter(){
+    @Autowired // 注入主数据库配置信息
+    public DataSourceRouter(MainDataSourceProperties mainDataSourceProperties){
         // 创建主数据库DataSource
-        DataSourceProperties defaultDataSourceProperties = new DataSourceProperties();
-        defaultDataSourceProperties.setUrl("");
-        defaultDataSourceProperties.setId("primary");
-        defaultDataSourceProperties.setDisplayName("primary");
-        defaultDataSourceProperties.setDriverClassName("com.mysql.jdbc.Driver");
-        defaultDataSourceProperties.setUrl("jdbc:mysql://localhost:3306/kjb?useUnicode=true&characterEncoding=gbk&serverTimezone=GMT");
-        defaultDataSourceProperties.setUsername("root");
-        defaultDataSourceProperties.setPassword("123456");
-        customDataSourceProperties.put("primary", defaultDataSourceProperties);
-        customDataSource.put("primary", createDataSource(defaultDataSourceProperties));
+        customDataSourceProperties.put("primary", mainDataSourceProperties);
+        customDataSource.put("primary", createDataSource(mainDataSourceProperties));
         setTargetDataSources(customDataSource);
 
         // 初始化DataSource计数
@@ -47,24 +49,45 @@ public class DataSourceRouter extends AbstractRoutingDataSource {
     }
 
     // 添加数据源
-    public void addDataSource(DataSourceProperties properties, List<String> dataSourceIds){
+    public Result addDataSource(DataSourceProperties properties, List<String> dataSourceIds){
 
-        Map<String, String> result = new HashMap<>();
+        Result result = new Result();
+
         // 1. 判断是否已经存在
-        if(!contained(properties, dataSourceIds).isEmpty()) return;
+        Map<String, Integer> map = contained(properties, dataSourceIds);
 
-        String dataSourceID = "db_" + DATASOURCE_COUNT.incrementAndGet();
+        if (map.get("msg") == 1) {
+            result.setStatus(0);
+            result.setMsg("数据源重名");
+            return result; // 重名
+        }
 
-        properties.setId(dataSourceID);
+        if (map.get("msg") == 3) {
+            result.setStatus(0);
+            result.setMsg("数据源已添加");
+            return result;
+        }
 
-        customDataSourceProperties.put(dataSourceID, properties);
+        if (map.get("msg") == 2) { // 其他用户已添加
+            customDataSourceProperties.put(properties.getId(), properties);
+        }else{
+            String dataSourceID = "db_" + DATASOURCE_COUNT.incrementAndGet();
+            properties.setId(dataSourceID);
+            customDataSourceProperties.put(dataSourceID, properties);
 
-        // 2. 创建DataSource并添加至TargetDataSource
-        customDataSource.put(properties.getId(), createDataSource(properties));
+            // 2. 创建DataSource并添加至TargetDataSource
+            customDataSource.put(properties.getId(), createDataSource(properties));
 
-        // 3. AbstractRoutingDataSource方法,重写AbstractRoutingDataSource中的数据源
-        setTargetDataSources(customDataSource);
-        afterPropertiesSet();
+            // 3. AbstractRoutingDataSource方法,重写AbstractRoutingDataSource中的数据源
+            setTargetDataSources(customDataSource);
+            afterPropertiesSet();
+        }
+
+        result.setStatus(1);
+        //TODO 成功无需返回数据
+        result.setData("{\"dbid\":\"" + properties.getId() + "\"}");
+
+        return result;
     }
 
     // 创建Hikari数据源
@@ -110,22 +133,32 @@ public class DataSourceRouter extends AbstractRoutingDataSource {
     }
 
     // 判断数据源是否已经存在路由中
-    public Map<String,String> contained(DataSourceProperties properties, List<String> dataSourceIds){
-        Map<String,String> result = new HashMap<>();
+    public Map<String, Integer> contained(DataSourceProperties properties, List<String> dataSourceIds){
+        Map<String, Integer> result = new HashMap<>();
 
         // 检查该用户对应的DataSource的displayName是否有重复
         for (String dsID: dataSourceIds
                 ) {
-            if(customDataSourceProperties.get(dsID).getDisplayName() == properties.getDisplayName()){
-                result.put("msg", "displayName 重名！");
+            if(customDataSourceProperties.get(dsID).getDisplayName().equals(properties.getDisplayName())){
+                result.put("msg", 1); // 1 - displayName重复
+                return result;
+            }
+            if(customDataSourceProperties.get(dsID).getUrl().equals(properties.getUrl()) &&
+                    customDataSourceProperties.get(dsID).getDriverClassName().equals(properties.getDriverClassName())){
+                result.put("msg", 3); // 3 - 已添加
+                return result;
             }
         }
         for (DataSourceProperties dsp: customDataSourceProperties.values()
                 ) {
-            if (dsp.getUrl() == properties.getUrl() && dsp.getDriverClassName() == properties.getDriverClassName()){
-                result.put("msg", dsp.getId()); // 如果已经存在 将已经存在的dataSource的id返回
+            if (dsp.getUrl().equals(properties.getUrl()) && dsp.getDriverClassName().equals(properties.getDriverClassName())){
+                properties.setId(dsp.getId());
+                result.put("msg",2); // 2 - 存在
+                return result;
             }
         }
+
+        result.put("msg",0); // 0 - 不存在，通过检查
         return result;
     }
 
