@@ -138,6 +138,8 @@ public class UmsService {
 
         //如果ticket未过期，且和用户名符合，自动登录成功
         if(loginTicket.getExpired().after(new Date()) && user.getUsername().equals(username)){
+            userManager.setUserName(username);
+            userManager.setUserId(user.getId());
             map.put("success","自动登录成功");
 
             //初始化userManager

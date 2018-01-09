@@ -14,7 +14,9 @@
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
             <li>
-                <span class="navbar-link" v-text="nickName" v-if="nickName"></span>
+              <a href="javascript:void(0)"><span class="navbar-link" v-text="nickName" v-if="nickName"></span></a>
+            </li>
+            <li>
                 <a href="javascript:void(0)" @click="loginModalFlag=true" v-if="!nickName">登录</a>
                 <a href="javascript:void(0)" @click="logOut" v-else >退出</a>
             </li>
@@ -26,6 +28,10 @@
           </ul>
         </div>
       </div>
+      <div class="alert alert-warning alert-dismissible" role="alert" v-show="regSuc">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <strong>注册成功</strong>
+      </div>
     </nav>
     <div class="md-modal modal-msg md-modal-transition" v-bind:class="{'md-show':loginModalFlag}">
       <div class="md-modal-inner">
@@ -36,7 +42,7 @@
         <div class="md-content">
           <div class="confirm-tips">
             <div class="error-wrap">
-              <span class="error error-show" v-show="errorTip">用户名或者密码错误</span>
+              <span class="error error-show" v-show="loginErrorTip">用户名或者密码错误</span>
             </div>
             <ul>
               <li class="regi_form_input">
@@ -63,7 +69,7 @@
         <div class="md-content">
           <div class="confirm-tips">
             <div class="error-wrap">
-              <span class="error error-show" v-show="errorTip">用户名或者密码错误</span>
+              <span class="error error-show" v-show="regErrorTip">密码错误</span>
             </div>
             <ul>
               <li class="regi_form_input">
@@ -86,10 +92,21 @@
     <div class="md-overlay" v-if="loginModalFlag" @click="loginModalFlag=false"></div>
   </div>
 </template>
+<style>
+  .alert-warning{
+    position:fixed;
+    width:200px;
+    height:100px;
+    left:auto;
+    right:auto;
+    top:300px;
+  }
+</style>
 <script>
   import '../assets/home.css'
   import '../assets/css/login.css'
   import { mapState } from 'vuex'
+  import axios from 'axios'
   export default{
     name:'Header',
     data(){
@@ -98,11 +115,14 @@
         userPwd: '123456',
         loginModalFlag: false,
         registerFlag: false,
-        errorTip: false,
+        loginErrorTip: false,
+        regErrorTip:false,
         regName: '',
         regPwd1: '',
         regPwd2: '',
-        nickName:''
+        loginSuc:false,
+        regSuc:false,
+        nickName:null
       }
     },
     computed:{
@@ -119,12 +139,53 @@
             }
         },
         login(){
+          if(!this.userName || !this.userPwd){
+              this.loginErrorTip=true;
+              return;
+          }
+          let param=new URLSearchParams();
+          param.append("username",this.userName);
+          param.append("password",this.userPwd);
+          axios.post("/kjb/ums/login",param).then((response)=>{
+              let res=response.data;
+              if(res.status==1){
+                  this.loginErrorTip=false;
+                  this.loginModalFlag=false;
+                  this.nickName=this.userName;
+                  this.loginSuc=true;
+              }else{
+                  this.loginErrorTip=true;
+              }
+          })
 
         },
         logOut(){
+          axios.post("/kjb/ums/logout").then((response)=>{
+            let res = response.data;
+            if(res.status==1){
+              this.nickName="";
+            }
+          });
 
         },
       register(){
+        if(!this.regName || !this.regPwd1 ||!this.regPwd2||this.regPwd1!=this.regPwd2){
+            this.regErrorTip=true;
+            return;
+        }
+        let param=new URLSearchParams();
+        param.append("username",this.regName);
+        param.append("password",this.regPwd2);
+        axios.post("/kjb/ums/register",param).then((response)=>{
+          let res=response.data;
+          if(res.status==1){
+            this.regErrorTip=false;
+            this.registerFlag=false;
+            this.regSuc=true;
+          }else{
+            this.regErrorTip=true;
+          }
+        })
 
       }
     }
