@@ -12,11 +12,15 @@ import Vuex from 'vuex'
 import axios from 'axios'
 import './assets/css/base.css'
 import global_ from './components/Global.vue'
+import ElementUI from 'element-ui'
+import 'element-ui/lib/theme-chalk/index.css'
+
 Vue.prototype.GLOBAL = global_;
 axios.defaults.baseURL=global_.BASE_URL;
 Vue.prototype.$ajax = axios;
 axios.defaults.withCredentials = true;
 Vue.use(Vuex);
+Vue.use(ElementUI);
 Vue.config.productionTip = false
 const store=new Vuex.Store({
   state:{

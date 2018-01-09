@@ -141,10 +141,7 @@ public class UmsService {
             userManager.setUserName(username);
             userManager.setUserId(user.getId());
             map.put("success","自动登录成功");
-
             //初始化userManager
-            userManager.setUserName(username);
-            userManager.setUserId(user.getId());
             return map;
         }
         //如果ticket超时 则用当前的用户名，密码登录，并删除原ticket
