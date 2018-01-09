@@ -22,9 +22,19 @@
             </li>
             <li><a href="javascript:void(0)" role="button" @click="registerFlag=true">注册</a></li>
             <li><a href="javascript:void(0)" id="add-conn" @click="changeMove">数据源</a></li>
-            <li><a href="javascript:void(0)">数据整合</a></li>
-            <li><a href="javascript:void(0)">实体事件管理</a></li>
-            <li><a href="javascript:void(0)">数据治理</a></li>
+            <li><a href="/#/fusion">数据整合</a></li>
+            <li><a href="/#/entity">实体事件管理</a></li>
+            <li class="dropdown"><a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">数据治理</a>
+              <ul class="dropdown-menu" style="width:50px;">
+                <li><a href="#">完整性检查</a></li>
+                <li role="separator" class="divider"></li>
+                <li><a href="#">一致性检查</a></li>
+                <li role="separator" class="divider"></li>
+                <li><a href="/#/accuracy">准确性检查</a></li>
+                <li role="separator" class="divider"></li>
+                <li><a href="#">及时性检查</a></li>
+              </ul>
+            </li>
           </ul>
         </div>
       </div>

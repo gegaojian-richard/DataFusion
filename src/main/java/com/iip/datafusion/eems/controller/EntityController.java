@@ -55,23 +55,21 @@ public class EntityController {
     }
     @RequestMapping(path={"/entity/insert"},method={RequestMethod.POST})
     @ResponseBody
+    //TODO:插入实体时相同用户不能同时创建两个一样的实体；
     public Result  insertEntity(@RequestBody Map<String,String> map){
         Entity entity=null;
-        for(String key:map.keySet()){
-            entity=new Entity();
-            entity.setDisplayName(map.get("displayName"));
-            entity.setTableName(map.get("tableName"));
-            entity.setDbPosition(map.get("dbPosition"));
-            entity.setEntityType(Integer.parseInt(map.get("entityType")));
-            entity.setProperties(map.get("properties"));
-        }
-        Boolean addEntity=entityService.insertEntity(entity);
+        entity=new Entity();
+        entity.setDisplayName(map.get("displayName"));
+        entity.setTableName(map.get("tableName"));
+        entity.setDbPosition(map.get("dbPosition"));
+        entity.setEntityType(Integer.parseInt(map.get("entityType")));
+        entity.setProperties(map.get("properties"));
+        int addEntity=entityService.insertEntity(entity);
         UserEntity newUserEntity=new UserEntity();
-        newUserEntity.setEntityId(entity.getId());
+        newUserEntity.setEntityId(addEntity);
         newUserEntity.setUserId(userManager.getUserId());
-       // newUserEntity.setUserId(1);
         Boolean addUserEntity=userEntityService.insertUserEntity(newUserEntity);
-        if (addEntity && addUserEntity){
+        if ((addEntity>0) && addUserEntity){
             return  new Result(1,"插入实体成功",null);
         }
         return  new Result(0,"插入实体失败",null);

@@ -6,6 +6,7 @@
           <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
           添加数据源
         </button>
+        <a href="/#/connect" style="border: 1px solid #b8b8b8;margin-right:5px;"><i class="el-icon-more"></i></a>
         <ul class="dropdown-menu dropdown-menu-right" role="menu" id="datasource_menu" aria-labelledby="data-dropdrow" >
           <li><a href="#"  role="button"  id="mysql-info" @click="addMySql=true">mysql</a></li>
           <li role="separator" class="divider"></li>
@@ -152,7 +153,7 @@
     data(){
       return {
         addMySql: false,
-        dataUrl: "localhost:3306/kjb",
+        dataUrl: "localhost:3306/datatest1",
         dataUserName: "root",
         dataPassword: "tangsy",
         displayName:"first",
