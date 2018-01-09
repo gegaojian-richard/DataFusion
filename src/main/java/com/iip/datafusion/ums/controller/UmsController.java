@@ -49,7 +49,7 @@ public class UmsController {
                         @CookieValue(value="DFU", defaultValue = "default") String ticket,
                         HttpServletResponse response){
         Map map;
-        if (ticket=="default") {
+        if (ticket.equals("default")) {
             map = umsService.login(username, password);
         }else {
             map = umsService.autoLogin(username,password,ticket);
