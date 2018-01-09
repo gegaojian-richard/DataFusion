@@ -96,6 +96,7 @@ public class DataSourceRouter extends AbstractRoutingDataSource {
         config.setJdbcUrl(properties.getUrl());
         config.setUsername(properties.getUsername());
         config.setPassword(properties.getPassword());
+        config.setDriverClassName(properties.getDriverClassName());
         config.addDataSourceProperty("cachePrepStmts", "true");
         config.addDataSourceProperty("prepStmtCacheSize", "250");
         config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
