@@ -84,5 +84,4 @@ public class EntityController {
         }
          return new Result(0,"更新实体失败",null);
     }
-
 }
