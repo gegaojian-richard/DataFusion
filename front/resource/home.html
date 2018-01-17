@@ -1,39 +1,259 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>home</title>
-  <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css"
-        integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-  <link rel="stylesheet" href="./css/home.css">
-  <link rel="stylesheet" href="./css/base.css">
-</head>
-<body>
-<header class="header">
-  <nav class="navbar navbar-fixed-top navbar-inverse">
-    <div class="container">
-          <span id="head_title">数据融合工具</span>
-          <ul class="nav navbar-nav navbar-right">
-            <li>
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">用户<span class="caret"></span></a>
-              <ul class="dropdown-menu dropdown-menu-left " id="login_menu">
-                <li><a href="#">注册</a></li>
-                <li role="separator" class="divider"></li>
-                <li><a href="#">登录</a></li>
-                <li role="separator" class="divider"></li>
-                <li><a href="#">退出</a></li>
-              </ul>
-            </li>
-            <li><a href="#">数据连接</a></li>
-            <li><a href="#">数据整合</a></li>
-            <li><a href="#">实体事件管理</a></li>
-            <li><a href="#">数据治理</a></li>
-          </ul>
-    </div>
-  </nav>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+  <meta name="description" content="">
+  <meta name="author" content="">
 
-</header>
-<script src="https://code.jquery.com/jquery.js"></script>
-<script src="js/bootstrap.min.js"></script>
+  <title>Dashboard Template for Bootstrap</title>
+
+  <!-- Bootstrap core CSS -->
+  <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+  <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+  <!--<link href="../../assets/css/ie10-viewport-bug-workaround.css" rel="stylesheet">-->
+
+  <!-- Custom styles for this template -->
+  <link href="./css/home.css" rel="stylesheet">
+
+  <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
+  <!--[if lt IE 9]><!--<script src="../../assets/js/ie8-responsive-file-warning.js"></script>--><![endif]-->
+  <!--<script src="../../assets/js/ie-emulation-modes-warning.js"></script>-->
+
+  <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+  <!--[if lt IE 9]>
+  <!--<script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>-->
+  <!--<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>-->
+  <![endif]-->
+  <script src="https://cdn.bootcss.com/jquery/2.1.1/jquery.min.js"></script>
+  <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
+  <script src="js/bootstrap.min.js"></script>
+</head>
+
+<body>
+
+<nav class="navbar navbar-inverse navbar-fixed-top">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="#">数据融合工具</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">用户<span class="caret"></span></a>
+          <ul class="dropdown-menu dropdown-menu-left " id="login_menu">
+            <li><a href="#" data-toggle="modal" role="button" data-target="#register-modal">注册</a></li>
+            <li role="separator" class="divider"></li>
+            <li>
+              <a href="#" data-toggle="modal" role="button" data-target="#login-modal">登录</a></li>
+            <li role="separator" class="divider"></li>
+            <li><a href="#">退出</a></li>
+          </ul>
+        </li>
+        <li ><a href="#" id="add-conn">数据源</a></li>
+        <li><a href="#">数据整合</a></li>
+        <li><a href="#">实体事件管理</a></li>
+        <li><a href="#">数据治理</a></li>
+      </ul>
+      <form class="navbar-form navbar-right">
+        <input type="text" class="form-control" placeholder="Search...">
+      </form>
+    </div>
+  </div>
+</nav>
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-sm-3 col-md-2 sidebar" id="side-conn" >
+      <div id="drop" style="position: relative">
+        <button type="button" class="btn btn-small dropdown-toggle" data-toggle="dropdown"  id="data-dropdrow">
+          <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
+          添加数据源
+        </button>
+        <ul class="dropdown-menu dropdown-menu-right" role="menu" id="datasource_menu" aria-labelledby="data-dropdrow" >
+          <li><a href="#" data-toggle="modal" role="button" data-target="#link-info" id="mysql-info" >mysql</a></li>
+          <li role="separator" class="divider"></li>
+          <li><a href="#" data-toggle="modal" role="button" data-target="#link-info" id="oracle-info">oracle</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+      <!--弹出框-->
+      <div class="modal fade" id="link-info" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+           aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+              <h4 class="modal-title" id="myModalLabel">添加数据源</h4>
+            </div>
+
+            <div class="modal-body">
+              <form class="form-horizontal"  id="datalink-form" method="post" action="http://localhost">
+                <div>
+                  <label> DB--URL :</label>
+                  <input type="text" name="url">
+                </div>
+                <div>
+                  <label>Username:</label>
+                  <input type="text" name="username">
+                </div>
+               <div>
+                 <label>Password:</label>
+                 <input type="password" name="password">
+               </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <input form="datalink-form" type="submit" class="btn btn-primary" value="test">
+              <input form="datalink-form" type="submit" class="btn btn-primary" value="Submit!">
+              <input form="datalink-form" type="button" class="btn" value="Close!" data-dismiss="modal">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal fade" id="register-modal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+              <h4 class="modal-title">注册</h4>
+            </div>
+
+            <div class="modal-body">
+              <form class="form-horizontal"  id="rigister-form" method="post" action="http://localhost">
+                <div>
+                  <label>Username:</label>
+                  <input type="text" name="username">
+                </div>
+                <div>
+                  <label>Password:</label>
+                  <input type="password" name="password">
+                </div>
+                <div>
+                  <label>Password:</label>
+                  <input type="password" name="password">
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <input form="datalink-form" type="submit" class="btn btn-primary" value="test">
+              <input form="datalink-form" type="submit" class="btn btn-primary" value="Submit!">
+              <input form="datalink-form" type="button" class="btn" value="Close!" data-dismiss="modal">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal fade" id="login-modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+              <h4 class="modal-title">登录</h4>
+            </div>
+            <div class="modal-body">
+              <form class="form-horizontal"  id="login-form" method="post" action="http://localhost">
+                <div>
+                  <label>Username:</label>
+                  <input type="text" name="username">
+                </div>
+                <div>
+                  <label>Password:</label>
+                  <input type="password" name="password">
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <input form="datalink-form" type="submit" class="btn btn-primary" value="test">
+              <input form="datalink-form" type="submit" class="btn btn-primary" value="Submit!">
+              <input form="datalink-form" type="button" class="btn" value="Close!" data-dismiss="modal">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="entity-event">
+          <div class="entity">
+            <div class="entity-title">
+              <h2 class="entity-title-h2"><span>实体库</span></h2>
+            </div>
+            <div class="entity-item">
+              <div class="entity-item-head">
+                <ul>
+                  <li>实体名</li>
+                  <li>数据库地址</li>
+                  <li>表名</li>
+                  <li>管理</li>
+                </ul>
+              </div>
+              <ul class="entity-item-list">
+                <li>
+                  <div class="entity-tab-1">
+                    people
+                  </div>
+                  <div class="entity-tab-2">
+                    people
+                  </div>
+                  <div class="entity-tab-3">
+                    localhost:3306/kjb
+                  </div>
+                  <div class="entity-tab-4">
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="event">
+            <div class="event-title">
+              <h2 class="event-title-h2"><span>事件库</span></h2>
+            </div>
+            <div class="entity-item">
+              <div class="entity-item-head">
+                <ul>
+                  <li>事件名</li>
+                  <li>数据库地址</li>
+                  <li>表名</li>
+                  <li>管理</li>
+                </ul>
+              </div>
+              <ul class="entity-item-list">
+                <li>
+                  <div class="entity-tab-1">
+                    people
+                  </div>
+                  <div class="entity-tab-2">
+                    people
+                  </div>
+                  <div class="entity-tab-3">
+                    localhost:3306/kjb
+                  </div>
+                  <div class="entity-tab-4">
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="js/home.js"></script>
+<!-- Just to make our placeholder images work. Don't actually copy the next line! -->
+<!--<script src="../../assets/js/vendor/holder.min.js"></script>-->
+<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+<!--<script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>-->
 </body>
 </html>

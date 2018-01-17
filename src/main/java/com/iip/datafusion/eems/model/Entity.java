@@ -4,6 +4,7 @@ public class Entity{
     private String displayName;
     private String tableName;
     private String dbPosition;
+    // todo: 主数据库中存储的是物理位置，不是当时系统中某个DataSource的ID
     private int entityType;//0表示实体，1表示事件
     private String properties;
     public Entity(){
