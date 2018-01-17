@@ -1,6 +1,7 @@
 package com.iip.datafusion.dgs.controller;
 
 import com.iip.datafusion.dgs.model.*;
+import com.iip.datafusion.dgs.service.CommonService;
 import com.iip.datafusion.dgs.service.IntegrityService;
 import com.iip.datafusion.util.jsonutil.Result;
 import net.sf.json.JSONArray;
@@ -21,7 +22,7 @@ import java.util.Map;
 @Controller
 public class IntegrityController {
     @Autowired
-    IntegrityService integrityService;
+    CommonService commonService;
 
     private int maxThreads = 3;
 
@@ -34,7 +35,7 @@ public class IntegrityController {
 
 
         ArrayList<String> inputColumnNames = tableAnyEmptyCheckParam.getColumnNames();
-        ArrayList<String> trueColumnNames = integrityService.getTableColumnList(dataSourceId, tableName);
+        ArrayList<String> trueColumnNames = commonService.getTableColumnList(dataSourceId, tableName);
 
         if (inputColumnNames == null || inputColumnNames.size() <= 0) {
             return new Result(0, "传入参数属性值不能为空", null);
@@ -51,7 +52,7 @@ public class IntegrityController {
         }
 
         whereClause = whereClause.substring(0, whereClause.lastIndexOf("or"));
-        SqlRowSet sqlRowSet = integrityService.tableAnyEmptyCheck(dataSourceId, tableName, whereClause);
+        SqlRowSet sqlRowSet = commonService.doSelect(dataSourceId, tableName, "*",whereClause);
 
         try {
             String json = rowSetToJson(sqlRowSet);
@@ -69,7 +70,7 @@ public class IntegrityController {
 
         String dataSourceId = tableAllCompleteCheckParam.getDataSourceId();
         String tableName = tableAllCompleteCheckParam.getTableName();
-        ArrayList<String> trueColumnNames = integrityService.getTableColumnList(dataSourceId, tableName);
+        ArrayList<String> trueColumnNames = commonService.getTableColumnList(dataSourceId, tableName);
 
         TableAnyEmptyCheckParam tableAnyEmptyCheckParam = new TableAnyEmptyCheckParam();
         tableAnyEmptyCheckParam.setColumnNames(trueColumnNames);
@@ -121,7 +122,7 @@ public class IntegrityController {
                 @Override
                 public SqlResult call() throws Exception {
 
-                    ArrayList<String> trueColumnNames = integrityService.getTableColumnList(threadDataSourceID, threadTableName);
+                    ArrayList<String> trueColumnNames = commonService.getTableColumnList(threadDataSourceID, threadTableName);
                     //System.out.println(trueColumnNames);
                     //System.out.println(threadColumnNames);
                     if (threadColumnNames == null || threadColumnNames.size() <= 0) {
@@ -140,7 +141,7 @@ public class IntegrityController {
                     }
 
                     whereClause = whereClause.substring(0, whereClause.lastIndexOf("or"));
-                    SqlRowSet sqlRowSet = integrityService.tableAnyEmptyCheck(threadDataSourceID, threadTableName, whereClause);
+                    SqlRowSet sqlRowSet = commonService.doSelect(threadDataSourceID, threadTableName," * ", whereClause);
                     return new SqlResult(sqlRowSet,threadTableName);
 
                 }
@@ -217,7 +218,7 @@ public class IntegrityController {
                 @Override
                 public String call() throws Exception {
                     //Thread.sleep(1000);
-                    if(integrityService.updateColumns(threadDataSourceID,threadTableName,threadUpdateClause,threadWhereClause)){
+                    if(commonService.doUpdate(threadDataSourceID,threadTableName,threadUpdateClause,threadWhereClause)){
                         return " ";
                     }
                     else
@@ -277,7 +278,7 @@ public class IntegrityController {
                 @Override
                 public String call() throws Exception {
                     //Thread.sleep(1000);
-                    if(integrityService.updateColumns(threadDataSourceID,threadTableName,threadUpdateClause,threadWhereClause)){
+                    if(commonService.doUpdate(threadDataSourceID,threadTableName,threadUpdateClause,threadWhereClause)){
                         return " ";
                     }
                     else
@@ -311,7 +312,7 @@ public class IntegrityController {
         String dataSourceId = updateItemsByInstanceParam.getDataSourceId();
         String tableName = updateItemsByInstanceParam.getTableName();
         Map<String,String> valueMap = updateItemsByInstanceParam.getIntanceValues();
-        ArrayList<String> trueColumnNames = integrityService.getTableColumnList(dataSourceId, tableName);
+        ArrayList<String> trueColumnNames = commonService.getTableColumnList(dataSourceId, tableName);
         String columnClause = "(";
         String valueClause  = "(";
         for(String key:valueMap.keySet()){
@@ -330,7 +331,7 @@ public class IntegrityController {
 
 
         try {
-            boolean res = integrityService.doReplace(dataSourceId,tableName,columnClause,valueClause);
+            boolean res = commonService.doReplace(dataSourceId,tableName,columnClause,valueClause);
             if(res)
                 return new Result(1, null, null);
             else

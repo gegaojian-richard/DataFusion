@@ -4,7 +4,10 @@ import com.iip.datafusion.util.dbutil.DataSourceRouterManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
+import org.springframework.jdbc.support.rowset.SqlRowSetMetaData;
 import org.springframework.stereotype.Repository;
+
+import java.util.ArrayList;
 
 /**
  * @author zengc
@@ -16,10 +19,10 @@ public class CommonDao {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    public SqlRowSet doSelect(String dataSourceId, String tableName, String whereClause){
+    public SqlRowSet doSelect(String dataSourceId, String tableName, String selectClause,String whereClause){
         DataSourceRouterManager.setCurrentDataSourceKey(dataSourceId);
 
-        String sql = String.format("SELECT * FROM %s where %s",tableName,whereClause);
+        String sql = String.format("SELECT %s FROM %s where %s",selectClause,tableName,whereClause);
 
         return jdbcTemplate.queryForRowSet(sql);
 
@@ -51,5 +54,25 @@ public class CommonDao {
             return false;
         }
     }
+
+    public ArrayList<String> getTableColumnList(String dataSourceId, String tableName){
+
+        ArrayList<String> result = new ArrayList<>();
+        DataSourceRouterManager.setCurrentDataSourceKey(dataSourceId);
+
+        String sql = String.format("SELECT * FROM %s",tableName);
+
+        SqlRowSet sqlRowSet = jdbcTemplate.queryForRowSet(sql);
+        SqlRowSetMetaData sqlRsmd = sqlRowSet.getMetaData();
+        for(int i=1;i<=sqlRsmd.getColumnCount();i++){
+            result.add(sqlRsmd.getColumnName(i));
+            //System.out.println(sqlRsmd.getColumnTypeName(i));
+        }
+
+        return result;
+
+    }
+
+
 
 }
