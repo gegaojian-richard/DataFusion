@@ -4,7 +4,7 @@ displayName VARCHAR(40) NOT NULL,
 tableName   VARCHAR(40) NOT NULL,
 dbPosition  VARCHAR(40) NOT NULL,
 entityType  VARCHAR(40) NOT NULL,
-properties  VARCHAR(100) ,
+properties  text ,
 PRIMARY KEY (id)
 );
 create TABLE userentity(

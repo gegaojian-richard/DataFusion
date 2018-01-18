@@ -36,7 +36,7 @@ public class UserEntityDao {
         DataSourceRouterManager.setCurrentDataSourceKey("primary");
         boolean flag=false;
         int i=jdbcTemplate.update("delete from userentity where userId=?",new Object[]{del_entityId});
-        if(i>0){
+        if(i>=0){
             flag=true;
         }
         return flag;
