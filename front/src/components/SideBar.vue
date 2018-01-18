@@ -172,10 +172,7 @@
     },
     methods: {
         addMysqlConnect(){
-            if(!this.dataUrl||!this.dataPassword||!this.dataUrl||!this.displayName){
-                this.errorTip=true;
-                return;
-            }
+
             var param={
               id:this.displayName,
               displayName:this.displayName,
