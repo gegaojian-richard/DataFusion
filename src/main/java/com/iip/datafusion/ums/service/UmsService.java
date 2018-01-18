@@ -134,6 +134,10 @@ public class UmsService {
     public Map autoLogin(String username, String password, String ticket) {
         Map<String ,Object> map = new HashMap<>();
         LoginTicket loginTicket = loginTicketDao.getObjectByTicket(ticket);
+        if(loginTicket==null){
+            map=login(username,password);
+            return map;
+        }
         User user = userDao.getUserById(loginTicket.getUserId());
 
         //如果ticket未过期，且和用户名符合，自动登录成功

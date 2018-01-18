@@ -33,15 +33,14 @@ public class CmsDao {
 
     public Result addDatabase(DataSourceProperties c) {
         dataSourceRouterManager.addDataSource(c);
-        Result result = new Result(1,null,null);
-        return result;
+        return new Result(1,null,null);
     }
 
     public DataBaseStructure getDatabaseStructure(String id) {
         try {
             DataBaseStructure dataBaseStructure = new DataBaseStructure();
 
-            dataSourceRouterManager.setCurrentDataSourceKey(id);
+            DataSourceRouterManager.setCurrentDataSourceKey(id);
             DatabaseMetaData metaData = jdbcTemplate.getDataSource().getConnection().getMetaData();
             ResultSet table = metaData.getTables(null,"%",
                     "%",new String[]{"TABLE"});
@@ -64,7 +63,7 @@ public class CmsDao {
 
             return dataBaseStructure;
         }
-        catch (Exception e){
+        catch (SQLException e){
             return null;
         }
     }
@@ -82,23 +81,23 @@ public class CmsDao {
         return result;
     }
 
-    public PreviewStructure previewCon(String display, String table, String num) {
+    public PreviewStructure previewCon(String id, String table, String num) {
         PreviewStructure previewStructure = new PreviewStructure();
-        try {
-            dataSourceRouterManager.setCurrentDataSourceKey(display);
-            DatabaseMetaData metaData = jdbcTemplate.getDataSource().getConnection().getMetaData();
-            List rows= jdbcTemplate.queryForList("select * from "+table+" limit "+num);
-            previewStructure.setSize(rows.size());
-            Iterator iterator = rows.iterator();
-            while(iterator.hasNext()){
-                Map map=(Map) iterator.next();
-                previewStructure.getItems().add(map);
-                previewStructure.setColumnNum(map.size());
-            }
-            return previewStructure;
+//            List<DataSourceProperties> list = new ArrayList<>();
+//            String id = "";
+//            for(DataSourceProperties item:list){
+//                if(item.getDisplayName().equals(display))
+//                    id = item.getId();
+//            }
+        DataSourceRouterManager.setCurrentDataSourceKey(id);
+        List rows= jdbcTemplate.queryForList("select * from "+table+" limit "+num);
+        previewStructure.setSize(rows.size());
+        Iterator iterator = rows.iterator();
+        while(iterator.hasNext()){
+            Map map=(Map) iterator.next();
+            previewStructure.getItems().add(map);
+            previewStructure.setColumnNum(map.size());
         }
-        catch (SQLException e){
-            return null;
-        }
+        return previewStructure;
     }
 }

@@ -62,16 +62,9 @@ public class CmsService {
         return new Result(1,null,null);
     }
 
-    public Result  desCon(String nick){
-        DataBaseStructure dataBaseStructure = new DataBaseStructure();
-        List<DataSourceProperties> list =  dataSourceRouterManager.getDataSourceProperties();
-        String id = "";
-        for(DataSourceProperties item:list){
-            if(item.getDisplayName().equals(nick)){
-                id = item.getId();
-            }
-        }
-        dataBaseStructure = cmsDao.getDatabaseStructure(id);
+    //TODO 查询数据库一律传递id
+    public Result  desCon(String id){
+        DataBaseStructure dataBaseStructure = cmsDao.getDatabaseStructure(id);
         if(dataBaseStructure==null){
             return new Result(0,"cannot connect to "+id,null);
         }
@@ -91,10 +84,10 @@ public class CmsService {
         return cmsDao.getCurrentConnection();
     }
 
-    public Result previewCon(String display, String table,String num) {
-        PreviewStructure previewStructure = cmsDao.previewCon(display,table,num);
+    public Result previewCon(String id, String table,String num) {
+        PreviewStructure previewStructure = cmsDao.previewCon(id,table,num);
         if(previewStructure == null){
-            return new Result(0,"cannot connect to "+display,null);
+            return new Result(0,"cannot connect to ",null);
         }
         return new Result(1,null,previewStructure.toString());
     }
