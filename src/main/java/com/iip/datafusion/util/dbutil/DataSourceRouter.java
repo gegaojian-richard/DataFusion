@@ -71,12 +71,14 @@ public class DataSourceRouter extends AbstractRoutingDataSource {
         if (map.get("msg") == 2) { // 其他用户已添加
             customDataSourceProperties.put(properties.getId(), properties);
         }else{
-            String dataSourceID = "db_" + DATASOURCE_COUNT.incrementAndGet();
+            String dataSourceID = properties.getDisplayName();
+//            String dataSourceID = "db_" + DATASOURCE_COUNT.incrementAndGet();
             properties.setId(dataSourceID);
             customDataSourceProperties.put(dataSourceID, properties);
 
             // 2. 创建DataSource并添加至TargetDataSource
-            customDataSource.put(properties.getId(), createDataSource(properties));
+            customDataSource.put(properties.getDisplayName(),createDataSource(properties));
+//            customDataSource.put(properties.getId(), createDataSource(properties));
 
             // 3. AbstractRoutingDataSource方法,重写AbstractRoutingDataSource中的数据源
             setTargetDataSources(customDataSource);
@@ -96,6 +98,7 @@ public class DataSourceRouter extends AbstractRoutingDataSource {
         config.setJdbcUrl(properties.getUrl());
         config.setUsername(properties.getUsername());
         config.setPassword(properties.getPassword());
+        config.setDriverClassName(properties.getDriverClassName());
         config.addDataSourceProperty("cachePrepStmts", "true");
         config.addDataSourceProperty("prepStmtCacheSize", "250");
         config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");

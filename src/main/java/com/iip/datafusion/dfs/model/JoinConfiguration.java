@@ -2,6 +2,7 @@ package com.iip.datafusion.dfs.model;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.iip.datafusion.backend.configuration.Configuration;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -12,7 +13,7 @@ import java.util.Map;
  * Created by GeGaojian on 2017/12/22.
  */
 
-public class JoinRule {
+public class JoinConfiguration implements Configuration{
     @JsonProperty("s2t")
     private List<FieldMapEntry> fieldMapEntries = new ArrayList<>();  // 原字段与目标字段映射表
 
@@ -28,16 +29,16 @@ public class JoinRule {
     @JsonProperty("target_datasource_id")
     private String targetDataSourceID;
 
-    public JoinRule() {
+    public JoinConfiguration() {
         super();
     }
 
     @JsonCreator
-    public JoinRule(@JsonProperty("s2t") List<FieldMapEntry> fieldMapEntries,
-                    @JsonProperty("join_units") List<String> joinUnits,
-                    @JsonProperty("relations") List<Relation> relations,
-                    @JsonProperty("target_table_name") String targetTableName,
-                    @JsonProperty("target_datasource_id") String targetDataSourceID) {
+    public JoinConfiguration(@JsonProperty("s2t") List<FieldMapEntry> fieldMapEntries,
+                             @JsonProperty("join_units") List<String> joinUnits,
+                             @JsonProperty("relations") List<Relation> relations,
+                             @JsonProperty("target_table_name") String targetTableName,
+                             @JsonProperty("target_datasource_id") String targetDataSourceID) {
         this.fieldMapEntries = fieldMapEntries;
         this.joinUnits = joinUnits;
         this.relations = relations;
@@ -87,7 +88,7 @@ public class JoinRule {
 
     @Override
     public String toString() {
-        return "JoinRule{" +
+        return "JoinConfiguration{" +
                 "fieldMapEntries=" + fieldMapEntries +
                 ", joinUnits=" + joinUnits +
                 ", relations=" + relations +
