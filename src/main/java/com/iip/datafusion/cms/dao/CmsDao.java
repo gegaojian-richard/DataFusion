@@ -8,7 +8,6 @@ import com.iip.datafusion.util.dbutil.DataSourceProperties;
 import com.iip.datafusion.util.dbutil.DataSourceRouter;
 import com.iip.datafusion.util.dbutil.DataSourceRouterManager;
 import com.iip.datafusion.util.jsonutil.Result;
-import com.sun.org.apache.regexp.internal.RE;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
@@ -18,10 +17,7 @@ import org.springframework.stereotype.Service;
 import javax.sql.RowSetMetaData;
 import javax.swing.text.TabSet;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by jingwei on 2017/12/13.
@@ -33,47 +29,23 @@ public class CmsDao {
     @Autowired
     DataSourceRouterManager dataSourceRouterManager;
 
-
-    public Result addDatabase(DataSourceProperties c) {
-        dataSourceRouterManager.addDataSource(c);
-        return new Result(1,null,null);
-    }
-
-    public DataBaseStructure getDatabaseStructure(String id) {
+    //得到id的数据库的表结构及列结构
+    public Map<String,Object> getDatabaseStructure(String id) {
+        Map<String,Object> map= new HashMap<>();
         DataBaseStructure dataBaseStructure = new DataBaseStructure();
         Connection connection = null;
         try {
             dataSourceRouterManager.setCurrentDataSourceKey(id);
             connection = jdbcTemplate.getDataSource().getConnection();
-//            DatabaseMetaData metaData = connection.getMetaData();
-//            ResultSet table = metaData.getTables(null,null,
-//                    "%",new String[]{"TABLE"});
-//            String dataBaseName = connection.getCatalog();
+
+            //得到数据库的表名
             PreparedStatement statement = connection.prepareStatement("show tables from "+connection.getCatalog());
             ResultSet resultSet = statement.executeQuery();
             connection.close();
-//            SqlRowSet resultSet = jdbcTemplate.queryForRowSet("show tables from " +dataBaseName);
-//            SqlRowSet resultSet = jdbcTemplate.queryForRowSet("show tables");
 
-//            while(table.next()){
-//                String tmp = table.getString("TABLE_NAME");
-//                TableStructure tableStructure = new TableStructure(tmp);
-//                ResultSet column = metaData.getColumns(null,"%",tmp,"%");
-//                while (column.next()) {
-//                    ColumnStructure columnStructure = new ColumnStructure();
-//                    columnStructure.setColumnName(column.getString("COLUMN_NAME"));
-//                    columnStructure.setColumnType(column.getString("TYPE_NAME"));
-//                    columnStructure.setDataSize(column.getInt("COLUMN_SIZE"));
-//                    columnStructure.setDigits(column.getInt("DECIMAL_DIGITS"));
-//                    columnStructure.setNullable(column.getInt("NULLABLE"));
-//                    tableStructure.addColumn(columnStructure);
-//                }
-//                dataBaseStructure.addTable(tableStructure);
-//            }
-
+            //对于每一个表，用一次查询得到所有的列名及列类型
             while (resultSet.next()){
                 String tmpTable = resultSet.getString(1);
-//                SqlRowSet column = jdbcTemplate.queryForRowSet("select * from "+tmpTable+" limit 1");
                 connection = jdbcTemplate.getDataSource().getConnection();
                 PreparedStatement statement1 = connection.prepareStatement("select * from "+tmpTable+" limit 0");
                 ResultSet column = statement1.executeQuery();
@@ -89,36 +61,21 @@ public class CmsDao {
                 }
                 dataBaseStructure.addTable(table);
             }
-            return dataBaseStructure;
+            map.put("success",dataBaseStructure);
         }
-        catch (NullPointerException e){
-//            return getDatabaseStructure(id);
+        catch (Exception e){
             e.printStackTrace();
-            return null;
-        }
-        catch (SQLException e){
-            e.printStackTrace();
-            return null;
+            map.put("msg",e.getMessage());
         }finally {
+            //防止多次在Connection.close()之前就报错跳出，导致连接池overflow
             try {
                 connection.close();
             }
             catch (Exception e){}
+            return map;
         }
     }
 
-    public Result getCurrentConnection() {
-        String jsonStr = "{\"databases\":[";
-        List<String > displayNames = dataSourceRouterManager.getDataSourceDisplayNames();
-        if(!displayNames.isEmpty())
-            jsonStr += "{\"name\":\"" + displayNames.get(0) + "\"}";
-        for(int i=1;i< displayNames.size();i++){
-            jsonStr += ",{\"name\":\"" +displayNames.get(i)+"\"}";
-        }
-        jsonStr += "]}";
-        Result result = new Result(1,null,jsonStr);
-        return result;
-    }
 
     public PreviewStructure previewCon(String id, String table, String num) {
         PreviewStructure previewStructure = new PreviewStructure();

@@ -37,7 +37,9 @@ public class CmsController {
         }
     }
 
-    //创建连接
+    /*创建连接
+    @return dbid
+     */
     @RequestMapping(path={"/cms/creationDataBase"},method = RequestMethod.POST)
     @ResponseBody
     public Result setCon(@RequestBody DataSourceProperties c){ return service.creCon(c); }
@@ -46,7 +48,7 @@ public class CmsController {
     //删除连接
     @RequestMapping(path={"/cms/deletionDataBase"},method = RequestMethod.POST)
     @ResponseBody
-    public Result delCon(@RequestParam(value = "nick") String nick){ return service.delCon(nick); }
+    public Result delCon(@RequestParam(value = "nick") String id){ return service.delCon(id); }
 
 
     //获取当前连接的所有数据库
@@ -59,9 +61,7 @@ public class CmsController {
     //获取某个数据库的具体信息
     @RequestMapping(path={"/cms/descriptionDataBase"},method = RequestMethod.GET)
     @ResponseBody
-    public Result desCon(@RequestParam("nick") String id){
-        return service.desCon(id);
-    }
+    public Result desCon(@RequestParam("nick") String id){ return service.desCon(id);}
 
     //获取某个表的预览信息
     @RequestMapping(path = "/cms/preview",method = RequestMethod.GET)
