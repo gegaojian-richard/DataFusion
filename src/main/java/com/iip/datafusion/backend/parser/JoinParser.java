@@ -1,16 +1,17 @@
-package com.iip.datafusion.dfs.join;
+package com.iip.datafusion.backend.parser;
 
+import com.iip.datafusion.dfs.join.JoinJob;
+import com.iip.datafusion.dfs.join.JoinUnit;
 import com.iip.datafusion.dfs.model.JoinConfiguration;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by GeGaojian on 2017/12/22.
+ * 数据整合工作描述解析器
+ * Created by GeGaojian on 2018/01/18.
  */
-
-public class JoinParser {
-
+public class JoinParser implements Parser{
     /**
      * 解析JoinRule得到JoinJob
      * @param joinConfiguration
@@ -23,7 +24,7 @@ public class JoinParser {
         // 创建JoinUnits
         List<JoinUnit> joinUnits = new ArrayList<>();
         for (String joinUnit : joinConfiguration.getJoinUnits()
-             ) {
+                ) {
             String[] temp = joinUnit.split(".");
             joinUnits.add(new JoinUnit(temp[0], temp[1]));
         }
