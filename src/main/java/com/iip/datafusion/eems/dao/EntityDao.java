@@ -3,14 +3,12 @@ package com.iip.datafusion.eems.dao;
 import com.iip.datafusion.eems.model.Entity;
 import com.iip.datafusion.util.dbutil.DataSourceRouterManager;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.InterruptibleBatchPreparedStatementSetter;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.*;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.List;
 //import javax.annotation.Resource;
 
@@ -19,17 +17,31 @@ public class EntityDao{
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    public boolean insertEntity(Entity entity){
+    public int insertEntity(Entity entity){
         DataSourceRouterManager.setCurrentDataSourceKey("primary");
         boolean flag=false;
-        return jdbcTemplate.update("INSERT INTO entity(displayName,tableName,dbPosition,entityType) values (?,?,?,?)",
-                new Object[]{entity.getDisplayName(),entity.getTableName(),entity.getDbPosition(),entity.getEntityType()})>0;
+        KeyHolder keyHolder=new GeneratedKeyHolder();
+        jdbcTemplate.update((new PreparedStatementCreator() {
+            @Override
+            public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
+                PreparedStatement ps = connection.prepareStatement("INSERT INTO entity(displayName,tableName,dbPosition,entityType,properties) values (?,?,?,?,?)",
+                        Statement.RETURN_GENERATED_KEYS);
+                ps.setString(1, entity.getDisplayName());
+                ps.setString(2, entity.getTableName());
+                ps.setString(3, entity.getDbPosition());
+                ps.setInt(4, entity.getEntityType());
+                ps.setString(5, entity.getProperties());
+                return ps;
+            }
+        }),keyHolder);
+        return keyHolder.getKey().intValue();
     }
+
     public boolean deleteEntity(int del_id){
         DataSourceRouterManager.setCurrentDataSourceKey("primary");
         boolean flag=false;
         int i=jdbcTemplate.update("delete from entity where id=?",new Object[]{del_id});
-        if(i>0){
+        if(i>=0){
             flag=true;
         }
         return flag;
@@ -71,7 +83,8 @@ public class EntityDao{
     public List<Entity> getEntityByUserId(Integer userId){
         DataSourceRouterManager.setCurrentDataSourceKey("primary");
         StringBuilder sbstr=new StringBuilder("SELECT e.* from entity e left join userentity u on (e.id=u.entityId) where u.userId=?");
-        List<Entity> list=jdbcTemplate.query(sbstr.toString(),new Object[]{userId},new BeanPropertyRowMapper(Entity.class));
+        List<Entity> list=jdbcTemplate.query(sbstr.toString(),
+                new Object[]{userId},new BeanPropertyRowMapper(Entity.class));
         return list;
     }
 

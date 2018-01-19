@@ -10,7 +10,7 @@ import java.util.List;
 public class EntityService{
     @Autowired
     private EntityDao entityDAO;
-    public boolean insertEntity(Entity entity){
+    public int insertEntity(Entity entity){
         return entityDAO.insertEntity(entity);
     }
     public boolean updateEntity(int update_id,String property,String newValue){

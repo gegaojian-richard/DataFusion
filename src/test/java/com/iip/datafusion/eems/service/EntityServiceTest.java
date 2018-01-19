@@ -27,8 +27,8 @@ public class EntityServiceTest {
         testEntity.setTableName("people");
         testEntity.setDbPosition("jdbc:mysql://localhost:3306/");
         testEntity.setEntityType(0);
-        boolean success=entityService.insertEntity(testEntity);
-        if(success){
+        int success=entityService.insertEntity(testEntity);
+        if(success>0){
             System.out.println("insert successfully");
         }
     }

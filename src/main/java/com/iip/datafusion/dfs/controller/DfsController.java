@@ -1,6 +1,6 @@
 package com.iip.datafusion.dfs.controller;
 
-import com.iip.datafusion.dfs.model.JoinRule;
+import com.iip.datafusion.dfs.model.JoinConfiguration;
 import com.iip.datafusion.dfs.service.DataFusionService;
 import com.iip.datafusion.util.jsonutil.Result;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,10 +23,10 @@ public class DfsController {
     DataFusionService dataFusionService;
     @RequestMapping(path={"/commitjob"},method = RequestMethod.POST)
     @ResponseBody
-    public Result commitJob(@RequestBody JoinRule joinRule){
+    public Result commitJob(@RequestBody JoinConfiguration joinConfiguration){
 
-        Map map = dataFusionService.commitJob(joinRule);
+        Map map = dataFusionService.commitJob(joinConfiguration);
         return new Result();
-//        return joinRule.toString();
+//        return joinConfiguration.toString();
     }
 }

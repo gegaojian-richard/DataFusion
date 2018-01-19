@@ -134,15 +134,18 @@ public class UmsService {
     public Map autoLogin(String username, String password, String ticket) {
         Map<String ,Object> map = new HashMap<>();
         LoginTicket loginTicket = loginTicketDao.getObjectByTicket(ticket);
+        if (loginTicket==null){
+            map = login(username, password);
+            return map;
+        }
         User user = userDao.getUserById(loginTicket.getUserId());
 
         //如果ticket未过期，且和用户名符合，自动登录成功
         if(loginTicket.getExpired().after(new Date()) && user.getUsername().equals(username)){
-            map.put("success","自动登录成功");
-
-            //初始化userManager
             userManager.setUserName(username);
             userManager.setUserId(user.getId());
+            map.put("success","自动登录成功");
+            //初始化userManager
             return map;
         }
         //如果ticket超时 则用当前的用户名，密码登录，并删除原ticket
