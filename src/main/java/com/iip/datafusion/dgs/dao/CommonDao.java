@@ -60,7 +60,7 @@ public class CommonDao {
         ArrayList<String> result = new ArrayList<>();
         DataSourceRouterManager.setCurrentDataSourceKey(dataSourceId);
 
-        String sql = String.format("SELECT * FROM %s",tableName);
+        String sql = String.format("SELECT * FROM %s limit 0",tableName);
 
         SqlRowSet sqlRowSet = jdbcTemplate.queryForRowSet(sql);
         SqlRowSetMetaData sqlRsmd = sqlRowSet.getMetaData();

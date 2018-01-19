@@ -1,8 +1,12 @@
 package com.iip.datafusion.dgs.controller;
 
+import com.iip.datafusion.backend.job.integrity.IntegrityJob;
 import com.iip.datafusion.dgs.model.*;
+import com.iip.datafusion.dgs.model.configuration.CheckIntegrityConfiguration;
+import com.iip.datafusion.dgs.model.configuration.UpdateIntegrityConfiguration;
+import com.iip.datafusion.dgs.model.parser.CheckIntegrityParser;
+import com.iip.datafusion.dgs.model.parser.UpdateIntegrityParser;
 import com.iip.datafusion.dgs.service.CommonService;
-import com.iip.datafusion.dgs.service.IntegrityService;
 import com.iip.datafusion.util.jsonutil.Result;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -25,6 +29,34 @@ public class IntegrityController {
     CommonService commonService;
 
     private int maxThreads = 3;
+
+
+    @RequestMapping(path = {"/dgs/checkIntegrity"}, method = RequestMethod.POST)
+    @ResponseBody
+    public Result checkIntegrity(@RequestBody CheckIntegrityConfiguration checkIntegrityConfiguration) {
+
+        try{
+            IntegrityJob integrityJob = CheckIntegrityParser.parse(checkIntegrityConfiguration);
+            return integrityJob.run();
+        }catch (Exception e){
+            return new Result(0,e.getMessage(),null);
+        }
+        //return new Result();
+    }
+
+    @RequestMapping(path = {"/dgs/updateIntegrity"}, method = RequestMethod.POST)
+    @ResponseBody
+    public Result updateIntegrity(@RequestBody UpdateIntegrityConfiguration updateIntegrityConfiguration) {
+        try{
+            IntegrityJob integrityJob = UpdateIntegrityParser.parse(updateIntegrityConfiguration);
+            return integrityJob.run();
+        }catch (Exception e){
+            return new Result(0,e.getMessage(),null);
+        }
+        //return new Result();
+    }
+
+
 
     @RequestMapping(path = {"/dgs/integrity/tableAnyEmptyCheck"}, method = RequestMethod.POST)
     @ResponseBody

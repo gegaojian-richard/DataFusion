@@ -16,7 +16,7 @@ public class IntegrityDao {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
-
+    /*
     public ArrayList<String> getTableColumnList(String dataSourceId, String tableName){
 
         ArrayList<String> result = new ArrayList<>();
