@@ -59,14 +59,14 @@ public class CmsController {
     //获取某个数据库的具体信息
     @RequestMapping(path={"/cms/descriptionDataBase"},method = RequestMethod.GET)
     @ResponseBody
-    public Result desCon(@RequestParam("id") String id){
+    public Result desCon(@RequestParam("nick") String id){
         return service.desCon(id);
     }
 
     //获取某个表的预览信息
     @RequestMapping(path = "/cms/preview",method = RequestMethod.GET)
     @ResponseBody
-    public Result previewCon(@RequestParam("id") String id,
+    public Result previewCon(@RequestParam("display") String id,
                              @RequestParam("table") String table,
                              @RequestParam(value = "num",defaultValue = "50")String  num){
         return service.previewCon(id,table,num);

@@ -8,13 +8,16 @@ import com.iip.datafusion.util.dbutil.DataSourceProperties;
 import com.iip.datafusion.util.dbutil.DataSourceRouter;
 import com.iip.datafusion.util.dbutil.DataSourceRouterManager;
 import com.iip.datafusion.util.jsonutil.Result;
+import com.sun.org.apache.regexp.internal.RE;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.rowset.SqlRowSet;
+import org.springframework.jdbc.support.rowset.SqlRowSetMetaData;
 import org.springframework.stereotype.Service;
 
-import java.sql.DatabaseMetaData;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import javax.sql.RowSetMetaData;
+import javax.swing.text.TabSet;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -37,34 +40,70 @@ public class CmsDao {
     }
 
     public DataBaseStructure getDatabaseStructure(String id) {
+        DataBaseStructure dataBaseStructure = new DataBaseStructure();
+        Connection connection = null;
         try {
-            DataBaseStructure dataBaseStructure = new DataBaseStructure();
+            dataSourceRouterManager.setCurrentDataSourceKey(id);
+            connection = jdbcTemplate.getDataSource().getConnection();
+//            DatabaseMetaData metaData = connection.getMetaData();
+//            ResultSet table = metaData.getTables(null,null,
+//                    "%",new String[]{"TABLE"});
+//            String dataBaseName = connection.getCatalog();
+            PreparedStatement statement = connection.prepareStatement("show tables from "+connection.getCatalog());
+            ResultSet resultSet = statement.executeQuery();
+            connection.close();
+//            SqlRowSet resultSet = jdbcTemplate.queryForRowSet("show tables from " +dataBaseName);
+//            SqlRowSet resultSet = jdbcTemplate.queryForRowSet("show tables");
 
-            DataSourceRouterManager.setCurrentDataSourceKey(id);
-            DatabaseMetaData metaData = jdbcTemplate.getDataSource().getConnection().getMetaData();
-            ResultSet table = metaData.getTables(null,"%",
-                    "%",new String[]{"TABLE"});
+//            while(table.next()){
+//                String tmp = table.getString("TABLE_NAME");
+//                TableStructure tableStructure = new TableStructure(tmp);
+//                ResultSet column = metaData.getColumns(null,"%",tmp,"%");
+//                while (column.next()) {
+//                    ColumnStructure columnStructure = new ColumnStructure();
+//                    columnStructure.setColumnName(column.getString("COLUMN_NAME"));
+//                    columnStructure.setColumnType(column.getString("TYPE_NAME"));
+//                    columnStructure.setDataSize(column.getInt("COLUMN_SIZE"));
+//                    columnStructure.setDigits(column.getInt("DECIMAL_DIGITS"));
+//                    columnStructure.setNullable(column.getInt("NULLABLE"));
+//                    tableStructure.addColumn(columnStructure);
+//                }
+//                dataBaseStructure.addTable(tableStructure);
+//            }
 
-            while(table.next()){
-                String tmp = table.getString("TABLE_NAME");
-                TableStructure tableStructure = new TableStructure(tmp);
-                ResultSet column = metaData.getColumns(null,"%",tmp,"%");
-                while (column.next()) {
+            while (resultSet.next()){
+                String tmpTable = resultSet.getString(1);
+//                SqlRowSet column = jdbcTemplate.queryForRowSet("select * from "+tmpTable+" limit 1");
+                connection = jdbcTemplate.getDataSource().getConnection();
+                PreparedStatement statement1 = connection.prepareStatement("select * from "+tmpTable+" limit 0");
+                ResultSet column = statement1.executeQuery();
+                ResultSetMetaData rowSetMetaData = column.getMetaData();
+                connection.close();
+
+                TableStructure table = new TableStructure(tmpTable);
+                for(int i=1;i<=rowSetMetaData.getColumnCount();i++){
                     ColumnStructure columnStructure = new ColumnStructure();
-                    columnStructure.setColumnName(column.getString("COLUMN_NAME"));
-                    columnStructure.setColumnType(column.getString("TYPE_NAME"));
-                    columnStructure.setDataSize(column.getInt("COLUMN_SIZE"));
-                    columnStructure.setDigits(column.getInt("DECIMAL_DIGITS"));
-                    columnStructure.setNullable(column.getInt("NULLABLE"));
-                    tableStructure.addColumn(columnStructure);
+                    columnStructure.setColumnName(rowSetMetaData.getColumnName(i));
+                    columnStructure.setColumnType(rowSetMetaData.getColumnTypeName(i));
+                    table.addColumn(columnStructure);
                 }
-                dataBaseStructure.addTable(tableStructure);
+                dataBaseStructure.addTable(table);
             }
-
             return dataBaseStructure;
         }
-        catch (SQLException e){
+        catch (NullPointerException e){
+//            return getDatabaseStructure(id);
+            e.printStackTrace();
             return null;
+        }
+        catch (SQLException e){
+            e.printStackTrace();
+            return null;
+        }finally {
+            try {
+                connection.close();
+            }
+            catch (Exception e){}
         }
     }
 
@@ -89,15 +128,20 @@ public class CmsDao {
 //                if(item.getDisplayName().equals(display))
 //                    id = item.getId();
 //            }
-        DataSourceRouterManager.setCurrentDataSourceKey(id);
-        List rows= jdbcTemplate.queryForList("select * from "+table+" limit "+num);
-        previewStructure.setSize(rows.size());
-        Iterator iterator = rows.iterator();
-        while(iterator.hasNext()){
-            Map map=(Map) iterator.next();
-            previewStructure.getItems().add(map);
-            previewStructure.setColumnNum(map.size());
-        }
+//        try {
+            dataSourceRouterManager.setCurrentDataSourceKey(id);
+            List rows = jdbcTemplate.queryForList("select * from " + table + " limit " + num);
+            previewStructure.setSize(rows.size());
+            Iterator iterator = rows.iterator();
+            while (iterator.hasNext()) {
+                Map map = (Map) iterator.next();
+                previewStructure.getItems().add(map);
+                previewStructure.setColumnNum(map.size());
+            }
+//            jdbcTemplate.getDataSource().getConnection().close();
+//        }catch (SQLException e){
+//            return null;
+//        }
         return previewStructure;
     }
 }

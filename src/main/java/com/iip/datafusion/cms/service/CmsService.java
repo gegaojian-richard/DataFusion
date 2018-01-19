@@ -64,6 +64,16 @@ public class CmsService {
 
     //TODO 查询数据库一律传递id
     public Result  desCon(String id){
+        //为了适配传递id为display
+        if(!id.equals("primary") && (id.length()<4 || !id.substring(0,3).equals("db_"))) {
+            List<DataSourceProperties> list = dataSourceRouterManager.getDataSourceProperties();
+            for (DataSourceProperties item : list) {
+                if (item.getDisplayName().equals(id))
+                    id = item.getId();
+            }
+        }
+
+
         DataBaseStructure dataBaseStructure = cmsDao.getDatabaseStructure(id);
         if(dataBaseStructure==null){
             return new Result(0,"cannot connect to "+id,null);
@@ -85,6 +95,15 @@ public class CmsService {
     }
 
     public Result previewCon(String id, String table,String num) {
+        //为了适配传递id为display
+        if(!id.substring(0,3).equals("db_")) {
+            List<DataSourceProperties> list = dataSourceRouterManager.getDataSourceProperties();
+            for (DataSourceProperties item : list) {
+                if (item.getDisplayName().equals(id))
+                    id = item.getId();
+            }
+        }
+
         PreviewStructure previewStructure = cmsDao.previewCon(id,table,num);
         if(previewStructure == null){
             return new Result(0,"cannot connect to ",null);
