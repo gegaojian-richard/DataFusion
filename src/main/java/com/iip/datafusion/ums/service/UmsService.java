@@ -162,4 +162,24 @@ public class UmsService {
         }
 
     }
+
+    public Map<String,Object> autoLogin(String ticket) {
+        Map<String,Object> map = new HashMap<>();
+        //检查ticket是否有效
+        LoginTicket loginTicket = loginTicketDao.getObjectByTicket(ticket);
+        if(loginTicket==null){
+            map.put("msg","cookie错误");
+        }else if(loginTicket.getStatus()==1){
+            map.put("msg","无效的cookie（已执行过登出）");
+        }
+        else if(loginTicket.getExpired().before(new Date())){
+            map.put("msg","cookie已过期");
+        }
+        //成功，返回对应的用户名
+        else {
+            User user = userDao.getUserById(loginTicket.getUserId());
+            map.put("success",user);
+        }
+        return map;
+    }
 }

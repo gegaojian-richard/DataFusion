@@ -4,6 +4,7 @@ import com.iip.datafusion.cms.service.CmsService;
 import com.iip.datafusion.ums.service.UmsService;
 import com.iip.datafusion.util.dbutil.DataSourceProperties;
 import com.iip.datafusion.util.jsonutil.Result;
+import com.iip.datafusion.util.userutil.UserManager;
 import com.sun.org.apache.regexp.internal.RE;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -20,21 +21,15 @@ public class CmsController {
     @Autowired
     CmsService service;
     @Autowired
-    UmsService umsService;
+    UserManager userManager;
 
     @RequestMapping("test")
     @ResponseBody
-    public Result test(HttpSession session,
-                       @CookieValue(value = "DFU",defaultValue = "111") String ticket){
-        Result res = umsService.getUserNameByTicket(ticket);
-        if(res.getStatus()==0){
-            return new Result(0,res.getMsg(),null);
-        }
-        else {
-            return new Result(1, null, "test, this sessionid is: " + session.getId() +
-                    ";the user name is "+res.getData()
-            );
-        }
+    public Result test(HttpSession session){
+//        Result res = umsService.getUserNameByTicket(ticket);
+
+        return new Result(1, null, "test, this sessionid is: " + session.getId() +
+                    ";the user name is "+userManager.getUserName());
     }
 
     /*创建连接

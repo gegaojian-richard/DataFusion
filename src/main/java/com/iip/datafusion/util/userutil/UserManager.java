@@ -11,10 +11,12 @@ import org.springframework.web.context.WebApplicationContext;
 @Component
 @Scope(value = WebApplicationContext.SCOPE_SESSION, proxyMode = ScopedProxyMode.TARGET_CLASS)
 public class UserManager {
+    private boolean state;  //true表示有用户登录，false表示没有
     private int userId;
     private String userName;
 
     public UserManager(){
+        this.state = false;
         this.userId=0;
         this.userName="";
     }
@@ -33,5 +35,13 @@ public class UserManager {
 
     public void setUserName(String userName) {
         this.userName = userName;
+    }
+
+    public boolean isState() {
+        return state;
+    }
+
+    public void setState(boolean state) {
+        this.state = state;
     }
 }
