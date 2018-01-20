@@ -56,6 +56,7 @@ public class EntityController {
     @RequestMapping(path={"/entity/insert"},method={RequestMethod.POST})
     @ResponseBody
     //TODO:插入实体时相同用户不能同时创建两个一样的实体；
+    //TODO insertEntity的逻辑应该在成功创建实体库之后
     public Result  insertEntity(@RequestBody Map<String,String> map){
         Entity entity=null;
         entity=new Entity();
@@ -83,5 +84,14 @@ public class EntityController {
             return new Result(1,"更新实体成功",null);
         }
          return new Result(0,"更新实体失败",null);
+    }
+
+    //在目标数据库创建实体库
+    @RequestMapping(path={"/entity/create"},method={RequestMethod.POST})
+    @ResponseBody
+    public Result createEntityDB(@RequestBody Entity entity){
+        int id = userManager.getUserId();
+        Result result = entityService.createEntityTable(entity,id);
+        return result;
     }
 }

@@ -1,12 +1,11 @@
 package com.iip.datafusion.cms.dao;
 
-import com.iip.datafusion.cms.model.ColumnStructure;
-import com.iip.datafusion.cms.model.DataBaseStructure;
-import com.iip.datafusion.cms.model.PreviewStructure;
-import com.iip.datafusion.cms.model.TableStructure;
+import com.iip.datafusion.cms.model.*;
+import com.iip.datafusion.eems.model.Entity;
 import com.iip.datafusion.util.dbutil.DataSourceProperties;
 import com.iip.datafusion.util.dbutil.DataSourceRouter;
 import com.iip.datafusion.util.dbutil.DataSourceRouterManager;
+import com.iip.datafusion.util.jsonutil.JsonParse;
 import com.iip.datafusion.util.jsonutil.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -16,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import javax.sql.RowSetMetaData;
 import javax.swing.text.TabSet;
+import java.io.IOException;
 import java.sql.*;
 import java.util.*;
 
@@ -100,5 +100,39 @@ public class CmsDao {
 //            return null;
 //        }
         return previewStructure;
+    }
+
+    public Result createTable(Entity entity) {
+        dataSourceRouterManager.setCurrentDataSourceKey(entity.getDbPosition());
+        StringBuilder stringBuilder = new StringBuilder("CREATE TABLE `");
+        stringBuilder.append(entity.getTableName());
+        stringBuilder.append("`(");
+
+        //获取entity的property中的列信息
+        try {
+            ColumnList list = JsonParse.getMapper().readValue("{\"list\":"+entity.getProperties()+"}", ColumnList.class);
+
+            //对columnList中的每个column的类型等进行预处理
+            list.pretreatment();
+
+            for(ColumnStructure item:list.getList()){
+                stringBuilder.append(item.getColumnName()+" "+item.getColumnType()+",");
+                stringBuilder.append(item.getIsPrime()==1 ? "PRIMARY KEY ("+item.getColumnName()+")," : "");
+            }
+
+            stringBuilder.delete(stringBuilder.length()-1,stringBuilder.length());
+            stringBuilder.append(");");
+            jdbcTemplate.execute(stringBuilder.toString());
+
+//            //检查目标表是否成功建立
+//            DataBaseStructure structure =(DataBaseStructure) this.getDatabaseStructure(entity.getDbPosition()).get("success");
+
+            return new Result(1,null,"成功创建实体/事件库");
+        }catch (IOException e){
+            e.printStackTrace();
+            return new Result(0,"列信息解析失败",null);
+        }catch (Exception e1){
+            return new Result(0,"SQL语句执行错误",null);
+        }
     }
 }

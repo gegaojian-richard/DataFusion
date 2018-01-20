@@ -128,6 +128,7 @@ public class UmsService {
     }
 
     public void logout(String ticket) {
+        //TODO 考虑后期数据库的存储性能，可能需要删除无效的cookie，或者统一定时维护
         loginTicketDao.updateStatus(ticket, 1);
     }
 
