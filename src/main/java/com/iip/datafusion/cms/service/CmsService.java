@@ -44,7 +44,9 @@ public class CmsService {
     @Autowired
     DataSourceRouterManager dataSourceRouterManager;
 
+    //添加数据源
     public Result  creCon(DataSourceProperties c){
+        //判断数据源类型 加载驱动，拼装成不同url
         switch (c.getDriverClassName()){
             case "mysql":{
                 c.setDriverClassName("com.mysql.jdbc.Driver");
@@ -52,32 +54,50 @@ public class CmsService {
                 c.setUrl(url);
                 break;
             }
+            case "oracle":{
+                c.setDriverClassName("oracle.jdbc.driver.OracleDriver");
+                String url = "jdbc:oracle:thin:@" + c.getUrl().split("/")[0]+":"+c.getUrl().split("/")[1];
+                c.setUrl(url);
+                break;
+            }
         }
-        return cmsDao.addDatabase(c);
+        return dataSourceRouterManager.addDataSource(c);
     }
 
-//TODO 连接池中释放这个连接
+    //删除数据源
     public Result delCon(String id){
-//        DataSourceRouterManager.dataSourceIds.remove(id);
+        //为了适配传递id为displayName的情况
+        if(!id.equals("primary") && (id.length()<4 || !id.substring(0,3).equals("db_"))) {
+            List<DataSourceProperties> list = dataSourceRouterManager.getDataSourceProperties();
+            for (DataSourceProperties item : list) {
+                if (item.getDisplayName().equals(id))
+                    id = item.getId();
+            }
+        }
+
+        dataSourceRouterManager.deleteConnection(id);
         return new Result(1,null,null);
     }
 
-    public Result  desCon(String nick){
-        DataBaseStructure dataBaseStructure = new DataBaseStructure();
-        List<DataSourceProperties> list =  dataSourceRouterManager.getDataSourceProperties();
-        String id = "";
-        for(DataSourceProperties item:list){
-            if(item.getDisplayName().equals(nick)){
-                id = item.getId();
+    //得到数据库的表结构，及每列的结构
+    public Result  desCon(String id){
+        //为了适配传递id为display
+        if(!id.equals("primary") && (id.length()<4 || !id.substring(0,3).equals("db_"))) {
+            List<DataSourceProperties> list = dataSourceRouterManager.getDataSourceProperties();
+            for (DataSourceProperties item : list) {
+                if (item.getDisplayName().equals(id))
+                    id = item.getId();
             }
         }
-        dataBaseStructure = cmsDao.getDatabaseStructure(id);
-        if(dataBaseStructure==null){
-            return new Result(0,"cannot connect to "+id,null);
+
+
+        Map<String,Object> map = cmsDao.getDatabaseStructure(id);
+        //如果含有错误信息直接返回错误
+        if(map.containsKey("msg")){
+            return new Result(0,map.get("msg").toString(),null);
         }
-
-//        JSONObject jsonObject = JSONObject.fromObject(dataBaseStructure);
-
+        //否则获取database结构，并转化成json格式
+        DataBaseStructure dataBaseStructure =(DataBaseStructure) map.get("success");
         try {
             String json = JsonParse.getMapper().writeValueAsString(dataBaseStructure);
             return new Result(1, null, json);
@@ -87,14 +107,33 @@ public class CmsService {
         }
     }
 
+    //得到当前用户拥有的数据源
     public Result getCurrentConnection(){
-        return cmsDao.getCurrentConnection();
+        String jsonStr = "{\"databases\":[";
+        List<String > displayNames = dataSourceRouterManager.getDataSourceDisplayNames();
+        if(!displayNames.isEmpty())
+            jsonStr += "{\"name\":\"" + displayNames.get(0) + "\"}";
+        for(int i=1;i< displayNames.size();i++){
+            jsonStr += ",{\"name\":\"" +displayNames.get(i)+"\"}";
+        }
+        jsonStr += "]}";
+        return new Result(1,null,jsonStr);
     }
 
-    public Result previewCon(String display, String table,String num) {
-        PreviewStructure previewStructure = cmsDao.previewCon(display,table,num);
+    //得到某个id的数据库的某张表的预览信息
+    public Result previewCon(String id, String table,String num) {
+        //为了适配传递id为display
+        if(!id.equals("primary") && (id.length()<4 || !id.substring(0,3).equals("db_"))) {
+            List<DataSourceProperties> list = dataSourceRouterManager.getDataSourceProperties();
+            for (DataSourceProperties item : list) {
+                if (item.getDisplayName().equals(id))
+                    id = item.getId();
+            }
+        }
+
+        PreviewStructure previewStructure = cmsDao.previewCon(id,table,num);
         if(previewStructure == null){
-            return new Result(0,"cannot connect to "+display,null);
+            return new Result(0,"previewStructure is null",null);
         }
         return new Result(1,null,previewStructure.toString());
     }
