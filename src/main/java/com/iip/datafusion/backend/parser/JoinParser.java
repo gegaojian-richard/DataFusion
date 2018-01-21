@@ -1,6 +1,6 @@
 package com.iip.datafusion.backend.parser;
 
-import com.iip.datafusion.dfs.join.JoinJob;
+import com.iip.datafusion.backend.job.join.JoinJob;
 import com.iip.datafusion.dfs.join.JoinUnit;
 import com.iip.datafusion.dfs.model.JoinConfiguration;
 
