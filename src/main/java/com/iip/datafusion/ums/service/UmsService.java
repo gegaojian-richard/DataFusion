@@ -128,14 +128,15 @@ public class UmsService {
     }
 
     public void logout(String ticket) {
+        //TODO 考虑后期数据库的存储性能，可能需要删除无效的cookie，或者统一定时维护
         loginTicketDao.updateStatus(ticket, 1);
     }
 
     public Map autoLogin(String username, String password, String ticket) {
         Map<String ,Object> map = new HashMap<>();
         LoginTicket loginTicket = loginTicketDao.getObjectByTicket(ticket);
-        if (loginTicket==null){
-            map = login(username, password);
+        if(loginTicket==null){
+            map=login(username,password);
             return map;
         }
         User user = userDao.getUserById(loginTicket.getUserId());
@@ -161,5 +162,25 @@ public class UmsService {
             return map;
         }
 
+    }
+
+    public Map<String,Object> autoLogin(String ticket) {
+        Map<String,Object> map = new HashMap<>();
+        //检查ticket是否有效
+        LoginTicket loginTicket = loginTicketDao.getObjectByTicket(ticket);
+        if(loginTicket==null){
+            map.put("msg","cookie错误");
+        }else if(loginTicket.getStatus()==1){
+            map.put("msg","无效的cookie（已执行过登出）");
+        }
+        else if(loginTicket.getExpired().before(new Date())){
+            map.put("msg","cookie已过期");
+        }
+        //成功，返回对应的用户名
+        else {
+            User user = userDao.getUserById(loginTicket.getUserId());
+            map.put("success",user);
+        }
+        return map;
     }
 }

@@ -1,8 +1,10 @@
 package com.iip.datafusion.ums.controller;
 
+import com.iip.datafusion.ums.model.User;
 import com.iip.datafusion.ums.service.UmsService;
 import com.iip.datafusion.util.dbutil.DataSourceProperties;
 import com.iip.datafusion.util.jsonutil.Result;
+import com.iip.datafusion.util.userutil.UserManager;
 import com.sun.org.apache.regexp.internal.RE;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.web.ServerProperties;
@@ -21,6 +23,8 @@ import java.util.Map;
 public class UmsController {
     @Autowired
     UmsService umsService;
+    @Autowired
+    UserManager userManager;
 
     @RequestMapping(path={"/ums/register"},method = RequestMethod.POST)
     @ResponseBody
@@ -41,6 +45,7 @@ public class UmsController {
             return new Result(0,map.get("msg").toString(), null);
         }
     }
+
 
     @RequestMapping(path={"/ums/login"},method = {RequestMethod.POST,RequestMethod.GET})
     @ResponseBody
@@ -68,11 +73,42 @@ public class UmsController {
         }
     }
 
+
     @RequestMapping(path={"/ums/logout"},method = RequestMethod.POST)
     @ResponseBody
-    public Result logout(@CookieValue("DFU") String ticket){
-        umsService.logout(ticket);
+    public Result logout(@CookieValue(value = "DFU",defaultValue = "default") String ticket){
+        if(!ticket.equals("default")) {
+            //在数据库中将ticket置为无效
+            umsService.logout(ticket);
+        }
+        //将UserManager置为未登录状态
+        userManager.setState(false);
         return new Result(1,null,"账户已登出");
     }
 
+
+    @RequestMapping(path={"/ums/autoLogin"},method = RequestMethod.POST)
+    @ResponseBody
+    //用户打开或者刷新页面时，应该向该地址发送请求
+    public Result auto(@CookieValue(value = "DFU",defaultValue = "default") String ticket){
+        Map<String,Object> map = new HashMap<>();
+        if(!ticket.equals("default")) {
+            //自动登录
+            map =  umsService.autoLogin(ticket);
+        }else{
+            map.put("msg","未找到cookie");
+        }
+
+        //判断登录成功与否
+        if(map.containsKey("msg")){
+            return new Result(0,map.get("msg").toString(),null);
+        }else {
+            //成功登录，设置userManager
+            userManager.setState(true);
+            User user = (User) map.get("success");
+            userManager.setUserName(user.getUsername());
+            userManager.setUserId(user.getId());
+            return new Result(1, null, "自动登录成功");
+        }
+    }
 }

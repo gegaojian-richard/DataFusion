@@ -10,7 +10,7 @@ public class LoginTicket {
     private int userId;
     private Date expired;
     private String ticket;
-    private int status;
+    private int status;  //0表示有效，1表示无效
 
     public int getId() {
         return id;
