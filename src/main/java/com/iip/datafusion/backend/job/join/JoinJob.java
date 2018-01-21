@@ -7,4 +7,13 @@ import com.iip.datafusion.backend.job.Job;
  * Created by GeGaojian on 2018/01/18.
  */
 public class JoinJob implements Job {
+    String targetTableName;
+    String targetDatasourceID;
+    JoinUnit joinUnits;
+
+
+    public JoinJob(String targetTableName, String targetDatasourceID) {
+        this.targetTableName = targetTableName;
+        this.targetDatasourceID = targetDatasourceID;
+    }
 }
