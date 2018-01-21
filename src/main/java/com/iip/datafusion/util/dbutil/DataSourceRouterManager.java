@@ -68,4 +68,10 @@ public class DataSourceRouterManager {
     public List<DataSourceProperties> getDataSourceProperties(){
         return dataSourceRouter.getDataSourcePropertiesByIDs(dataSourceIds);
     }
+
+    public void deleteConnection(String id) {
+        //TODO 目前只是将数据源id删除，后期可能对于每一个数据源加入count，为0时真正删除连接
+        //dataSourceId中删除
+        dataSourceIds.remove(id);
+    }
 }
