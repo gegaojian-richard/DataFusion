@@ -1,23 +1,21 @@
-package com.iip.datafusion.dgs.service;
+package com.iip.datafusion.dgs.integrity;
 
-import com.iip.datafusion.dgs.dao.CommonDao;
-import com.iip.datafusion.dgs.dao.IntegrityDao;
+import com.iip.datafusion.backend.job.integrity.IntegrityJob;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.Set;
 
 @Service
 public class IntegrityService {
-
+    /*
     @Autowired
     private IntegrityDao integrityDao;
     @Autowired
     private CommonDao commonDao;
+    */
+    public String commitJob(IntegrityConfiguration integrityConfiguration)throws Exception{
+        IntegrityJob integrityJob = IntegrityParser.parse(integrityConfiguration);
+        return "hello";
+    }
     /*
     public SqlRowSet tableAnyEmptyCheck(String dataSourceId,String tableName, String whereClause){
         return commonDao.doSelect(dataSourceId,tableName,whereClause);

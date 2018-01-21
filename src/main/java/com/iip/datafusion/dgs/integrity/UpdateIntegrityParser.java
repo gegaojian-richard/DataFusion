@@ -1,8 +1,6 @@
-package com.iip.datafusion.dgs.model.parser;
+package com.iip.datafusion.dgs.integrity;
 
 import com.iip.datafusion.backend.job.integrity.IntegrityJob;
-import com.iip.datafusion.dgs.model.configuration.UpdateIntegrityConfiguration;
-import com.iip.datafusion.util.jsonutil.Result;
 
 import java.util.ArrayList;
 import java.util.List;

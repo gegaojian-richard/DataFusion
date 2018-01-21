@@ -18,7 +18,7 @@ import java.util.List;
  * 完整性检查工作描述
  * Created by GeGaojian on 2018/01/18.
  */
-
+@Repository
 public class IntegrityJob implements Job {
 
     private String dataSourceId;
@@ -64,6 +64,9 @@ public class IntegrityJob implements Job {
     public Result run(){
 
         DataSourceRouterManager.setCurrentDataSourceKey(dataSourceId);
+        if(jdbcTemplate == null){
+            System.out.println("null");
+        }
         try{
             if(sqlList.size()>0) {
                 if(jobType.equals("query")) {

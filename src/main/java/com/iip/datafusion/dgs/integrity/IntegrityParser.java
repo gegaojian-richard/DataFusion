@@ -1,25 +1,23 @@
-package com.iip.datafusion.dgs.model.parser;
+package com.iip.datafusion.dgs.integrity;
 
 import com.iip.datafusion.backend.job.integrity.IntegrityJob;
-import com.iip.datafusion.dgs.model.configuration.CheckIntegrityConfiguration;
-import com.iip.datafusion.util.jsonutil.Result;
-import org.springframework.jdbc.support.rowset.SqlRowSet;
+import com.iip.datafusion.backend.parser.Parser;
 
 import java.util.ArrayList;
 
 /**
  * @author zengc
- * @date 2018/1/19 15:38
+ * @date 2018/1/21 10:21
  */
-public class CheckIntegrityParser {
+public class IntegrityParser implements Parser {
 
-    public static IntegrityJob parse(CheckIntegrityConfiguration checkIntegrityConfiguration)throws Exception{
+    public static IntegrityJob parse(IntegrityConfiguration integrityConfiguration)throws Exception{
 
-        String dataSourceId = checkIntegrityConfiguration.getDataSourceId();
-        String tableName = checkIntegrityConfiguration.getTableName();
+        String dataSourceId = integrityConfiguration.getDataSourceId();
+        String tableName = integrityConfiguration.getTableName();
 
 
-        ArrayList<String> inputColumnNames = checkIntegrityConfiguration.getColumnNames();
+        ArrayList<String> inputColumnNames = integrityConfiguration.getColumnNames();
 
         if (inputColumnNames == null || inputColumnNames.size() <= 0) {
             throw new Exception("传入参数属性值不能为空");
@@ -54,4 +52,6 @@ public class CheckIntegrityParser {
         return integrityJob;
 
     }
+
+
 }

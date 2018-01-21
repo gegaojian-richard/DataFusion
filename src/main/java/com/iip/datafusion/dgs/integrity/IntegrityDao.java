@@ -1,4 +1,4 @@
-package com.iip.datafusion.dgs.dao;
+package com.iip.datafusion.dgs.integrity;
 
 
 import com.iip.datafusion.util.dbutil.DataSourceRouterManager;

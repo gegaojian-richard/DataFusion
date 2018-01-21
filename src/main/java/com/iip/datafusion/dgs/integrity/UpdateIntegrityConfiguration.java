@@ -1,4 +1,4 @@
-package com.iip.datafusion.dgs.model.configuration;
+package com.iip.datafusion.dgs.integrity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.iip.datafusion.backend.configuration.Configuration;

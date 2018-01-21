@@ -1,7 +1,6 @@
 package com.iip.datafusion.dgs.service;
 
-import com.iip.datafusion.dgs.dao.AccuracyDao;
-import com.iip.datafusion.dgs.dao.CommonDao;
+import com.iip.datafusion.dgs.integrity.CommonDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Service;

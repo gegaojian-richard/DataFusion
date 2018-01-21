@@ -1,12 +1,12 @@
-package com.iip.datafusion.dgs.controller;
+package com.iip.datafusion.dgs.integrity;
 
 import com.iip.datafusion.backend.job.integrity.IntegrityJob;
 import com.iip.datafusion.dgs.model.*;
-import com.iip.datafusion.dgs.model.configuration.CheckIntegrityConfiguration;
-import com.iip.datafusion.dgs.model.configuration.UpdateIntegrityConfiguration;
-import com.iip.datafusion.dgs.model.parser.CheckIntegrityParser;
-import com.iip.datafusion.dgs.model.parser.UpdateIntegrityParser;
+import com.iip.datafusion.dgs.integrity.UpdateIntegrityConfiguration;
+import com.iip.datafusion.dgs.integrity.IntegrityConfiguration;
+import com.iip.datafusion.dgs.integrity.UpdateIntegrityParser;
 import com.iip.datafusion.dgs.service.CommonService;
+import com.iip.datafusion.dgs.integrity.IntegrityService;
 import com.iip.datafusion.util.jsonutil.Result;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -28,22 +28,25 @@ public class IntegrityController {
     @Autowired
     CommonService commonService;
 
+    @Autowired
+    IntegrityService integrityService;
+
     private int maxThreads = 3;
 
 
     @RequestMapping(path = {"/dgs/checkIntegrity"}, method = RequestMethod.POST)
     @ResponseBody
-    public Result checkIntegrity(@RequestBody CheckIntegrityConfiguration checkIntegrityConfiguration) {
+    public Result checkIntegrity(@RequestBody IntegrityConfiguration integrityConfiguration) {
 
         try{
-            IntegrityJob integrityJob = CheckIntegrityParser.parse(checkIntegrityConfiguration);
-            return integrityJob.run();
+            String res = integrityService.commitJob(integrityConfiguration);
+            return new Result(0,res,null);
         }catch (Exception e){
             return new Result(0,e.getMessage(),null);
         }
         //return new Result();
     }
-
+    /*
     @RequestMapping(path = {"/dgs/updateIntegrity"}, method = RequestMethod.POST)
     @ResponseBody
     public Result updateIntegrity(@RequestBody UpdateIntegrityConfiguration updateIntegrityConfiguration) {
@@ -55,6 +58,7 @@ public class IntegrityController {
         }
         //return new Result();
     }
+    */
 
 
 

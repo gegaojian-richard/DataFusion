@@ -1,4 +1,4 @@
-package com.iip.datafusion.dgs.model.configuration;
+package com.iip.datafusion.dgs.integrity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.iip.datafusion.backend.configuration.Configuration;
@@ -7,9 +7,9 @@ import java.util.ArrayList;
 
 /**
  * @author zengc
- * @date 2018/1/19 15:22
+ * @date 2018/1/21 10:17
  */
-public class CheckIntegrityConfiguration implements Configuration {
+public class IntegrityConfiguration implements Configuration {
 
     @JsonProperty("dataSourceId")
     private String dataSourceId;
@@ -42,6 +42,7 @@ public class CheckIntegrityConfiguration implements Configuration {
     public void setTableName(String tableName) {
         this.tableName = tableName;
     }
+
 
 
 

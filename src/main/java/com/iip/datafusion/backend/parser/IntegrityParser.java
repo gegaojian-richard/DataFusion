@@ -4,4 +4,7 @@ package com.iip.datafusion.backend.parser;
  * Created by GeGaojian on 2018/01/18.
  */
 public class IntegrityParser implements Parser{
+
+
+
 }
