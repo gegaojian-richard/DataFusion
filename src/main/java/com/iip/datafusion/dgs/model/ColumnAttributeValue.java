@@ -1,7 +1,6 @@
 package com.iip.datafusion.dgs.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.ArrayList;
 

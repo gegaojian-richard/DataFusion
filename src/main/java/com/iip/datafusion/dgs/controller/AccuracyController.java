@@ -20,73 +20,32 @@ public class AccuracyController {
     @Autowired
     private CommonService commonService;
 
-    @RequestMapping(path = "/dgs/accuracy/formulaCheck",method = RequestMethod.POST)
+    @RequestMapping(path = "/dgs/accuracy/rangeCheck",method = RequestMethod.POST)
     @ResponseBody
-    public Result formulaCheck(@RequestBody FormulaCheckParam formulaCheckParam){
-        String dataSourceId = formulaCheckParam.getDataSourceId();
-        String tableName = formulaCheckParam.getTableName();
-        String whereClause = formulaCheckParam.getWhereClause();
-        ArrayList<ColumnAttributeValue> columnAttributeValues = formulaCheckParam.getColumnAttributeValues();
+    public Result rangeCheck(@RequestBody RangeCheckParam rangeCheckParam){
 
-        //如果where子句中的字段存在语义的对应关系
-        String newWhereClause = whereClause;
-        if(!columnAttributeValues.isEmpty()){
-            for(ColumnAttributeValue cav : columnAttributeValues){
-                String clause = "(CASE " + cav.getColumn();
-                ArrayList<AttributeValue> attributeValues = cav.getAttributeValues();
-                for(AttributeValue av : attributeValues){
-                    clause += " WHEN '" + av.getAttribute() + "' THEN " + av.getValue();
-                }
-                clause += " END)";
-                newWhereClause = newWhereClause.replaceAll(cav.getColumn(),clause);
-            }
-        }
+        String dataSourceId = rangeCheckParam.getDataSourceId();
+        String tableName = rangeCheckParam.getTableName();
+        String whereClause = rangeCheckParam.getWhereClause();
 
-        try{
+        try {
+            String newWhereClause = "NOT(" + whereClause + ")";
+            String selectClause = "*";
+            SqlRowSet sqlRowSet = commonService.doSelect(dataSourceId,tableName,selectClause,newWhereClause);
+
             JSONArray jsonArray = new JSONArray();
-            //where子句是一个等式
-            if(newWhereClause.contains("="))
-            {
-                String[] splits = newWhereClause.split("=");
-                String selectClause = "* , " + splits[1].trim() + " AS newValue";
-                String columnName = splits[0].trim();
-                newWhereClause = "NOT(" + newWhereClause + ")";
-                SqlRowSet sqlRowSet = commonService.doSelect(dataSourceId,tableName,selectClause,newWhereClause);
-
-                ArrayList<String> columnNames = getColumnNames(sqlRowSet);
-                columnNames.remove("newValue");
-                while(sqlRowSet.next()) {
-                    JSONArray resultSet = new JSONArray();
-                    JSONObject jo = new JSONObject();
-                    for (String name : columnNames){
-                        jo.put(name,sqlRowSet.getString(name));
-                    }
-                    resultSet.add(jo);
-                    JSONObject jsonObject = new JSONObject();
-                    jsonObject.put("resultSet", resultSet);
-                    jsonObject.put("message", columnName + " 应改为：" + sqlRowSet.getString("newValue"));
-                    jsonArray.add(jsonObject);
-                }
-            }
-            //where子句是一个限制条件
-            else{
-                newWhereClause = "NOT(" + newWhereClause + ")";
-                String selectClause = "*";
-                SqlRowSet sqlRowSet = commonService.doSelect(dataSourceId,tableName,selectClause,newWhereClause);
-
-                ArrayList<String> columnNames = getColumnNames(sqlRowSet);
-                JSONArray resultSet = getJsonObjectList(sqlRowSet,columnNames);
-                JSONObject jsonObject = new JSONObject();
-                jsonObject.put("resultSet", resultSet);
-                jsonObject.put("message","应满足：" + whereClause);
-
-                jsonArray.add(jsonObject);
-            }
+            ArrayList<String> columnNames = getColumnNames(sqlRowSet);
+            JSONArray resultSet = getJsonObjectList(sqlRowSet,columnNames);
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("resultSet", resultSet);
+            jsonObject.put("message","应满足：" + whereClause);
+            jsonArray.add(jsonObject);
 
             Result result = new Result(1,null,jsonArray.toString());
             return result;
-        }catch (Exception e){
-            Result result = new Result(0,"出现内部错误",null);
+
+        }catch (Exception e) {
+            Result result = new Result(0, "出现内部错误", null);
             return result;
         }
     }
@@ -111,6 +70,88 @@ public class AccuracyController {
             jsonObject.put("resultSet", resultSet);
             jsonObject.put("message",columnName + "的长度不等于" + length);
             jsonArray.add(jsonObject);
+
+            Result result = new Result(1,null,jsonArray.toString());
+            return result;
+        }catch (Exception e){
+            Result result = new Result(0,"出现内部错误",null);
+            return result;
+        }
+    }
+
+    @RequestMapping(path = "/dgs/accuracy/emailCheck",method = RequestMethod.POST)
+    @ResponseBody
+    public Result emailCheck(@RequestBody EmailCheckParam emailCheckParam){
+        String dataSourceId = emailCheckParam.getDataSourceId();
+        String tableName = emailCheckParam.getTableName();
+        String columnName = emailCheckParam.getColumnName();
+        String whereClause = columnName +" REGEXP '^[a-zA-Z0-9]+[a-zA-Z0-9_-]*@[a-zA-Z0-9]+([\\.][a-zA-Z0-9]+){1,}$'";
+        whereClause = "NOT(" + whereClause + ")";
+        String selectClause = "*";
+        try{
+            SqlRowSet sqlRowSet = commonService.doSelect(dataSourceId,tableName,selectClause,whereClause);
+
+            JSONArray jsonArray = new JSONArray();
+            ArrayList<String> columnNames = getColumnNames(sqlRowSet);
+            JSONArray resultSet = getJsonObjectList(sqlRowSet,columnNames);
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("resultSet", resultSet);
+            jsonObject.put("message","邮箱格式不正确！");
+            jsonArray.add(jsonObject);
+
+            Result result = new Result(1,null,jsonArray.toString());
+            return result;
+        }catch (Exception e) {
+            Result result = new Result(0,"出现内部错误",null);
+            return result;
+        }
+    }
+
+    @RequestMapping(path = "/dgs/accuracy/formulaCheck",method = RequestMethod.POST)
+    @ResponseBody
+    public Result formulaCheck(@RequestBody FormulaCheckParam formulaCheckParam){
+
+        String dataSourceId = formulaCheckParam.getDataSourceId();
+        String tableName = formulaCheckParam.getTableName();
+        String whereClause = formulaCheckParam.getWhereClause();
+        ArrayList<ColumnAttributeValue> columnAttributeValues = formulaCheckParam.getColumnAttributeValues();
+
+        //如果where子句中的字段存在语义的对应关系
+        String newWhereClause = whereClause;
+        if(!columnAttributeValues.isEmpty()){
+            for(ColumnAttributeValue cav : columnAttributeValues){
+                String clause = "(CASE " + cav.getColumn();
+                ArrayList<AttributeValue> attributeValues = cav.getAttributeValues();
+                for(AttributeValue av : attributeValues){
+                    clause += " WHEN '" + av.getAttribute() + "' THEN " + av.getValue();
+                }
+                clause += " END)";
+                newWhereClause = newWhereClause.replaceAll(cav.getColumn(),clause);
+            }
+        }
+
+        try{
+            String[] splits = newWhereClause.split("=");
+            String selectClause = "* , " + splits[1].trim() + " AS newValue";
+            String columnName = splits[0].trim();
+            newWhereClause = "NOT(" + newWhereClause + ")";
+            SqlRowSet sqlRowSet = commonService.doSelect(dataSourceId,tableName,selectClause,newWhereClause);
+
+            JSONArray jsonArray = new JSONArray();
+            ArrayList<String> columnNames = getColumnNames(sqlRowSet);
+            columnNames.remove("newValue");
+            while(sqlRowSet.next()) {
+                JSONArray resultSet = new JSONArray();
+                JSONObject jo = new JSONObject();
+                for (String name : columnNames){
+                    jo.put(name,sqlRowSet.getString(name));
+                }
+                resultSet.add(jo);
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("resultSet", resultSet);
+                jsonObject.put("message", columnName + " 应改为：" + sqlRowSet.getString("newValue"));
+                jsonArray.add(jsonObject);
+            }
 
             Result result = new Result(1,null,jsonArray.toString());
             return result;
@@ -154,34 +195,6 @@ public class AccuracyController {
             return result;
         }
 
-    }
-
-    @RequestMapping(path = "/dgs/accuracy/emailCheck",method = RequestMethod.POST)
-    @ResponseBody
-    public Result emailCheck(@RequestBody EmailCheckParam emailCheckParam){
-        String dataSourceId = emailCheckParam.getDataSourceId();
-        String tableName = emailCheckParam.getTableName();
-        String columnName = emailCheckParam.getColumnName();
-        String whereClause = columnName +" REGEXP '^[a-zA-Z0-9]+[a-zA-Z0-9_-]*@[a-zA-Z0-9]+([\\.][a-zA-Z0-9]+){1,}$'";
-        whereClause = "NOT(" + whereClause + ")";
-        String selectClause = "*";
-        try{
-            SqlRowSet sqlRowSet = commonService.doSelect(dataSourceId,tableName,selectClause,whereClause);
-
-            JSONArray jsonArray = new JSONArray();
-            ArrayList<String> columnNames = getColumnNames(sqlRowSet);
-            JSONArray resultSet = getJsonObjectList(sqlRowSet,columnNames);
-            JSONObject jsonObject = new JSONObject();
-            jsonObject.put("resultSet", resultSet);
-            jsonObject.put("message","邮箱格式不正确！");
-            jsonArray.add(jsonObject);
-
-            Result result = new Result(1,null,jsonArray.toString());
-            return result;
-        }catch (Exception e) {
-            Result result = new Result(0,"出现内部错误",null);
-            return result;
-        }
     }
 
     @RequestMapping(path = "/dgs/accuracy/update",method = RequestMethod.POST)
@@ -228,73 +241,6 @@ public class AccuracyController {
         }
         return result;
     }
-
-//    @RequestMapping(path = "/dgs/accuracy/formulaUpdate",method = RequestMethod.POST)
-//    @ResponseBody
-//    public Result formulaUpdate(@RequestBody FormulaUpdateParam formulaUpdateParam){
-//        String dataSourceId = formulaUpdateParam.getDataSourceId();
-//        String tableName = formulaUpdateParam.getTableName();
-//        String setClause = formulaUpdateParam.getSetClause();
-//        String whereClause = formulaUpdateParam.getWhereClause();
-//
-//        //whereClause = "NOT(" + whereClause +")";
-//        boolean status = accuracyService.updateData(dataSourceId,tableName,setClause,whereClause);
-//
-//        Result result;
-//        if(status){
-//            result = new Result(1,null,"更新成功");
-//        }else{
-//            result = new Result(0,null,null);
-//        }
-//        return result;
-//    }
-//
-//    @RequestMapping(path = "/dgs/accuracy/lengthUpdate",method = RequestMethod.POST)
-//    @ResponseBody
-//    public Result lengthUpdate(@RequestBody LengthUpdateParam lengthUpdateParam) {
-//        String dataSourceId = lengthUpdateParam.getDataSourceId();
-//        String tableName = lengthUpdateParam.getTableName();
-//        String columnName = lengthUpdateParam.getColumnName();
-//        String length = lengthUpdateParam.getLength();
-//        String fill = lengthUpdateParam.getFill();
-//
-//        String whereClause = "length(" + columnName + ") < " + length;
-//        SqlRowSet sqlRowSet = accuracyService.selectData(dataSourceId, tableName, whereClause);
-//
-//        ArrayList<String> columnNames = getColumnNames(sqlRowSet);
-//        boolean flag = true;
-//        JSONArray jsonArray = new JSONArray();
-//        JSONArray resultSet = new JSONArray();
-//        while (sqlRowSet.next()) {
-//            String oldValue = sqlRowSet.getString(columnName);
-//            String newValue = oldValue;
-//            while (newValue.length() < Integer.parseInt(length)) {
-//                newValue += fill;
-//            }
-//            boolean status = accuracyService.updateData(dataSourceId, tableName, columnName, newValue, whereClause);
-//            if (!status) {
-//                flag = false;
-//                JSONObject jo = new JSONObject();
-//                for (String name : columnNames) {
-//                    jo.put(name, sqlRowSet.getString(name));
-//                }
-//                resultSet.add(jo);
-//            }
-//        }
-//        JSONObject jsonObject = new JSONObject();
-//        jsonObject.put("resultSet", resultSet);
-//        jsonObject.put("message", "更新失败");
-//        jsonArray.add(jsonObject);
-//
-//        Result result;
-//        if (flag) {
-//            result = new Result(1, null, "全部更新成功");
-//        } else {
-//            result = new Result(0, null, jsonArray.toString());
-//        }
-//        return result;
-//    }
-//
 
     private ArrayList<String> getColumnNames(SqlRowSet sqlRowSet){
         SqlRowSetMetaData smd = sqlRowSet.getMetaData();

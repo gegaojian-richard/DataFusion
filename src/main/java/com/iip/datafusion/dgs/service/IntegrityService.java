@@ -20,7 +20,7 @@ public class IntegrityService {
     private CommonDao commonDao;
 
     public SqlRowSet tableAnyEmptyCheck(String dataSourceId,String tableName, String whereClause){
-        return commonDao.doSelect(dataSourceId,tableName,whereClause);
+        return integrityDao.doSelect(dataSourceId,tableName,whereClause);
     }
 
     public ArrayList<String> getTableColumnList(String dataSourceId, String tableName){
