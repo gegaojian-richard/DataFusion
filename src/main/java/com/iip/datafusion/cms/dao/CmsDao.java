@@ -85,7 +85,13 @@ public class CmsDao {
     public PreviewStructure previewCon(String display, String table, String num) {
         PreviewStructure previewStructure = new PreviewStructure();
         try {
-            dataSourceRouterManager.setCurrentDataSourceKey(display);
+            List<DataSourceProperties> list = new ArrayList<>();
+            String id = "";
+            for(DataSourceProperties item:list){
+                if(item.getDisplayName().equals(display))
+                    id = item.getId();
+            }
+            dataSourceRouterManager.setCurrentDataSourceKey(id);
             DatabaseMetaData metaData = jdbcTemplate.getDataSource().getConnection().getMetaData();
             List rows= jdbcTemplate.queryForList("select * from "+table+" limit "+num);
             previewStructure.setSize(rows.size());
