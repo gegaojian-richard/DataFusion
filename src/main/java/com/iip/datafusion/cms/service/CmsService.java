@@ -109,15 +109,25 @@ public class CmsService {
 
     //得到当前用户拥有的数据源
     public Result getCurrentConnection(){
-        String jsonStr = "{\"databases\":[";
-        List<String > displayNames = dataSourceRouterManager.getDataSourceDisplayNames();
-        if(!displayNames.isEmpty())
-            jsonStr += "{\"name\":\"" + displayNames.get(0) + "\"}";
-        for(int i=1;i< displayNames.size();i++){
-            jsonStr += ",{\"name\":\"" +displayNames.get(i)+"\"}";
-        }
-        jsonStr += "]}";
-        return new Result(1,null,jsonStr);
+        StringBuilder jsonStr = new StringBuilder();
+//        StringBuilder jsonStr = new StringBuilder("{\"databases\":[");
+        List<DataSourceProperties > properties = dataSourceRouterManager.getDataSourceProperties();
+        if(!properties.isEmpty())
+            try {
+                jsonStr.append(JsonParse.getMapper().writeValueAsString(properties));
+//            jsonStr.append("{\"database\":[{\"name\":\"" + properties.get(0).getDisplayName() + "\"},{\"id\":\"");
+//            jsonStr.append(properties.get(0).getId() + "\"}]}");
+//        for(int i=1;i< properties.size();i++){
+////            jsonStr.append(",{\"database\":[{\"name\":\"" + properties.get(0).getDisplayName() + "\"},{\"id\":\"");
+////            jsonStr.append(properties.get(0).getId() + "\"}]}");
+//            jsonStr.append(JsonParse.getMapper().writeValueAsString(properties.get(0)));
+//        }
+//        jsonStr.append("]}");
+            }catch (JsonProcessingException e){
+            e.printStackTrace();
+            jsonStr.append("json转化失败");
+            }
+        return new Result(1,null,jsonStr.toString());
     }
 
     //得到某个id的数据库的某张表的预览信息
