@@ -130,9 +130,9 @@ public class CmsDao {
             return new Result(1,null,"成功创建实体/事件库");
         }catch (IOException e){
             e.printStackTrace();
-            return new Result(0,"列信息解析失败",null);
+            return new Result(0,"列信息解析失败@createTable",null);
         }catch (Exception e1){
-            return new Result(0,"SQL语句执行错误",null);
+            return new Result(0,"SQL语句执行错误@createTable",null);
         }
     }
 }
