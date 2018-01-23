@@ -5,10 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.iip.datafusion.cms.dao.CmsDao;
-import com.iip.datafusion.cms.model.ColumnStructure;
-import com.iip.datafusion.cms.model.DataBaseStructure;
-import com.iip.datafusion.cms.model.PreviewStructure;
-import com.iip.datafusion.cms.model.TableStructure;
+import com.iip.datafusion.cms.model.*;
 import com.iip.datafusion.ums.dao.LoginTicketDao;
 import com.iip.datafusion.ums.dao.UserDao;
 import com.iip.datafusion.ums.model.LoginTicket;
@@ -25,9 +22,7 @@ import org.springframework.jdbc.support.rowset.SqlRowSetMetaData;
 
 import javax.sql.RowSet;
 import java.io.IOException;
-import java.sql.DatabaseMetaData;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -43,6 +38,8 @@ public class CmsService {
     CmsDao cmsDao;
     @Autowired
     DataSourceRouterManager dataSourceRouterManager;
+    @Autowired
+    JdbcTemplate jdbcTemplate;
 
     //添加数据源
     public Result  creCon(DataSourceProperties c){
@@ -110,23 +107,52 @@ public class CmsService {
     //得到当前用户拥有的数据源
     public Result getCurrentConnection(){
         StringBuilder jsonStr = new StringBuilder();
-//        StringBuilder jsonStr = new StringBuilder("{\"databases\":[");
         List<DataSourceProperties > properties = dataSourceRouterManager.getDataSourceProperties();
-        if(!properties.isEmpty())
+        if(properties.isEmpty())
+            return new Result(1,null,"空");
+
+        List<DBTable> dbTableList = new ArrayList<>();
+        for(DataSourceProperties item:properties){
+            DBTable dbTable = new DBTable();
+            dbTable.setId(item.getId());
+            dbTable.setDisplayName(item.getDisplayName());
+            Connection connection = null;
+            List<TableStructure> list = new ArrayList<>();
             try {
-                jsonStr.append(JsonParse.getMapper().writeValueAsString(properties));
-//            jsonStr.append("{\"database\":[{\"name\":\"" + properties.get(0).getDisplayName() + "\"},{\"id\":\"");
-//            jsonStr.append(properties.get(0).getId() + "\"}]}");
-//        for(int i=1;i< properties.size();i++){
-////            jsonStr.append(",{\"database\":[{\"name\":\"" + properties.get(0).getDisplayName() + "\"},{\"id\":\"");
-////            jsonStr.append(properties.get(0).getId() + "\"}]}");
-//            jsonStr.append(JsonParse.getMapper().writeValueAsString(properties.get(0)));
-//        }
-//        jsonStr.append("]}");
-            }catch (JsonProcessingException e){
-            e.printStackTrace();
-            jsonStr.append("json转化失败");
+                dataSourceRouterManager.setCurrentDataSourceKey(item.getId());
+                connection = jdbcTemplate.getDataSource().getConnection();
+                PreparedStatement statement = connection.prepareStatement("show tables from " + connection.getCatalog());
+                ResultSet resultSet = statement.executeQuery();
+                connection.close();
+                while (resultSet.next()){
+                    TableStructure tableStructure = new TableStructure(resultSet.getString(1));
+                    list.add(tableStructure);
+                }
+            }catch (SQLException e ){
+                e.printStackTrace();
+                return new Result(0,"sql执行错误",null);
+            }finally {
+                try{
+                    connection.close();
+                }catch (Exception e){}
             }
+            dbTable.setTables(list);
+            dbTableList.add(dbTable);
+        }
+
+//        if(!properties.isEmpty())
+//            try {
+//                jsonStr.append(JsonParse.getMapper().writeValueAsString(properties));
+//            }catch (JsonProcessingException e){
+//                e.printStackTrace();
+//                return new Result(0,"json转化失败"+e.getMessage(),null);
+//            }
+        try {
+            jsonStr.append(JsonParse.getMapper().writeValueAsString(dbTableList));
+        }catch (JsonProcessingException e){
+            return new Result(0,"json转化失败",null);
+        }
+
         return new Result(1,null,jsonStr.toString());
     }
 
