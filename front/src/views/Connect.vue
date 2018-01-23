@@ -5,7 +5,7 @@
 </template>
 <script>
   import axios from 'axios'
-  import MyHeader from './../components/MyHeader'
+  import MyHeader from '../../resource/MyHeader'
   import  NavBar from '../../resource/NavBar'
   import ConnectBread from './../components/ConnectBread'
   export default{

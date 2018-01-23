@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 const _import = require('./_import_' + process.env.NODE_ENV)
-import Layout from '@/views/Layout'
+import Layout from '@/views/layout/Layout'
 import Home from '@/views/Home'
 Vue.use(Router)
 //同步路由
@@ -14,10 +14,10 @@ export const constantRouterMap=[
     component:Layout,
     redirect:'/home',
     children:[{
-      path:'/home',
+      path:'home',
       component:Home,
       name:Home,
-      meta:{title:'home',icon:'home',noCache:true}
+      meta:{title:'home',icon:'dashboard',noCache:true}
     }]
   },
   {
@@ -38,7 +38,7 @@ export const constantRouterMap=[
       path:'index',
       component:_import('Connect'),
       name:'Connect',
-      meta:{title:'connect',icon:'connect',noCache:true}
+      meta:{title:'connect',icon:'icon',noCache:true}
     }]
   },
   {
@@ -49,7 +49,7 @@ export const constantRouterMap=[
       path:'index',
       component:_import('Entity'),
       name:'Entity',
-      meta:{title:'entity',icon:'entity',noCache:true}
+      meta:{title:'entity',icon:'chart',noCache:true}
     }]
   },
   {
@@ -60,7 +60,7 @@ export const constantRouterMap=[
       path:'index',
       component:_import('Fusion'),
       name:'Fusion',
-      meta:{title:'fusion',icon:'fusion',noCache:true}
+      meta:{title:'fusion',icon:'excel',noCache:true}
     }]
   },
   {
@@ -70,12 +70,12 @@ export const constantRouterMap=[
     name: 'Check',
     meta: {
       title: 'check',
-      icon: 'check'
+      icon: 'component'
     },
     children: [
       { path: 'complete', component:_import('Complete'), name: 'Complete', meta: { title: 'complete', icon: 'table' }},
-      { path: 'insist', component:_import('Insist'), name: 'Insist', meta: { title: 'insist', icon: 'table' }},
-      { path: 'accuracy', component:_import('Accuracy') , name: 'Accuracy', meta: { title: 'accuracy', icon: 'table' }}
+      { path: 'insist', component:_import('Insist'), name: 'Insist', meta: { title: 'insist', icon: 'example' }},
+      { path: 'accuracy', component:_import('Accuracy') , name: 'Accuracy', meta: { title: 'accuracy', icon: 'form' }}
     ]
   },
 ]
