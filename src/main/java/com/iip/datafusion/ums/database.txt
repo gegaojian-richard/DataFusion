@@ -1,0 +1,20 @@
+DROP TABLE IF EXISTS user_table;
+CREATE TABLE `kjb`.`user_table` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `username` VARCHAR(45) NOT NULL,
+  `password` VARCHAR(64) NOT NULL,
+  `salt` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `id_UNIQUE` (`id` ASC),
+  UNIQUE INDEX `username_UNIQUE` (`username` ASC));
+
+
+DROP TABLE IF EXISTS ticket;
+  CREATE TABLE `kjb`.`ticket` (
+    `id` INT NOT NULL AUTO_INCREMENT,
+    `userId` INT NOT NULL,
+    `expired` VARCHAR(45) NOT NULL,
+    `ticket` VARCHAR(45) NOT NULL,
+    `status` INT ZEROFILL NOT NULL,
+    PRIMARY KEY (`id`),
+    UNIQUE INDEX `ticket_UNIQUE` (`ticket` ASC));
