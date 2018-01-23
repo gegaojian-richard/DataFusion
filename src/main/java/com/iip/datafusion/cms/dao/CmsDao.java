@@ -1,24 +1,23 @@
 package com.iip.datafusion.cms.dao;
 
-import com.iip.datafusion.cms.model.ColumnStructure;
-import com.iip.datafusion.cms.model.DataBaseStructure;
-import com.iip.datafusion.cms.model.PreviewStructure;
-import com.iip.datafusion.cms.model.TableStructure;
+import com.iip.datafusion.cms.model.*;
+import com.iip.datafusion.eems.model.Entity;
 import com.iip.datafusion.util.dbutil.DataSourceProperties;
 import com.iip.datafusion.util.dbutil.DataSourceRouter;
 import com.iip.datafusion.util.dbutil.DataSourceRouterManager;
+import com.iip.datafusion.util.jsonutil.JsonParse;
 import com.iip.datafusion.util.jsonutil.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.rowset.SqlRowSet;
+import org.springframework.jdbc.support.rowset.SqlRowSetMetaData;
 import org.springframework.stereotype.Service;
 
-import java.sql.DatabaseMetaData;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import javax.sql.RowSetMetaData;
+import javax.swing.text.TabSet;
+import java.io.IOException;
+import java.sql.*;
+import java.util.*;
 
 /**
  * Created by jingwei on 2017/12/13.
@@ -30,81 +29,110 @@ public class CmsDao {
     @Autowired
     DataSourceRouterManager dataSourceRouterManager;
 
-
-    public Result addDatabase(DataSourceProperties c) {
-        dataSourceRouterManager.addDataSource(c);
-        Result result = new Result(1,null,null);
-        return result;
-    }
-
-    public DataBaseStructure getDatabaseStructure(String id) {
+    //得到id的数据库的表结构及列结构
+    public Map<String,Object> getDatabaseStructure(String id) {
+        Map<String,Object> map= new HashMap<>();
+        DataBaseStructure dataBaseStructure = new DataBaseStructure();
+        Connection connection = null;
         try {
-            DataBaseStructure dataBaseStructure = new DataBaseStructure();
-
             dataSourceRouterManager.setCurrentDataSourceKey(id);
-            DatabaseMetaData metaData = jdbcTemplate.getDataSource().getConnection().getMetaData();
-            ResultSet table = metaData.getTables(null,"%",
-                    "%",new String[]{"TABLE"});
+            connection = jdbcTemplate.getDataSource().getConnection();
 
-            while(table.next()){
-                String tmp = table.getString("TABLE_NAME");
-                TableStructure tableStructure = new TableStructure(tmp);
-                ResultSet column = metaData.getColumns(null,"%",tmp,"%");
-                while (column.next()) {
+            //得到数据库的表名
+            PreparedStatement statement = connection.prepareStatement("show tables from "+connection.getCatalog());
+            ResultSet resultSet = statement.executeQuery();
+            connection.close();
+
+            //对于每一个表，用一次查询得到所有的列名及列类型
+            while (resultSet.next()){
+                String tmpTable = resultSet.getString(1);
+                connection = jdbcTemplate.getDataSource().getConnection();
+                PreparedStatement statement1 = connection.prepareStatement("select * from "+tmpTable+" limit 0");
+                ResultSet column = statement1.executeQuery();
+                ResultSetMetaData rowSetMetaData = column.getMetaData();
+                connection.close();
+
+                TableStructure table = new TableStructure(tmpTable);
+                for(int i=1;i<=rowSetMetaData.getColumnCount();i++){
                     ColumnStructure columnStructure = new ColumnStructure();
-                    columnStructure.setColumnName(column.getString("COLUMN_NAME"));
-                    columnStructure.setColumnType(column.getString("TYPE_NAME"));
-                    columnStructure.setDataSize(column.getInt("COLUMN_SIZE"));
-                    columnStructure.setDigits(column.getInt("DECIMAL_DIGITS"));
-                    columnStructure.setNullable(column.getInt("NULLABLE"));
-                    tableStructure.addColumn(columnStructure);
+                    columnStructure.setColumnName(rowSetMetaData.getColumnName(i));
+                    columnStructure.setColumnType(rowSetMetaData.getColumnTypeName(i));
+                    table.addColumn(columnStructure);
                 }
-                dataBaseStructure.addTable(tableStructure);
+                dataBaseStructure.addTable(table);
             }
-
-            return dataBaseStructure;
+            map.put("success",dataBaseStructure);
         }
         catch (Exception e){
-            return null;
-        }
-    }
-
-    public Result getCurrentConnection() {
-        String jsonStr = "{\"databases\":[";
-        List<String > displayNames = dataSourceRouterManager.getDataSourceDisplayNames();
-        if(!displayNames.isEmpty())
-            jsonStr += "{\"name\":\"" + displayNames.get(0) + "\"}";
-        for(int i=1;i< displayNames.size();i++){
-            jsonStr += ",{\"name\":\"" +displayNames.get(i)+"\"}";
-        }
-        jsonStr += "]}";
-        Result result = new Result(1,null,jsonStr);
-        return result;
-    }
-
-    public PreviewStructure previewCon(String display, String table, String num) {
-        PreviewStructure previewStructure = new PreviewStructure();
-        try {
-            List<DataSourceProperties> list = new ArrayList<>();
-            String id = "";
-            for(DataSourceProperties item:list){
-                if(item.getDisplayName().equals(display))
-                    id = item.getId();
+            e.printStackTrace();
+            map.put("msg",e.getMessage());
+        }finally {
+            //防止多次在Connection.close()之前就报错跳出，导致连接池overflow
+            try {
+                connection.close();
             }
+            catch (Exception e){}
+            return map;
+        }
+    }
+
+
+    public PreviewStructure previewCon(String id, String table, String num) {
+        PreviewStructure previewStructure = new PreviewStructure();
+//            List<DataSourceProperties> list = new ArrayList<>();
+//            String id = "";
+//            for(DataSourceProperties item:list){
+//                if(item.getDisplayName().equals(display))
+//                    id = item.getId();
+//            }
+//        try {
             dataSourceRouterManager.setCurrentDataSourceKey(id);
-            DatabaseMetaData metaData = jdbcTemplate.getDataSource().getConnection().getMetaData();
-            List rows= jdbcTemplate.queryForList("select * from "+table+" limit "+num);
+            List rows = jdbcTemplate.queryForList("select * from " + table + " limit " + num);
             previewStructure.setSize(rows.size());
             Iterator iterator = rows.iterator();
-            while(iterator.hasNext()){
-                Map map=(Map) iterator.next();
+            while (iterator.hasNext()) {
+                Map map = (Map) iterator.next();
                 previewStructure.getItems().add(map);
                 previewStructure.setColumnNum(map.size());
             }
-            return previewStructure;
-        }
-        catch (SQLException e){
-            return null;
+//            jdbcTemplate.getDataSource().getConnection().close();
+//        }catch (SQLException e){
+//            return null;
+//        }
+        return previewStructure;
+    }
+
+    public Result createTable(Entity entity) {
+        dataSourceRouterManager.setCurrentDataSourceKey(entity.getDbPosition());
+        StringBuilder stringBuilder = new StringBuilder("CREATE TABLE `");
+        stringBuilder.append(entity.getTableName());
+        stringBuilder.append("`(");
+
+        //获取entity的property中的列信息
+        try {
+            ColumnList list = JsonParse.getMapper().readValue("{\"list\":"+entity.getProperties()+"}", ColumnList.class);
+
+            //对columnList中的每个column的类型等进行预处理
+            list.pretreatment();
+
+            for(ColumnStructure item:list.getList()){
+                stringBuilder.append(item.getColumnName()+" "+item.getColumnType()+",");
+                stringBuilder.append(item.getIsPrime()==1 ? "PRIMARY KEY ("+item.getColumnName()+")," : "");
+            }
+
+            stringBuilder.delete(stringBuilder.length()-1,stringBuilder.length());
+            stringBuilder.append(");");
+            jdbcTemplate.execute(stringBuilder.toString());
+
+//            //检查目标表是否成功建立
+//            DataBaseStructure structure =(DataBaseStructure) this.getDatabaseStructure(entity.getDbPosition()).get("success");
+
+            return new Result(1,null,"成功创建实体/事件库");
+        }catch (IOException e){
+            e.printStackTrace();
+            return new Result(0,"列信息解析失败",null);
+        }catch (Exception e1){
+            return new Result(0,"SQL语句执行错误",null);
         }
     }
 }
