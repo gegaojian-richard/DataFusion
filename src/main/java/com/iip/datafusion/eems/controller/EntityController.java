@@ -53,28 +53,29 @@ public class EntityController {
         }
         return  new Result(1,"删除实体成功",null);
     }
-    @RequestMapping(path={"/entity/insert"},method={RequestMethod.POST})
-    @ResponseBody
-    //TODO:插入实体时相同用户不能同时创建两个一样的实体；
-    //TODO insertEntity的逻辑应该在成功创建实体库之后
-    public Result  insertEntity(@RequestBody Map<String,String> map){
-        Entity entity=null;
-        entity=new Entity();
-        entity.setDisplayName(map.get("displayName"));
-        entity.setTableName(map.get("tableName"));
-        entity.setDbPosition(map.get("dbPosition"));
-        entity.setEntityType(Integer.parseInt(map.get("entityType")));
-        entity.setProperties(map.get("properties"));
-        int addEntity=entityService.insertEntity(entity);
-        UserEntity newUserEntity=new UserEntity();
-        newUserEntity.setEntityId(addEntity);
-        newUserEntity.setUserId(userManager.getUserId());
-        Boolean addUserEntity=userEntityService.insertUserEntity(newUserEntity);
-        if ((addEntity>0) && addUserEntity){
-            return  new Result(1,"插入实体成功",null);
-        }
-        return  new Result(0,"插入实体失败",null);
-    }
+
+//    @RequestMapping(path={"/entity/insert"},method={RequestMethod.POST})
+//    @ResponseBody
+//    //TODO:插入实体时相同用户不能同时创建两个一样的实体；
+//    //TODO insertEntity的逻辑应该在成功创建实体库之后
+//    public Result  insertEntity(@RequestBody Map<String,String> map){
+//        Entity entity=null;
+//        entity=new Entity();
+//        entity.setDisplayName(map.get("displayName"));
+//        entity.setTableName(map.get("tableName"));
+//        entity.setDbPosition(map.get("dbPosition"));
+//        entity.setEntityType(Integer.parseInt(map.get("entityType")));
+//        entity.setProperties(map.get("properties"));
+//        int addEntity=entityService.insertEntity(entity);
+//        UserEntity newUserEntity=new UserEntity();
+//        newUserEntity.setEntityId(addEntity);
+//        newUserEntity.setUserId(userManager.getUserId());
+//        Boolean addUserEntity=userEntityService.insertUserEntity(newUserEntity);
+//        if ((addEntity>0) && addUserEntity){
+//            return  new Result(1,"插入实体成功",null);
+//        }
+//        return  new Result(0,"插入实体失败",null);
+//    }
 
     @RequestMapping(path={"/entity/update"},method={RequestMethod.GET})
     @ResponseBody
@@ -90,8 +91,24 @@ public class EntityController {
     @RequestMapping(path={"/entity/create"},method={RequestMethod.POST})
     @ResponseBody
     public Result createEntityDB(@RequestBody Entity entity){
+        Result result;
         int id = userManager.getUserId();
-        Result result = entityService.createEntityTable(entity,id);
+        result = entityService.createEntityTable(entity,id);
+        if(result.getStatus()==1){
+            return result;
+        }
+
+        //创建成功后，insert
+        int addEntity=entityService.insertEntity(entity);
+        UserEntity newUserEntity=new UserEntity();
+        newUserEntity.setEntityId(addEntity);
+        newUserEntity.setUserId(id);
+        Boolean addUserEntity=userEntityService.insertUserEntity(newUserEntity);
+        if ((addEntity>0) && addUserEntity){
+            result = new Result(1,"创建成功，插入实体成功",null);
+        }else {
+            result = new Result(0, "创建成功，但是插入实体失败", null);
+        }
         return result;
     }
 }

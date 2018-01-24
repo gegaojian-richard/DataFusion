@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.ArrayList;
 
-public class ColumnAttributeValue {
+public class  ColumnAttributeValue {
 
     @JsonProperty("column")
     private String column;
