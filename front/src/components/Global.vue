@@ -4,4 +4,3 @@
     BASE_URL
   }
 </script>
-

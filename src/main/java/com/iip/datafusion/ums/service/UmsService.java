@@ -70,6 +70,7 @@ public class UmsService {
         User user = userDao.getUserByName(username);
         if(user==null){
             map.put("msg","用户名不存在");
+            return map;
         }
 
         //验证密码

@@ -11,4 +11,5 @@ create TABLE userentity(
 id INT NOT NULL AUTO_INCREMENT primary key,
 userId INT NOT NULL,
 entityId INT NOT NULL
-)
+);
+ alter table entity convert to character set utf8 collate utf8_general_ci;

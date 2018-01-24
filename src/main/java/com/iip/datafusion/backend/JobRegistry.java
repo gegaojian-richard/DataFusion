@@ -45,4 +45,8 @@ public class JobRegistry {
         String key = "userid - jobtype - job id and decription"; // 从job中获得
         submittedJobRegistry.put(key, state);
     }
+
+    public ConcurrentMap<String,Integer> getSubmittedJobRegistry(){
+        return this.submittedJobRegistry;
+    }
 }

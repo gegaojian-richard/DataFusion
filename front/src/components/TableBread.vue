@@ -85,8 +85,8 @@
 
 </style>
 <script>
-  import MyHeader from './../components/MyHeader'
-  import  SideBar from './../components/SideBar'
+  import MyHeader from '../../resource/MyHeader'
+  import  SideBar from '../../resource/SideBar'
   export default{
     data(){
       return{
