@@ -1,11 +1,13 @@
 package com.iip.datafusion.backend.job.join;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 public class JoinUnit {
-    private Map<String, String> S2TMap = new LinkedHashMap<>();  // 原字段与目标字段映射表
+
+    private List<String> fields2Select = new ArrayList<>(); // 需要select的字段
     private String databaseID; // 数据库标识
     private String tableName; // 表格名
     private String where="";
@@ -26,14 +28,13 @@ public class JoinUnit {
 
     /**
      * 添加一个需要select的字段
-     * @param sourceFieldName
-     * @param targetFieldName 当select的字段为
+     * @param fieldName
      */
-    public void addField(String sourceFieldName,String targetFieldName){
+    public void addField(String fieldName){
 
         //todo: 检查是否重复
 
-        S2TMap.put(sourceFieldName, targetFieldName);
+        fields2Select.add(fieldName);
     }
 
     public void addJoinUnit(JoinUnit joinUnit){
@@ -43,5 +44,20 @@ public class JoinUnit {
 
     public void setParentJoinUnit(JoinUnit joinUnit){
         this.parentJoinUnit = joinUnit;
+    }
+
+    public String getSQLStatement(){
+        StringBuilder result = new StringBuilder("select ");
+        result.append(fields2Select.get(0));
+        for (int i = 1; i < fields2Select.size(); i++) {
+            result.append(", ").append(fields2Select.get(i));
+        }
+        result.append("from ").append(tableName);
+        return result.toString();
+    }
+
+    public String getSQLStatement2(){
+        StringBuilder result = new StringBuilder("select ");
+        return result.toString();
     }
 }

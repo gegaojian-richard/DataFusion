@@ -1,5 +1,6 @@
 package com.iip.datafusion.dfs.controller;
 
+import com.iip.datafusion.backend.JoinManager;
 import com.iip.datafusion.dfs.model.JoinConfiguration;
 import com.iip.datafusion.dfs.service.DataFusionService;
 import com.iip.datafusion.util.jsonutil.Result;
@@ -25,7 +26,10 @@ public class DfsController {
     @ResponseBody
     public Result commitJob(@RequestBody JoinConfiguration joinConfiguration){
 
+        //        todo: 测试
+        JoinManager.getInstance().init();
         Map map = dataFusionService.commitJob(joinConfiguration);
+
         return new Result();
 //        return joinConfiguration.toString();
     }
