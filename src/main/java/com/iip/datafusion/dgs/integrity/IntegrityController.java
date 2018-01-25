@@ -39,8 +39,11 @@ public class IntegrityController {
     public Result checkIntegrity(@RequestBody IntegrityConfiguration integrityConfiguration) {
 
         try{
-            String res = integrityService.commitJob(integrityConfiguration);
-            return new Result(0,res,null);
+            IntegrityJob integrityJob = integrityService.commitJob(integrityConfiguration);
+            while (integrityJob.getResult()==null){
+
+            }
+            return integrityJob.getResult();
         }catch (Exception e){
             return new Result(0,e.getMessage(),null);
         }

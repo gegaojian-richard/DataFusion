@@ -38,7 +38,7 @@ public class IntegrityParser implements Parser {
         whereClause = whereClause.substring(0, whereClause.lastIndexOf("or"));
         String sql = String.format("SELECT %s FROM %s where %s"," * ",tableName,whereClause);
 
-        System.out.println(sql);
+        //System.out.println(sql);
 
 
         IntegrityJob integrityJob = new IntegrityJob();

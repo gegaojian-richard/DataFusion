@@ -18,7 +18,7 @@ public class JoinUnit {
     private String order="";
 
     private String parentTable=""; // 左连接的join表格名
-    private String joinParentField=""; // 左连接的join字段
+    private String parentJoinField=""; // 左连接的join字段
     private String joinField=""; // 本表格的join字段
 
     private List<JoinUnit> joinUnits; // 以本表作为左连接的join表格的表格列表
@@ -51,5 +51,11 @@ public class JoinUnit {
         this.parentJoinUnit = joinUnit;
     }
 
+    public void setJoinField(String joinField) {
+        this.joinField = joinField;
+    }
 
+    public void setParentJoinField(String parentJoinField) {
+        this.parentJoinField = parentJoinField;
+    }
 }

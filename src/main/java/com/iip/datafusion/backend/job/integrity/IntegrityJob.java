@@ -18,16 +18,15 @@ import java.util.List;
  * 完整性检查工作描述
  * Created by GeGaojian on 2018/01/18.
  */
-@Repository
+
 public class IntegrityJob implements Job {
 
     private String dataSourceId;
     private String tableName;
     private List<String> sqlList;
     private String jobType;
+    private Result result;
 
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
 
     public String getJobType() {
         return jobType;
@@ -61,34 +60,16 @@ public class IntegrityJob implements Job {
         this.sqlList = sqlList;
     }
 
-    public Result run(){
-
-        DataSourceRouterManager.setCurrentDataSourceKey(dataSourceId);
-        if(jdbcTemplate == null){
-            System.out.println("null");
-        }
-        try{
-            if(sqlList.size()>0) {
-                if(jobType.equals("query")) {
-                    System.out.println(sqlList.get(0));
-                    SqlRowSet d = jdbcTemplate.queryForRowSet(sqlList.get(0));
-                    System.out.println(d);
-                    //String json = rowSetToJson(jdbcTemplate.queryForRowSet(sqlList.get(0)));
-                    //return new Result(1,null,json);
-                }else if(jobType.equals("execute")){
-                    jdbcTemplate.execute(sqlList.get(0));
-                }
-            }
-        }catch (Exception e){
-            e.printStackTrace();
-            return new Result(0,"出现内部错误",null);
-        }
-        return new Result();
+    public Result getResult() {
+        return result;
     }
 
+    public void setResult(Result result) {
+        this.result = result;
+    }
 
-    private String rowSetToJson(SqlRowSet sqlRowSet) {
-        // json数组
+    public String rowSetToJson(SqlRowSet sqlRowSet) {
+
         SqlRowSetMetaData sqlRsmd = sqlRowSet.getMetaData();
         ArrayList<String> trueColumnNames = new ArrayList<>();
         for(int i=1;i<=sqlRsmd.getColumnCount();i++){
@@ -112,7 +93,7 @@ public class IntegrityJob implements Job {
                     jsonObj.put(columnName, value);
                 else
                     jsonObj.put(columnName, "NULL");
-                System.out.println(columnName+" "+value+"\n");
+                //System.out.println(columnName+" "+value+"\n");
             }
             array.add(jsonObj);
         }

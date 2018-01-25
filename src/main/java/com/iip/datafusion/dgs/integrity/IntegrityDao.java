@@ -16,6 +16,19 @@ public class IntegrityDao {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
+
+    public SqlRowSet doQuery(String sql)throws Exception{
+        return jdbcTemplate.queryForRowSet(sql);
+    }
+
+    public boolean doExecute(String sql){
+        try {
+            jdbcTemplate.execute(sql);
+            return true;
+        }catch (Exception e){
+            return false;
+        }
+    }
     /*
     public ArrayList<String> getTableColumnList(String dataSourceId, String tableName){
 
