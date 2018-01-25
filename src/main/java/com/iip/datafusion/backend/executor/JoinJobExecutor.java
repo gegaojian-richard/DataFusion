@@ -38,8 +38,9 @@ public class JoinJobExecutor extends AbstractTerminatableThread implements JobEx
     @Override
     public void doJob(JoinJob job) throws Exception {
         // todo: 实现整合工作
+        // 1. jdbcTemplate.query
 
 
-
+        // jdbcTemplate.batchUpdate()
     }
 }
