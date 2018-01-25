@@ -79,7 +79,7 @@ public class IntegrityDao {
 
         boolean flag=false;
         //return jdbcTemplate.update("")>0;
-        //String row = jdbcTemplate.queryForObject("SELECT * FROM test where name is null", String.class);
+        //String row = jdbcTemplate.queryForObject("SELECT * FROM qq where name is null", String.class);
         String sql = String.format("SELECT * FROM %s where %s is null",tableName,columnName);
         System.out.println(sql);
         try{
