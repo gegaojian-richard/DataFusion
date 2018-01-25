@@ -18,7 +18,7 @@ public class AccuracyController {
 
     @Autowired
     private AccuracyService accuracyService;
-
+    /*
     @RequestMapping(path = "/dgs/accuracy/formulaCheck",method = RequestMethod.POST)
     @ResponseBody
     public Result formulaCheck(@RequestBody FormulaCheckParam formulaCheckParam){
@@ -251,4 +251,5 @@ public class AccuracyController {
         }
         return list;
     }
+    */
 }
