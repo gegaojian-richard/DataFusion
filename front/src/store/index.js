@@ -6,6 +6,8 @@ import errorLog from './modules/errorLog'
 import permission from './modules/permission'
 import app from './modules/app'
 import user from './modules/user'
+import connect from './modules/connect'
+import entity from './modules/entity'
 Vue.use(Vuex)
 const store=new Vuex.Store({
   modules: {
@@ -13,7 +15,9 @@ const store=new Vuex.Store({
     errorLog,
     app,
     permission,
-    user
+    user,
+    connect,
+    entity
   },
   getters
 })
