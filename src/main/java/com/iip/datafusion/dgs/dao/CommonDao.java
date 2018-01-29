@@ -68,11 +68,6 @@ public class CommonDao {
             result.add(sqlRsmd.getColumnName(i));
             //System.out.println(sqlRsmd.getColumnTypeName(i));
         }
-
         return result;
-
     }
-
-
-
 }

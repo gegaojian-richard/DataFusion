@@ -1,11 +1,15 @@
 package com.iip.datafusion.backend.parser;
 
 import com.iip.datafusion.backend.job.join.JoinJob;
-import com.iip.datafusion.dfs.join.JoinUnit;
+import com.iip.datafusion.backend.job.join.JoinUnit;
+import com.iip.datafusion.dfs.model.FieldMapEntry;
 import com.iip.datafusion.dfs.model.JoinConfiguration;
+import com.iip.datafusion.dfs.model.Relation;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 数据整合工作描述解析器
@@ -22,13 +26,43 @@ public class JoinParser implements Parser{
         JoinJob job = new JoinJob(joinConfiguration.getTargetTableName(), joinConfiguration.getTargetDataSourceID());
 
         // 创建JoinUnits
-        List<JoinUnit> joinUnits = new ArrayList<>();
+        Map<String, JoinUnit> joinUnits = new HashMap<>();
         for (String joinUnit : joinConfiguration.getJoinUnits()
                 ) {
-            String[] temp = joinUnit.split(".");
-            joinUnits.add(new JoinUnit(temp[0], temp[1]));
+            String[] temp = joinUnit.split(":");
+            joinUnits.put(joinUnit, new JoinUnit(temp[0], temp[1]));
         }
-        //
+
+        String[] temp;
+        // 遍历关系组织joinUnits关系
+        for (Relation relation : joinConfiguration.getRelations()
+             ) {
+            temp = relation.getLeft().split(":");
+            String parentJUId = temp[0] + ":" + temp[1];
+            String parentJoinField = temp[2];
+            temp = relation.getRight().split(":");
+            String childJUId = temp[0] + ":" + temp[1];
+            String joinField = temp[2];
+            joinUnits.get(parentJUId).addJoinUnit(joinUnits.get(childJUId));
+            joinUnits.get(parentJUId).addSelectField(parentJoinField);
+            joinUnits.get(childJUId).setParentJoinUnit(joinUnits.get(parentJUId));
+            joinUnits.get(childJUId).addSelectField(joinField);
+            joinUnits.get(childJUId).setParentJoinField(parentJoinField);
+            joinUnits.get(childJUId).setJoinField(joinField);
+        }
+
+        // 遍历字段映射表
+        for (FieldMapEntry fieldMapEntry : joinConfiguration.getFieldMapEntries()
+             ) {
+            temp = fieldMapEntry.getSourceFieldName().split(":");
+            String jUId = temp[0] + ":" + temp[1];
+            String selectField = temp[2];
+            joinUnits.get(jUId).addSelectField(selectField);
+            joinUnits.get(jUId).addFieldMap(fieldMapEntry.getTargetFieldName(), selectField);
+            job.addFieldMap(fieldMapEntry.getTargetFieldName(), fieldMapEntry.getSourceFieldName());
+        }
+
+        job.setJoinUnits(joinUnits);
 
         return job;
     }

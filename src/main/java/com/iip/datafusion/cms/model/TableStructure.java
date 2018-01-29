@@ -1,5 +1,7 @@
 package com.iip.datafusion.cms.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.ArrayList;
 
 /**
@@ -8,6 +10,7 @@ import java.util.ArrayList;
 public class TableStructure {
     private ArrayList<ColumnStructure> colmnuStructures;
 //    private String[] dataPreview;
+    @JsonProperty("tableName")
     private String tablename;
 
 
