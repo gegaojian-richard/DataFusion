@@ -1,6 +1,6 @@
 <template>
   <div class="app-wrapper" :class="{hideSidebar:!sidebar.opened}">
-    <sidebar class="sidebar-container"></sidebar>
+    <sidebar class="sidebar-container" style="border-right:2px solid #bfcbd9;"></sidebar>
     <div class="main-container">
       <navbar></navbar>
       <tags-view></tags-view>

@@ -55,7 +55,9 @@
                 </div>
                 <div class="input-group">
                   <span style="width:50px"> 数据库：</span>
-                  <input v-model="addOne.dbPosition" type="text" class="inputEntity">
+                  <el-select  v-model="addOne.dbPosition" style="height:8px;width:200px">
+                    <el-option v-for="item in conns" :key="item.displayName" :value="item.displayName" :label="item.displayName"></el-option>
+                  </el-select>
                 </div>
                 <div class="input-group">
                   <span style="width:50px"> 表格名: </span>
@@ -85,8 +87,9 @@
                       width="100">
                       <template slot-scope="scope">
                         <span v-if="editingRow!=scope.$index">{{ scope.row.type }}</span>
-                        <span v-if="editingRow==scope.$index" class="cell-edit-input"><el-input
-                          v-model="scope.row.type"></el-input></span>
+                        <el-select v-if="editingRow==scope.$index" v-model="scope.row.type"  width="40px">
+                          <el-option v-for="item in optionsType" :key="item" :value="item" :label="item"></el-option>
+                        </el-select>
                       </template>
                     </el-table-column>
                     <el-table-column
@@ -95,8 +98,8 @@
                       width="100px">
                       <template slot-scope="scope">
                         <span v-if="editingRow!=scope.$index">{{ scope.row.prime }}</span>
-                        <el-select v-if="editingRow==scope.$index" v-model="scope.row.prime" placeholder="请选择" width="40px">
-                          <el-option v-for="item in options" :key="item" :value="item" :label="item"></el-option>
+                        <el-select v-if="editingRow==scope.$index" v-model="scope.row.prime"  width="40px">
+                          <el-option v-for="item in optionsPrim" :key="item.value" :value="item.value" :label="item.label"></el-option>
                         </el-select>
                       </template>
                     </el-table-column>
@@ -137,7 +140,9 @@
                 </div>
                 <div class="input-group">
                   <span style="width:50px"> 数据库：</span>
-                  <input v-model="editArr.dbPosition" type="text" class="inputEntity">
+                  <el-select  v-model="editArr.dbPosition"  >
+                    <el-option v-for="item in conns.displayName" :key="item" :value="item" :label="item"></el-option>
+                  </el-select>
                 </div>
                 <div class="input-group">
                   <span style="width:50px"> 表格名: </span>
@@ -167,8 +172,9 @@
                       width="100">
                       <template slot-scope="scope">
                         <span v-if="editingRow!=scope.$index">{{ scope.row.type }}</span>
-                        <span v-if="editingRow==scope.$index" class="cell-edit-input"><el-input
-                          v-model="scope.row.type"></el-input></span>
+                        <el-select v-if="editingRow==scope.$index" v-model="scope.row.type"  width="40px">
+                          <el-option v-for="item in optionsType" :key="item" :value="item" :label="item"></el-option>
+                        </el-select>
                       </template>
                     </el-table-column>
                     <el-table-column
@@ -177,8 +183,8 @@
                       width="100px">
                       <template slot-scope="scope">
                         <span v-if="editingRow!=scope.$index">{{ scope.row.prime }}</span>
-                        <el-select v-if="editingRow==scope.$index" v-model="scope.row.prime" placeholder="1表示主键" width="40px">
-                          <el-option v-for="item in options" :key="item" :value="item" :label="item"></el-option>
+                        <el-select v-if="editingRow==scope.$index" v-model="scope.row.prime"  width="40px">
+                          <el-option v-for="item in optionsPrim" :key="item.value" :value="item.value" :label="item.label"></el-option>
                         </el-select>
                       </template>
                     </el-table-column>
@@ -210,10 +216,11 @@
 </template>
 <style>
   .inputEntity{
-    height:30px;
+    height:50px;
     margin-left:0px;
     width:200px;
     margin-top: 10px;
+    border-radius: 5px;
   }
   .entity-tab{
     /*width:100%;*/
@@ -297,10 +304,11 @@
 </style>
 <script>
   import axios from 'axios'
+  import {mapGetters} from 'vuex'
   export default{
     data(){
       return{
-        entityEvent:[],
+      //  entityEvent:[],
         entityLi:[],
         eventLi:[],
         editStatus:false,
@@ -309,16 +317,20 @@
         addOne:{'displayName':'','dbPosition':'','tableName':'','entityType':'','properties':''},
         editShow:false,
         addShow:false,
-        options:[0,1],
+        optionsPrim:[{'label':'Y','value':'1'},{'label':'N',"value":'0'}],
+        optionsType:['INT','FLOAT','TEXT','VARCHAR'],
         editingRow: null,
         editArr:{'displayName':'','dbPosition':'','tableName':'','entityType':'','properties':[]}
       }
+    },
+    computed: {
+      ...mapGetters(['entityevent','conns']),
     },
     mounted(){
       this.getEntity();
     },
     watch:{
-      entityEvent:function(val) {
+      entityevent:function(val) {
         this.entityLi = val.filter(function (item) {
           return item.entityType == 0;
         });
@@ -446,15 +458,10 @@
         }
       },
       getEntity(){
-        axios.get("kjb/entity/show").then((response) => {
-          let res = response.data;
-          if (res.status == 1) {
-            this.entityEvent=JSON.parse(res.data);
-          }
-        })
+        this.$store.dispatch('GetEntity');
       },
       insertEntity(params){
-        axios.post("kjb/entity/insert", params).then(
+        axios.post("kjb/entity/create", params).then(
           (response) => {
             let res = response.data;
             if (res.status == 1) {
@@ -465,7 +472,6 @@
             }
           }
         );
-
       },
     }
   }

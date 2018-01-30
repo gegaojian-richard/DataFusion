@@ -1,6 +1,6 @@
 <template>
-  <div class="tags-view-container">
-    <scroll-pane class='tags-view-wrapper' ref='scrollPane'>
+  <div class="tags-view-container" >
+    <scroll-pane class='tags-view-wrapper' ref='scrollPane' style="background-color: #304156;color:#bfcbd9">
       <router-link ref='tag' class="tags-view-item" :class="isActive(tag)?'active':''" v-for="tag in Array.from(visitedViews)" :to="tag.path" :key="tag.path" @contextmenu.prevent.native="openMenu(tag,$event)">
         {{tag.title}}
         <span class='el-icon-close' @click.prevent.stop='closeSelectedTag(tag)'></span>

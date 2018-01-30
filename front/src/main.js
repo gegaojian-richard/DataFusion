@@ -11,12 +11,13 @@ import App from './App'
 import router from './router'
 import axios from 'axios'
  import global_ from './components/global.vue'
-import 'normalize.css/normalize.css'// A modern alternative to CSS resets
+//import 'normalize.css/normalize.css'// A modern alternative to CSS resets
 import ElementUI from 'element-ui'
-import 'element-ui/lib/theme-chalk/index.css'
 import './assets/scss/index.scss' // global css
-import 'element-ui/lib/theme-chalk/index.css'
 import store from './store/index'
+import './assets/base.css'
+import '@/assets/login.css'
+import 'element-ui/lib/theme-chalk/index.css'
 import './icons'
 Vue.prototype.GLOBAL = global_;
 axios.defaults.baseURL=global_.BASE_URL;

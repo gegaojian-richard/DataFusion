@@ -19,7 +19,7 @@ import java.sql.ResultSet;
 public class test {
     public static void main(String [] args) {
 
-//        String url = "jdbc:mysql://localhost:3306/test";
+//        String url = "jdbc:mysql://localhost:3306/qq";
 //        String type = "com.mysql.jdbc.Driver";
 //        String user = "root";
 //        String pwd = "123456";
