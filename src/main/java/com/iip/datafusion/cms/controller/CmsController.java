@@ -28,7 +28,7 @@ public class CmsController {
     public Result test(HttpSession session){
 //        Result res = umsService.getUserNameByTicket(ticket);
 
-        return new Result(1, null, "test, this sessionid is: " + session.getId() +
+        return new Result(1, null, "qq, this sessionid is: " + session.getId() +
                     ";the user name is "+userManager.getUserName());
     }
 
