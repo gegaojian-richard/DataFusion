@@ -1,13 +1,9 @@
 package com.iip.datafusion.backend.channel;
 
-import com.iip.datafusion.backend.config.ChannelConfig;
 import com.iip.datafusion.backend.job.accuracy.AccuracyJob;
 import com.iip.datafusion.backend.job.consistency.ConsistencyJob;
 import com.iip.datafusion.backend.job.integrity.IntegrityJob;
 import com.iip.datafusion.backend.job.join.JoinJob;
-
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
 
 public class ChannelManager {
 
