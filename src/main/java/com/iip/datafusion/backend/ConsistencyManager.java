@@ -4,9 +4,7 @@ import com.iip.datafusion.backend.channel.ChannelManager;
 import com.iip.datafusion.backend.channel.WorkStealingChannel;
 import com.iip.datafusion.backend.common.TerminationToken;
 import com.iip.datafusion.backend.config.Capabilities;
-import com.iip.datafusion.backend.executor.AccuracyJobExecutor;
 import com.iip.datafusion.backend.executor.ConsistencyJobExecutor;
-import com.iip.datafusion.backend.job.accuracy.AccuracyJob;
 import com.iip.datafusion.backend.job.consistency.ConsistencyJob;
 
 import java.util.concurrent.BlockingQueue;

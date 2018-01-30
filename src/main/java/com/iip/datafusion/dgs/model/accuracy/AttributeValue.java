@@ -1,13 +1,16 @@
-package com.iip.datafusion.dgs.model;
+package com.iip.datafusion.dgs.model.accuracy;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class AttributeValue {
 
-    @JsonProperty("attribute")
     private String attribute;
-    @JsonProperty("value")
     private String value;
+
+    public AttributeValue(String attribute, String value) {
+        this.attribute = attribute;
+        this.value = value;
+    }
 
     public String getAttribute() {
         return attribute;
