@@ -23,12 +23,12 @@ public class EntityServiceTest {
     @Test
     public void insertEntity() throws Exception{
         Entity  testEntity=new Entity();
-        testEntity.setDisplayName("people");
+        testEntity.setDisplayName("prople");
         testEntity.setTableName("people");
         testEntity.setDbPosition("jdbc:mysql://localhost:3306/");
         testEntity.setEntityType(0);
-        int success=entityService.insertEntity(testEntity);
-        if(success>0){
+        boolean success=entityService.insertEntity(testEntity);
+        if(success){
             System.out.println("insert successfully");
         }
     }

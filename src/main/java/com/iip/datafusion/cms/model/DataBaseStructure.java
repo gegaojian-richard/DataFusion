@@ -5,7 +5,6 @@ import org.springframework.jdbc.support.DatabaseStartupValidator;
 import java.sql.DatabaseMetaData;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -14,6 +13,7 @@ import java.util.Map;
 public class DataBaseStructure {
 
 
+//    private String dbname;
     private ArrayList<TableStructure> tableStructures;
 
     public DataBaseStructure(){
@@ -26,13 +26,6 @@ public class DataBaseStructure {
 
     public ArrayList<TableStructure> getTableStructures() {
         return tableStructures;
-    }
-
-    public List<String> getTableNames(){
-        List<String> list = new ArrayList<>();
-        for(TableStructure table:this.tableStructures)
-            list.add(table.getTablename());
-        return list;
     }
 
     //    public TableStructure getTable(String tablename){
