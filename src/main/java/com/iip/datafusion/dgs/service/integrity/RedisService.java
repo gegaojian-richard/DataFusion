@@ -1,4 +1,4 @@
-package com.iip.datafusion.dgs.service;
+package com.iip.datafusion.dgs.service.integrity;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;

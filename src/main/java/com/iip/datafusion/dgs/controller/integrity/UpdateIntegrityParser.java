@@ -1,6 +1,7 @@
-package com.iip.datafusion.dgs.integrity;
+package com.iip.datafusion.dgs.controller.integrity;
 
 import com.iip.datafusion.backend.job.integrity.IntegrityJob;
+import com.iip.datafusion.dgs.model.integrity.UpdateIntegrityConfiguration;
 
 import java.util.ArrayList;
 import java.util.List;

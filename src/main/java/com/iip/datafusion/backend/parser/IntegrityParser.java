@@ -1,7 +1,7 @@
 package com.iip.datafusion.backend.parser;
 
 import com.iip.datafusion.backend.job.integrity.IntegrityJob;
-import com.iip.datafusion.dgs.integrity.IntegrityConfiguration;
+import com.iip.datafusion.dgs.model.integrity.IntegrityConfiguration;
 
 import java.util.ArrayList;
 
