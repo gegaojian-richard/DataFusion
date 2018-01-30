@@ -32,6 +32,8 @@ public class JoinParser implements Parser{
             String[] temp = joinUnit.split(":");
             joinUnits.put(joinUnit, new JoinUnit(temp[0], temp[1]));
         }
+        // 设置主要JoinUnit
+        job.setPrimaryJoinUnitKey(joinConfiguration.getJoinUnits().get(0).split(":")[0]);
 
         String[] temp;
         // 遍历关系组织joinUnits关系
@@ -50,6 +52,7 @@ public class JoinParser implements Parser{
             joinUnits.get(childJUId).setParentJoinField(parentJoinField);
             joinUnits.get(childJUId).setJoinField(joinField);
         }
+
 
         // 遍历字段映射表
         for (FieldMapEntry fieldMapEntry : joinConfiguration.getFieldMapEntries()

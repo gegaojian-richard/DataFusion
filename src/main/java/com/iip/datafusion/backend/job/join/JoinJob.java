@@ -1,10 +1,9 @@
 package com.iip.datafusion.backend.job.join;
 
 import com.iip.datafusion.backend.job.Job;
+import com.iip.datafusion.util.dbutil.DataSourceRouterManager;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 数据整合工作描述
@@ -12,12 +11,13 @@ import java.util.Map;
  */
 public class JoinJob implements Job {
     Map<String,Integer> sqlRegistry;
-    List<SQLTask> sqlTasks;
+    List<SQLTask> sqlTasks = new ArrayList<>();
     String targetTableName;
     String targetDatasourceID;
     Map<String, String> s2tMap = new HashMap<>();
 
     Map<String, JoinUnit> joinUnits;
+    String primaryJoinUnitKey;
 
 
     public JoinJob(String targetTableName, String targetDatasourceID) {
@@ -37,4 +37,54 @@ public class JoinJob implements Job {
         return joinUnits;
     }
 
+    public String getInsertSQL(){
+        List<String> fields = (ArrayList<String>)s2tMap.values();
+        StringBuilder result = new StringBuilder("INSERT INTO ");
+        result.append(targetTableName).append(" (").append(fields.get(0));
+        for (int i = 1; i < fields.size(); i++) {
+            result.append(", ").append(fields.get(i));
+        }
+        result.append(") VALUES (?");
+        for (int i = 1; i < fields.size(); i++) {
+            result.append(", ?");
+        }
+        result.append(")");
+        return result.toString();
+    }
+
+    public List<String> getTargetFields(){
+        return (ArrayList<String>)s2tMap.values();
+    }
+
+    public Map<String, String> getS2tMap() {
+        return s2tMap;
+    }
+
+    public void setPrimaryJoinUnitKey(String primaryJoinUnitKey) {
+        this.primaryJoinUnitKey = primaryJoinUnitKey;
+    }
+
+    public JoinUnit getPrimaryJoinUnit(){
+        return joinUnits.get(primaryJoinUnitKey);
+    }
+
+    public List<SQLTask> getSQLTasks(){
+        Queue<JoinUnit> queue = new LinkedList<>();
+        queue.offer(getPrimaryJoinUnit());
+
+        while (!queue.isEmpty()){
+            JoinUnit currentJoinUnit = queue.poll();
+            for (JoinUnit joinUnit : currentJoinUnit.getJoinUnits()
+                 ) {
+                queue.offer(joinUnit);
+            }
+            sqlTasks.add(currentJoinUnit.getSQLTask());
+        }
+
+        return sqlTasks;
+    }
+
+    public String getTargetDatasourceID() {
+        return targetDatasourceID;
+    }
 }
