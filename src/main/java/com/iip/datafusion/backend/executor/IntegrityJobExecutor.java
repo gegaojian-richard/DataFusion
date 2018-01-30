@@ -12,7 +12,6 @@ import com.iip.datafusion.util.jsonutil.Result;
 import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.jdbc.support.rowset.SqlRowSetMetaData;
@@ -27,8 +26,6 @@ public class IntegrityJobExecutor extends AbstractTerminatableThread implements 
 
     private final JdbcTemplate jdbcTemplate = JDBCHelper.getJdbcTemplate();
 
-    @Autowired
-    private RedisTemplate<String, String> redisTemplate = JDBCHelper.getRedisTemplate();
 
 
 
@@ -56,9 +53,7 @@ public class IntegrityJobExecutor extends AbstractTerminatableThread implements 
 
         //System.out.println("finished hahah");
         //job.setResult(new Result(0,"wawawawawa",null));
-        if(redisTemplate == null){
-            System.out.println("finished hahah");
-        }
+
         DataSourceRouterManager.setCurrentDataSourceKey(job.getDataSourceId());
 
         try{
@@ -108,8 +103,7 @@ public class IntegrityJobExecutor extends AbstractTerminatableThread implements 
             lists.add(jsonObj.toString());
         }
         System.out.println(lists);
-        redisTemplate.opsForList().leftPushAll("test", lists);
-        System.out.println(redisTemplate.opsForList().range("test",0,-1));
+
         return true;
     }
 
