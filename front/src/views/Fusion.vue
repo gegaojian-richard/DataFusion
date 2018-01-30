@@ -1,23 +1,21 @@
 <template>
-<div>
-      <FusionBread></FusionBread>
-  </div>
+<div style="height:100%">
+  <fusion-side style="height:490px; width:180px"></fusion-side>
+  <FusionBread></FusionBread>
 </div>
 </template>
 <script>
   import axios from 'axios'
-  import MyHeader from '../../resource/MyHeader'
-  import  NavBar from '../../resource/NavBar'
-  import FusionBread from './../components/FusionBread'
+  import FusionBread from '../components/fusion/FusionBread'
+  import fusionSide from '../components/fusion/FusionSide'
   export default{
     data(){
       return {
       }
     },
     components: {
-      MyHeader,
-      NavBar,
-      FusionBread
+      FusionBread,
+      fusionSide
     },
     methods: {
 

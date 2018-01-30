@@ -37,6 +37,8 @@ export default {
 	transform: rotate(90deg);
 	transition: .38s;
 	transform-origin: 50% 50%;
+  color:#bfcbd9;
+  background-color:#bfcbd9 ;
 }
 
 .hamburger.is-active {

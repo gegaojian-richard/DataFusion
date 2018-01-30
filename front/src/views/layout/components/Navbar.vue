@@ -1,6 +1,6 @@
 <template>
-  <el-menu class="navbar" mode="horizontal">
-    <hamburger class="hamburger-container" :toggleClick="toggleSideBar" :isActive="sidebar.opened"></hamburger>
+  <el-menu class="navbar" mode="horizontal" style="background-color: #304156;color:#bfcbd9">
+    <hamburger   class="hamburger-container" :toggleClick="toggleSideBar" :isActive="sidebar.opened"></hamburger>
 
     <breadcrumb class="breadcrumb-container"></breadcrumb>
     <a class="navbar-brand" href="/">数据融合工具</a>

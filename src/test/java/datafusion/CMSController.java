@@ -22,7 +22,7 @@ public class CMSController {
     @RequestMapping("test")
     @ResponseBody
     public String test(HttpSession session){
-        return "test, this sessionid is: " + session.getId();
+        return "qq, this sessionid is: " + session.getId();
     }
 
     @RequestMapping("/addConnection1")
