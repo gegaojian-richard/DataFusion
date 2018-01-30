@@ -1,6 +1,12 @@
 <template>
   <div>
-    <connect-info  @previewtable="previewTable" style="height:490px;float:left;width:180px"></connect-info>
+    <el-row>
+      <el-col span="6">
+        <connect-info  @previewtable="previewTable" style="height:490px;width:180px"></connect-info>
+      </el-col>
+      <el-col span="18">
+      </el-col>
+    </el-row>
   </div>
 </template>
 <script>

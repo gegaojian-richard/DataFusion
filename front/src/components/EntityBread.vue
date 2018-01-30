@@ -42,7 +42,7 @@
         </ul>
       </div>
       <div>
-        <div class="md-modal modal-msg md-modal-transition" style="width:450px" v-bind:class="{'md-show':addShow}">
+        <div class="md-modal modal-msg md-modal-transition" style="width:500px" v-bind:class="{'md-show':addShow}">
           <div class="md-modal-inner">
             <div class="md-top">
               <button class="md-close" @click="addShow=false">Close</button>
@@ -56,7 +56,7 @@
                 <div class="input-group">
                   <span style="width:50px"> 数据库：</span>
                   <el-select  v-model="addOne.dbPosition" style="height:8px;width:200px">
-                    <el-option v-for="item in conns" :key="item.displayName" :value="item.displayName" :label="item.displayName"></el-option>
+                    <el-option v-for="item in conns" :key="item.displayName" :value="item.id" :label="item.displayName"></el-option>
                   </el-select>
                 </div>
                 <div class="input-group">
@@ -127,7 +127,7 @@
         <div class="md-overlay" v-if="addShow" @click="addShow=false"></div>
       </div>
       <div>
-        <div class="md-modal modal-msg md-modal-transition" style="width:450px" v-bind:class="{'md-show':editShow}">
+        <div class="md-modal modal-msg md-modal-transition" style="width:500px" v-bind:class="{'md-show':editShow}">
           <div class="md-modal-inner">
             <div class="md-top">
               <button class="md-close" @click="editShow=false">Close</button>
@@ -215,6 +215,10 @@
   </div>
 </template>
 <style>
+  .el-input__inner{
+    height:30px;
+    margin-top: 5px;
+  }
   .inputEntity{
     height:50px;
     margin-left:0px;
