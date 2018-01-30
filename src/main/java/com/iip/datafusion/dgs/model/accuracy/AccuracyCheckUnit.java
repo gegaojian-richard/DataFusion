@@ -1,12 +1,10 @@
 package com.iip.datafusion.dgs.model.accuracy;
 
-import com.iip.datafusion.backend.jdbchelper.JDBCHelper;
 import com.iip.datafusion.dgs.dao.AccuracyDao;
 import com.iip.datafusion.util.jsonutil.Result;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.jdbc.support.rowset.SqlRowSetMetaData;
 import org.springframework.stereotype.Component;

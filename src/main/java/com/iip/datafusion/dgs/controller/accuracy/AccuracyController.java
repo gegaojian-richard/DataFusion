@@ -18,13 +18,10 @@ public class AccuracyController {
     @Autowired
     private AccuracyService accuracyService;
 
-    @Autowired
-    private CommonService commonService;
     @RequestMapping(path={"/commitjob"},method = RequestMethod.POST)
     @ResponseBody
     public Result commitjob(@RequestBody AccuracyConfiguration accuracyConfiguration){
         accuracyService.commitJob(accuracyConfiguration);
-        commonService.doSelect("primary","person_info","*","id = '0123'");
         return new Result();
     }
 }
