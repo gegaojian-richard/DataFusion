@@ -29,6 +29,7 @@ public class DfsController {
     private JdbcTemplate jdbcTemplate;
     @Autowired
     DataFusionService dataFusionService;
+
     @RequestMapping(path={"/commitjob"},method = RequestMethod.POST)
     @ResponseBody
     public Result commitJob(@RequestBody JoinConfiguration joinConfiguration){

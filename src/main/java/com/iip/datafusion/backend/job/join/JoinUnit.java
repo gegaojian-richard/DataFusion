@@ -8,20 +8,17 @@ public class JoinUnit {
     private List<String> fields2Select = new ArrayList<>(); // 需要select的字段
     private String databaseID; // 数据库标识
     private String tableName; // 表格名
-    private String where="";
-    private String order="";
 
     private String parentTable=""; // 左连接的join表格名
     private String parentJoinField=""; // 左连接的join字段
     private String joinField=""; // 本表格的join字段
 
-    private List<JoinUnit> joinUnits; // 以本表作为左连接的join表格的表格列表
+    private List<JoinUnit> joinUnits = new ArrayList<>(); // 以本表作为左连接的join表格的表格列表
     private JoinUnit parentJoinUnit; // 左连接的join表格
 
     public JoinUnit(String databaseID, String tableName){
         this.databaseID = databaseID;
         this.tableName = tableName;
-        this.where = "";
     }
 
     /**
@@ -68,5 +65,26 @@ public class JoinUnit {
             result.append(" where ").append(joinField).append(" = ?");
         }
         return result.toString();
+    }
+
+    public String getDatabaseID() {
+        return databaseID;
+    }
+
+    public JoinUnit getParentJoinUnit() {
+        return parentJoinUnit;
+    }
+
+    public SQLTask getSQLTask(){
+        SQLTask sqlTask = new SQLTask();
+        sqlTask.setSql(getSQLStatement());
+        sqlTask.whereFieldName = parentJoinField;
+        sqlTask.setAsync(false);
+
+        return sqlTask;
+    }
+
+    public List<JoinUnit> getJoinUnits() {
+        return joinUnits;
     }
 }

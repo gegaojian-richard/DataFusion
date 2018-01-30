@@ -1,13 +1,16 @@
-package com.iip.datafusion.dgs.model;
+package com.iip.datafusion.dgs.model.accuracy;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class ConditionValue {
 
-    @JsonProperty("condition")
     private String condition;
-    @JsonProperty("value")
     private String value;
+
+    public ConditionValue(String condition, String value) {
+        this.condition = condition;
+        this.value = value;
+    }
 
     public String getCondition() {
         return condition;

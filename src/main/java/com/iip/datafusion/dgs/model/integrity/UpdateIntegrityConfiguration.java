@@ -1,22 +1,23 @@
-package com.iip.datafusion.dgs.model;
+package com.iip.datafusion.dgs.model.integrity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.iip.datafusion.backend.configuration.Configuration;
 
+import java.util.List;
 import java.util.Map;
 
 /**
  * @author zengc
- * @date 2018/1/15 15:45
+ * @date 2018/1/19 15:31
  */
-public class UpdateColumnsParam {
+public class UpdateIntegrityConfiguration implements Configuration {
 
     @JsonProperty("dataSourceId")
     private String dataSourceId;
     @JsonProperty("tableName")
     private String tableName;
-    @JsonProperty("updateValues")
-    private Map<String,Object> updateValues;
-
+    @JsonProperty("instanceValues")
+    private List<Map<String,String>> intanceValues;
 
     public String getDataSourceId() {
         return dataSourceId;
@@ -34,11 +35,11 @@ public class UpdateColumnsParam {
         this.tableName = tableName;
     }
 
-    public Map<String, Object> getUpdateValues() {
-        return updateValues;
+    public List<Map<String, String>> getIntanceValues() {
+        return intanceValues;
     }
 
-    public void setUpdateValues(Map<String, Object> updateValues) {
-        this.updateValues = updateValues;
+    public void setIntanceValues(List<Map<String, String>> intanceValues) {
+        this.intanceValues = intanceValues;
     }
 }

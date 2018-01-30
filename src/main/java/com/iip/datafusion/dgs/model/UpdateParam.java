@@ -1,7 +1,10 @@
 package com.iip.datafusion.dgs.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.springframework.web.bind.annotation.RequestBody;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 public class UpdateParam {
 
@@ -9,12 +12,8 @@ public class UpdateParam {
     private String dataSourceId;
     @JsonProperty("tableName")
     private String tableName;
-    @JsonProperty("columnName")
-    private String columnName;
-    @JsonProperty("newValue")
-    private String newValue;
-    @JsonProperty("whereClause")
-    private String whereClause;
+    @JsonProperty("newValues")
+    private ArrayList<Map<String,String>> newValues;
 
     public String getDataSourceId() {
         return dataSourceId;
@@ -32,27 +31,11 @@ public class UpdateParam {
         this.tableName = tableName;
     }
 
-    public String getColumnName() {
-        return columnName;
+    public ArrayList<Map<String, String>> getNewValues() {
+        return newValues;
     }
 
-    public void setColumnName(String columnName) {
-        this.columnName = columnName;
-    }
-
-    public String getNewValue() {
-        return newValue;
-    }
-
-    public void setNewValue(String newValue) {
-        this.newValue = newValue;
-    }
-
-    public String getWhereClause() {
-        return whereClause;
-    }
-
-    public void setWhereClause(String whereClause) {
-        this.whereClause = whereClause;
+    public void setNewValues(ArrayList<Map<String, String>> newValues) {
+        this.newValues = newValues;
     }
 }

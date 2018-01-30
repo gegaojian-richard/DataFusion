@@ -1,17 +1,22 @@
-package com.iip.datafusion.dgs.model;
+package com.iip.datafusion.dgs.model.integrity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.iip.datafusion.backend.configuration.Configuration;
 
-public class FormulaUpdateParam {
+import java.util.ArrayList;
+
+/**
+ * @author zengc
+ * @date 2018/1/21 10:17
+ */
+public class IntegrityConfiguration implements Configuration {
 
     @JsonProperty("dataSourceId")
     private String dataSourceId;
     @JsonProperty("tableName")
     private String tableName;
-    @JsonProperty("setClause")
-    private String setClause;
-    @JsonProperty("whereClause")
-    private String whereClause;
+    @JsonProperty("columnNames")
+    private ArrayList<String> columnNames;
 
     public String getDataSourceId() {
         return dataSourceId;
@@ -21,7 +26,16 @@ public class FormulaUpdateParam {
         this.dataSourceId = dataSourceId;
     }
 
+    public ArrayList<String> getColumnNames() {
+        return columnNames;
+    }
+
+    public void setColumnNames(ArrayList<String> columnNames) {
+        this.columnNames = columnNames;
+    }
+
     public String getTableName() {
+
         return tableName;
     }
 
@@ -29,19 +43,8 @@ public class FormulaUpdateParam {
         this.tableName = tableName;
     }
 
-    public String getSetClause() {
-        return setClause;
-    }
 
-    public void setSetClause(String setClause) {
-        this.setClause = setClause;
-    }
 
-    public String getWhereClause() {
-        return whereClause;
-    }
 
-    public void setWhereClause(String whereClause) {
-        this.whereClause = whereClause;
-    }
+
 }

@@ -1,33 +1,32 @@
 package com.iip.datafusion.dgs.service;
 
+import com.iip.datafusion.dgs.dao.AccuracyDao;
 import com.iip.datafusion.dgs.dao.CommonDao;
-import com.iip.datafusion.dgs.dao.IntegrityDao;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Map;
-import java.util.Set;
 
+/**
+ * @author zengc
+ * @date 2018/1/17 19:43
+ */
 @Service
-public class IntegrityService {
+public class CommonService {
 
-    @Autowired
-    private IntegrityDao integrityDao;
     @Autowired
     private CommonDao commonDao;
 
-    public SqlRowSet tableAnyEmptyCheck(String dataSourceId,String tableName, String whereClause){
-        return commonDao.doSelect(dataSourceId,tableName,whereClause);
+    public SqlRowSet doSelect(String dataSourceId, String tableName, String selectClause,String whereClause){
+        return commonDao.doSelect(dataSourceId,tableName,selectClause,whereClause);
     }
 
     public ArrayList<String> getTableColumnList(String dataSourceId, String tableName){
-        return integrityDao.getTableColumnList(dataSourceId,tableName);
+        return commonDao.getTableColumnList(dataSourceId,tableName);
     }
 
-    public boolean updateColumns(String dataSourceId, String tableName,String updateClause,String whereClause){
+    public boolean doUpdate(String dataSourceId, String tableName,String updateClause,String whereClause){
         return commonDao.doUpdate(dataSourceId,tableName,updateClause,whereClause);
     }
 
