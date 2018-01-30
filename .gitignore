@@ -17,11 +17,8 @@ target/
 
 ### NetBeans ###
 nbproject/private/
-###build/ ### 前端冲突
+build/
 nbbuild/
-###dist/###
+dist/
 nbdist/
 .nb-gradle/
-
-### Mac ###
-*.DS_Store

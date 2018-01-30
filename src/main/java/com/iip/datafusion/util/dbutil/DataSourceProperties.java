@@ -3,11 +3,6 @@ package com.iip.datafusion.util.dbutil;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/**
- * Created by GeGaojian on 2017/12/12.
- * 数据库配置信息实体类
- */
-
 public class DataSourceProperties {
     @JsonProperty("id")
     private String id;
@@ -16,7 +11,7 @@ public class DataSourceProperties {
     @JsonProperty("type")
     private String driverClassName;
     @JsonProperty("url")
-    private String url;     //  host:port/dataBaseName
+    private String url;
     @JsonProperty("user")
     private String username;
     @JsonProperty("pwd")

@@ -1,249 +1,66 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>LibGoodsController测试页面</title>
-  <meta name="layout" content="main"/>
-  <script type="text/javascript" src="https://cdn.bootcss.com/jquery/2.1.1/jquery.min.js"></script>
-  <script type="text/javascript" src="../node_modules/vue/dist/vue.js"></script>
-  <style type="text/css">
-    *{
-      margin:0;
-      padding:0;
-    }
-    .report_card{
-      width:800px;
-      margin:0 auto;
-      font-size:12px;
-    }
-    .report_card table{
-      width:100%;
-      border-collapse: collapse;
-      text-align:center;
-    }
-    .report_card caption{
-      font-size:14px;
-      text-align:left;
-      line-height:30px;
-      font-weight:bold;
-    }
-    .report_card table th,.report_card table td{
-      border:1px solid #ccc;
-    }
-    .report_card table th{
-      height:36px;
-      background:#f8f8f8;
-    }
-    .report_card table td{
-      height:32px;
-      background:#f8f8f8;
-    }
-    .content{
-      width:100%;
-      height:32px;
-      line-height:32px;
-      position:relative;
-    }
-    .content input{
-      position:absolute;
-      top:0;
-      left:0;
-      width:100%;
-      color:#999;
-      padding-left:10px;
-      -webkit-box-sizing:border-box;
-      box-sizing:border-box;
-      height:30px;
-      border:1px solid blue;
-      -webkit-animation:borderAn 2s infinite;
-      animation:borderAn 2s infinite;
-    }
-    .studyForm select{
-      width:100px;
-      height:28px;
-    }
-    .searchInput{
-      width:200px;
-      height:28px;
-    }
-    .searchButton{
-      width:100px;
-      height:32px;
-    }
-    @-webkit-keyframes borderAn{
-      0%{
-        border-color:transparent;
-      }
-      100%{
-        border-color:blue;
-      }
-    }
-    @keyframes borderAn{
-      0%{
-        border-color:transparent;
-      }
-      100%{
-        border-color:blue;
-      }
-    }
-    .studyForm{
-      margin:10px 0;
-    }
-    .studyForm input{
-      width:120px;
-      height:30px;
-
-    }
-  </style>
+    <meta charset="UTF-8">
+    <title>Title</title>
+  <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css"
+        integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 </head>
 <body>
-<div class="report_card" id="reportCard">
-  <table class="studyForm">
-    <caption>成绩录入/处理</caption>
-    <tbody>
-    <tr>
-      <td width="170">学号:<input type="text" v-model="addArr.stuId"></td>
-      <td width="170">姓名:<input type="text" v-model="addArr.name"></td>
-      <td width="170">语文:<input type="text" v-model="addArr.ywScores"></td>
-      <td width="170">数学:<input type="text" v-model="addArr.sxScores"></td>
-      <td colspan="2" width="120">
-        <a href="javascript:void(0);" v-on:click="submitStu">录入</a>
-        <a href="javascript:void(0);" v-on:click="resetStu">重置</a>
-      </td>
-    </tr>
-    <tr>
-      <td align="left">
-        搜索：<input v-model="searchTxt" type="text" class="searchInput">
-      </td>
-      <td>
-        排序字段:
-        <select v-model='sortKey'>
-          <option value="ywScores">语文</option>
-          <option value="sxScores">数学</option>
-        </select>
-      </td>
-      <td>
-        排序类型：
-        <select v-model="sortClass">
-          <option value="1">升序</option>
-          <option value="-1">降序</option>
-        </select>
-      </td>
-      <td colspan="3"></td>
-    </tr>
-    </tbody>
-  </table>
-  <table class="scoreList">
-    <caption>成绩列表</caption>
-    <thead>
-    <th width="170">学号</th>
-    <th width="170">姓名</th>
-    <th width="170">语文</th>
-    <th width="170">数学</th>
-    <th colspan="2" width="120">操作</th>
-    </thead>
-    <tbody>
-    <tr v-for="item in studyArr | filterBy searchTxt | orderBy sortKey sortClass">
-      <td><div class="content">{{item.stuId}}<input v-model="editArr.stuId" type="text" v-if="item.stuId==nowEditCol"></div></td>
-      <td><div class="content">{{item.name}}<input v-model="editArr.name" type="text" v-if="item.stuId==nowEditCol"></div></td>
-      <td><div class="content">{{item.ywScores}}<input v-model="editArr.ywScores" type="text" v-if="item.stuId==nowEditCol"></div></td>
-      <td><div class="content">{{item.sxScores}}<input v-model="editArr.sxScores" type="text" v-if="item.stuId==nowEditCol"></div></td>
-      <td>
-        <a href="javascript:void(0);" v-on:click="startEdit(item.stuId)" v-if="item.stuId!=nowEditCol">编辑</a>
-        <a href="javascript:void(0);" v-on:click="cancelEdit" v-if="item.stuId==nowEditCol">取消</a>
-        <a href="javascript:void(0);" v-on:click="sureEdit(item.stuId)" v-if="item.stuId==nowEditCol">确认</a>
-      </td>
-      <td><a href="javascript:void(0);" v-on:click="deleteStu(item.stuId)">删除</a></td>
-    </tr>
-    </tbody>
-  </table>
-</div>
-<script type="text/javascript">
-  var studyArrJson=[
-    {'stuId':'stu0001','name':'张三','ywScores':85,'sxScores':90},
-    {'stuId':'stu0002','name':'李四','ywScores':88,'sxScores':85},
-    {'stuId':'stu0003','name':'王五','ywScores':65,'sxScores':75},
-    {'stuId':'stu0004','name':'刘六','ywScores':58,'sxScores':96}
-  ];
-  var reportCardVm=new Vue({
-    el:'#reportCard',
-    data:{
-      studyArr:studyArrJson,//成绩花名册
-      addArr:{'stuId':'','name':'','ywScores':'','sxScores':''},//新增的表单字段
-      nowEditCol:-1,//当前编辑的行
-      editStatus:false,//当前是否在编辑状态
-      searchTxt:'',//搜索字段
-      sortKey:'ywScores',//排序健
-      sortClass:'1',//升降排序1为升,-1为降
-    },
-    methods:{
-      //启动索引index数据编辑
-      startEdit:function(id){
-        this.nowEditCol=id;
-      },
-      //取消编辑状态
-      cancelEdit:function(){
-        this.nowEditCol=-1;
-      },
-      //启动索引index数据修改确认
-      sureEdit:function(id){
-        for(var i=0,len=this.studyArr.length;i<len;i++){
-          if(id === this.studyArr[i]['stuId'] ){
-            this.studyArr.splice(i,1,this.editArr);
-            break;
-          }
-        }
-        this.nowEditCol=-1;
-      },
-      //删除索引index数据
-      deleteStu:function(id){
-        for(var i=0,len=this.studyArr.length;i<len;i++){
-          if(id === this.studyArr[i]['stuId'] ){
-            this.studyArr.splice(i,1);
-            break;
-          }
-        }
-      },
-      //新增成绩
-      submitStu:function(){
-        var addArr={
-          'stuId':this.addArr.stuId,
-          'name':this.addArr.name,
-          'ywScores':this.addArr.ywScores,
-          'sxScores':this.addArr.sxScores
-        };
-        this.studyArr.push(addArr);
-        this.resetStu();
-      },
-      //复位新增表单
-      resetStu:function(){
-        this.addArr={
-          'stuId':'',
-          'name':'',
-          'ywScores':'',
-          'sxScores':''
-        }
-      }
-    },
-    computed:{
-      //存储当前编辑的对象
-      editArr:function(){
-        var editO={};
-        for(var i=0,len=this.studyArr.length;i<len;i++){
-          if(this.nowEditCol === this.studyArr[i]['stuId'] ){
-            editO= this.studyArr[i];
-            break;
-          }
-        }
-        return {
-          'stuId':editO.stuId,
-          'name':editO.name,
-          'ywScores':editO.ywScores,
-          'sxScores':editO.sxScores
-        }
-      }
-    }
-  })
-</script>
+<nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="#">Brand</a>
+    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav">
+        <li class="active"><a href="#">Link <span class="sr-only">(current)</span></a></li>
+        <li><a href="#">Link</a></li>
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="#">Action</a></li>
+            <li><a href="#">Another action</a></li>
+            <li><a href="#">Something else here</a></li>
+            <li role="separator" class="divider"></li>
+            <li><a href="#">Separated link</a></li>
+            <li role="separator" class="divider"></li>
+            <li><a href="#">One more separated link</a></li>
+          </ul>
+        </li>
+      </ul>
+      <form class="navbar-form navbar-left">
+        <div class="form-group">
+          <input type="text" class="form-control" placeholder="Search">
+        </div>
+        <button type="submit" class="btn btn-default">Submit</button>
+      </form>
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="#">Link</a></li>
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="#">Action</a></li>
+            <li><a href="#">Another action</a></li>
+            <li><a href="#">Something else here</a></li>
+            <li role="separator" class="divider"></li>
+            <li><a href="#">Separated link</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
+<script src="https://code.jquery.com/jquery.js"></script>
+<script src="js/bootstrap.min.js"></script>
 </body>
 </html>
