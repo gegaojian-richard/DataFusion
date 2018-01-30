@@ -1,7 +1,7 @@
 <template>
   <div class="app-wrapper" :class="{hideSidebar:!sidebar.opened}">
-    <sidebar class="sidebar-container" style="border-right:2px solid #bfcbd9;"></sidebar>
-    <div class="main-container">
+    <sidebar class="sidebar-container" ></sidebar>
+    <div class="main-container"style="border-left:2px solid #bfcbd9;">
       <navbar></navbar>
       <tags-view></tags-view>
       <app-main></app-main>

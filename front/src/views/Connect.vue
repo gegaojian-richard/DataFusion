@@ -9,7 +9,7 @@
           <!--</button>-->
         </div>
         </div>
-        <div class="tablecontent">
+        <div class="tablecontent" style="margin-left: 200px">
           <el-table
             :data="previewData"
             height="450"
@@ -48,7 +48,7 @@
     margin:5px 10px 5px 20px;
   }
   .show{
-    margin-left: 150px;
+    margin-left: 200px;
   }
 </style>
 <script>

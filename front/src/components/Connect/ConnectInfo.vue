@@ -147,7 +147,7 @@
           database: data.id,
           table: data.displayName
         }
-        if(emitdata.database!=emitdata.table){
+        if(!data.tables){
           this.$emit('previewtable', emitdata);    //传递给父组件选中的表格
         }
       },
