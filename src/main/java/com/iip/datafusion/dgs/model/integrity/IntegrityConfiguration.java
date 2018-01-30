@@ -1,10 +1,15 @@
-package com.iip.datafusion.dgs.model;
+package com.iip.datafusion.dgs.model.integrity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.iip.datafusion.backend.configuration.Configuration;
 
 import java.util.ArrayList;
 
-public class TableAnyEmptyCheckParam {
+/**
+ * @author zengc
+ * @date 2018/1/21 10:17
+ */
+public class IntegrityConfiguration implements Configuration {
 
     @JsonProperty("dataSourceId")
     private String dataSourceId;
@@ -37,6 +42,9 @@ public class TableAnyEmptyCheckParam {
     public void setTableName(String tableName) {
         this.tableName = tableName;
     }
+
+
+
 
 
 }
