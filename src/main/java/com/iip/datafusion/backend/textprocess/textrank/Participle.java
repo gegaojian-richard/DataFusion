@@ -1,4 +1,4 @@
-package com.iip.datafusion.nsps.process.textrank;
+package com.iip.datafusion.backend.textprocess.textrank;
 
 /**
  * Created by ganjun on 2018/1/3.
@@ -94,13 +94,4 @@ public class Participle {
         return sentenceTerms;
     }
 
-
-
-    public static void main(String [] args){
-
-        List<Word> ret = TextRank.topKWordsFromFile("a", 20, 5, 0.85);
-        for(int i=0 ; i<ret.size() ; i++){
-            System.out.println(ret.get(i).getWord() + "->" + ret.get(i).getWeight());
-        }
-    }
 }

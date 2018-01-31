@@ -1,4 +1,4 @@
-package com.iip.datafusion.nsps.process.textrank;
+package com.iip.datafusion.backend.textprocess.textrank;
 
 /**
  * Created by ganjun on 2018/1/3.
@@ -8,9 +8,7 @@ import com.hankcs.hanlp.seg.common.Term;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
 public class TextRank {
-
 
     TextRankGraph graph ;
     double d;  // 阻尼系数
