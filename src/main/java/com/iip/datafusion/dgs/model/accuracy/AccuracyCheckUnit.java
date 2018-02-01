@@ -6,7 +6,6 @@ import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
-import org.springframework.jdbc.support.rowset.SqlRowSetMetaData;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -19,11 +18,9 @@ public class AccuracyCheckUnit {
     private AccuracyDao accuracyDao;
 
     public Result doCheck(String tableName, FormulaParam formulaParam){
-
         String whereClause = formulaParam.getWhereClause();
         List<ColumnAttributeValue> columnAttributeValues = formulaParam.getColumnAttributeValues();
 
-        //如果where子句中的字段存在语义的对应关系
         String newWhereClause = whereClause;
         if(!columnAttributeValues.isEmpty()){
             for(ColumnAttributeValue cav : columnAttributeValues){
@@ -36,31 +33,27 @@ public class AccuracyCheckUnit {
                 newWhereClause = newWhereClause.replaceAll(cav.getColumn(),clause);
             }
         }
+        String[] splits = newWhereClause.split("=");
+        String newColumnName = "new_" + splits[0].trim();
+        String selectClause = "* , " + splits[1].trim() + " AS " + newColumnName;
+        newWhereClause = "NOT(" + newWhereClause + ")";
 
         try{
-            String[] splits = newWhereClause.split("=");
-            String selectClause = "* , " + splits[1].trim() + " AS newValue";
-            String columnName = splits[0].trim();
-            newWhereClause = "NOT(" + newWhereClause + ")";
             SqlRowSet sqlRowSet = accuracyDao.doSelect(tableName,selectClause,newWhereClause);
-
-            JSONArray jsonArray = new JSONArray();
-            ArrayList<String> columnNames = getColumnNames(sqlRowSet);
-            columnNames.remove("newValue");
+            ArrayList<String> columnNames = accuracyDao.getTableColumnList(tableName);
+            JSONArray data_items = new JSONArray();
             while(sqlRowSet.next()) {
-                JSONArray resultSet = new JSONArray();
-                JSONObject jo = new JSONObject();
+                JSONObject item = new JSONObject();
                 for (String name : columnNames){
-                    jo.put(name,sqlRowSet.getString(name));
+                    item.put(name,sqlRowSet.getString(name));
                 }
-                resultSet.add(jo);
-                JSONObject jsonObject = new JSONObject();
-                jsonObject.put("resultSet", resultSet);
-                jsonObject.put("message", columnName + " 应改为：" + sqlRowSet.getString("newValue"));
-                jsonArray.add(jsonObject);
+                item.put(newColumnName,sqlRowSet.getString(newColumnName));
+                data_items.add(item);
             }
+            JSONObject result_data = new JSONObject();
+            result_data.put("items", data_items);
 
-            Result result = new Result(1,null,jsonArray.toString());
+            Result result = new Result(1,null,result_data.toString());
             return result;
         }catch (Exception e){
             Result result = new Result(0,"出现内部错误",null);
@@ -73,24 +66,47 @@ public class AccuracyCheckUnit {
         List<ConditionValue> conditionValues = conditionParam.getConditionValues();
 
         try {
-            JSONArray jsonArray = new JSONArray();
-            String whereClause;
+            ArrayList<String> columnNames = accuracyDao.getTableColumnList(tableName);
+            String columnType = "";
+            for(int i = 0; i < columnNames.size();i++){
+                if(columnNames.get(i).equals(columnName)){
+                    columnType = accuracyDao.getColumnType(tableName,i);
+                    System.out.println(columnName);
+                    System.out.println(columnType);
+                    break;
+                }
+            }
+
+            JSONArray data_items = new JSONArray();
             for(ConditionValue cv : conditionValues) {
                 String condition = cv.getCondition();
                 String value = cv.getValue();
 
-                whereClause = "NOT(CASE WHEN " + condition + " THEN " + columnName + " = " + value + " END)";
+                String whereClause;
+                if(columnType.equals("VARCHAR") || columnType.equals("CHAR")) {
+                    whereClause = "NOT(CASE WHEN " + condition + " THEN " + columnName + " = '" + value + "' END)";
+                }
+                else{
+                    whereClause = "NOT(CASE WHEN " + condition + " THEN " + columnName + " = " + value + " END)";
+                }
                 String selectClause = "*";
+
                 SqlRowSet sqlRowSet = accuracyDao.doSelect(tableName, selectClause, whereClause);
 
-                ArrayList<String> columnNames = getColumnNames(sqlRowSet);
-                JSONArray resultSet = getJsonObjectList(sqlRowSet, columnNames);
-                JSONObject jsonObject = new JSONObject();
-                jsonObject.put("resultSet", resultSet);
-                jsonObject.put("message", columnName + "应改为：" + value);
-                jsonArray.add(jsonObject);
+                String newColumnName = "new_" + columnName;
+                while(sqlRowSet.next()){
+                    JSONObject item = new JSONObject();
+                    for (String name : columnNames){
+                        item.put(name,sqlRowSet.getString(name));
+                    }
+                    item.put(newColumnName,value);
+                    data_items.add(item);
+                }
             }
-            Result result = new Result(1,null,jsonArray.toString());
+            JSONObject result_data = new JSONObject();
+            result_data.put("items",data_items);
+
+            Result result = new Result(1,null,result_data.toString());
             return result;
 
         }catch(Exception e){
@@ -107,16 +123,12 @@ public class AccuracyCheckUnit {
         String whereClause = "length("+ columnName + ") <> " + length;
 
         try{
-            JSONArray jsonArray = new JSONArray();
             SqlRowSet sqlRowSet = accuracyDao.doSelect(tableName,selectClause,whereClause);
-            ArrayList<String> columnNames = getColumnNames(sqlRowSet);
-            JSONObject jsonObject = new JSONObject();
-            JSONArray resultSet = getJsonObjectList(sqlRowSet,columnNames);
-            jsonObject.put("resultSet", resultSet);
-            jsonObject.put("message",columnName + "的长度不等于" + length);
-            jsonArray.add(jsonObject);
+            String newColumnName = "new_" + columnName;
+            String newVlaue = columnName+"长度应为"+length;
+            JSONObject result_data = getResultData(tableName,sqlRowSet,newColumnName,newVlaue);
 
-            Result result = new Result(1,null,jsonArray.toString());
+            Result result = new Result(1,null,result_data.toString());
             return result;
         }catch (Exception e){
             Result result = new Result(0,"出现内部错误",null);
@@ -125,24 +137,20 @@ public class AccuracyCheckUnit {
     }
 
     public Result doCheck(String tableName, RangeParam rangeParam){
+        String columnName = rangeParam.getColumnName();
         String whereClause = rangeParam.getWhereClause();
 
+        String newWhereClause = "NOT(" + whereClause + ")";
+        String selectClause = "*";
+
         try {
-            String newWhereClause = "NOT(" + whereClause + ")";
-            String selectClause = "*";
             SqlRowSet sqlRowSet = accuracyDao.doSelect(tableName,selectClause,newWhereClause);
+            String newColumnName = "new_" + columnName;
+            String neaValue = whereClause;
+            JSONObject result_data = getResultData(tableName,sqlRowSet,newColumnName,neaValue);
 
-            JSONArray jsonArray = new JSONArray();
-            ArrayList<String> columnNames = getColumnNames(sqlRowSet);
-            JSONArray resultSet = getJsonObjectList(sqlRowSet,columnNames);
-            JSONObject jsonObject = new JSONObject();
-            jsonObject.put("resultSet", resultSet);
-            jsonObject.put("message","应满足：" + whereClause);
-            jsonArray.add(jsonObject);
-
-            Result result = new Result(1,null,jsonArray.toString());
+            Result result = new Result(1,null,result_data.toString());
             return result;
-
         }catch (Exception e) {
             Result result = new Result(0, "出现内部错误", null);
             return result;
@@ -150,23 +158,19 @@ public class AccuracyCheckUnit {
     }
 
     public Result doCheck(String tableName, EmailParam emailParam){
-
         String columnName = emailParam.getColumnName();
+
         String whereClause = columnName +" REGEXP '^[a-zA-Z0-9]+[a-zA-Z0-9_-]*@[a-zA-Z0-9]+([\\.][a-zA-Z0-9]+){1,}$'";
         whereClause = "NOT(" + whereClause + ")";
         String selectClause = "*";
+
         try{
             SqlRowSet sqlRowSet = accuracyDao.doSelect(tableName,selectClause,whereClause);
+            String newColumnName = "new_" + columnName;
+            String neaValue = "邮箱格式不正确";
+            JSONObject result_data = getResultData(tableName,sqlRowSet,newColumnName,neaValue);
 
-            JSONArray jsonArray = new JSONArray();
-            ArrayList<String> columnNames = getColumnNames(sqlRowSet);
-            JSONArray resultSet = getJsonObjectList(sqlRowSet,columnNames);
-            JSONObject jsonObject = new JSONObject();
-            jsonObject.put("resultSet", resultSet);
-            jsonObject.put("message","邮箱格式不正确！");
-            jsonArray.add(jsonObject);
-
-            Result result = new Result(1,null,jsonArray.toString());
+            Result result = new Result(1,null,result_data.toString());
             return result;
         }catch (Exception e) {
             Result result = new Result(0,"出现内部错误",null);
@@ -174,25 +178,20 @@ public class AccuracyCheckUnit {
         }
     }
 
-    private ArrayList<String> getColumnNames(SqlRowSet sqlRowSet){
-        SqlRowSetMetaData smd = sqlRowSet.getMetaData();
-        int columnCount = smd.getColumnCount();
-        ArrayList<String> columnNames = new ArrayList<String>();
-        for(int i = 1;i <= columnCount;i++){
-            columnNames.add(smd.getColumnName(i));
-        }
-        return columnNames;
-    }
-
-    private JSONArray getJsonObjectList(SqlRowSet sqlRowSet, ArrayList<String> colname){
-        JSONArray list = new JSONArray();
+    private JSONObject getResultData(String tableName,SqlRowSet sqlRowSet, String newColumnName, String newValue) {
+        ArrayList<String> columnNames = accuracyDao.getTableColumnList(tableName);
+        JSONArray data_items = new JSONArray();
         while (sqlRowSet.next()){
-            JSONObject jo = new JSONObject();
-            for (String name : colname){
-                jo.put(name,sqlRowSet.getString(name));
+            JSONObject item = new JSONObject();
+            for (String name : columnNames){
+                item.put(name,sqlRowSet.getString(name));
             }
-            list.add(jo);
+            item.put(newColumnName,newValue);
+            data_items.add(item);
         }
-        return list;
+        JSONObject result_data = new JSONObject();
+        result_data.put("items",data_items);
+
+        return result_data;
     }
 }

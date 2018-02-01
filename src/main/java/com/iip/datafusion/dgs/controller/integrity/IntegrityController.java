@@ -22,6 +22,7 @@ public class IntegrityController {
     public Result checkIntegrity(@RequestBody IntegrityConfiguration integrityConfiguration) {
 
         try{
+
             IntegrityJob integrityJob = integrityService.commitJob(integrityConfiguration);
             while (integrityJob.getResult()==null){
 
