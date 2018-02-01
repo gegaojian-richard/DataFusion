@@ -36,6 +36,7 @@ public class DatafusionApplication {
 		// ganjun Manager init()
 		TestManager.getInstance().init();
 		TextRankManager.getInstance().init();
+		NameRecognitionManager.getInstance().init();
 	}
 
 }

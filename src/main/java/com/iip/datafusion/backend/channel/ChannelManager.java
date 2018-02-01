@@ -1,6 +1,7 @@
 package com.iip.datafusion.backend.channel;
 
 import com.iip.datafusion.backend.job.accuracy.AccuracyJob;
+import com.iip.datafusion.backend.job.algorithm.NameRecognitionJob;
 import com.iip.datafusion.backend.job.algorithm.TextRankJob;
 import com.iip.datafusion.backend.job.consistency.ConsistencyJob;
 import com.iip.datafusion.backend.job.integrity.IntegrityJob;
@@ -23,6 +24,8 @@ public class ChannelManager {
     private WorkStealingEnabledChannel<TestJob> testChannel;
     // ganjun textRank
     private WorkStealingEnabledChannel<TextRankJob> textRankChannel;
+    // ganjun nameRecognition
+    private WorkStealingEnabledChannel<NameRecognitionJob> nameRecognitionChannel;
 
     private ChannelManager(){
     }
@@ -80,5 +83,15 @@ public class ChannelManager {
 
     public void setTextRankChannel(WorkStealingEnabledChannel<TextRankJob> textRankChannel) {
         this.textRankChannel = textRankChannel;
+    }
+
+    // ganjun add name recognition job
+
+    public WorkStealingEnabledChannel<NameRecognitionJob> getNameRecognitionChannel() {
+        return nameRecognitionChannel;
+    }
+
+    public void setNameRecognitionChannel(WorkStealingEnabledChannel<NameRecognitionJob> nameRecognitionChannel) {
+        this.nameRecognitionChannel = nameRecognitionChannel;
     }
 }

@@ -4,6 +4,7 @@ package com.iip.datafusion.backend.textprocess.textrank;
  * Created by ganjun on 2018/1/3.
  */
 import com.hankcs.hanlp.seg.common.Term;
+import com.iip.datafusion.backend.textprocess.util.FileUtil;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -96,7 +97,7 @@ public class TextRank {
     d: 阻尼系数
      */
     public static List<Word> topKWordsFromFile(String path , int topK , int k , double d){
-        Participle.loadStopWords("src/main/java/com/iip/datafusion/nsps/resource/stopwords");
+        FileUtil.loadStopWords("src/main/java/com/iip/datafusion/nsps/resource/stopwords");
         List<List<Term>> sentences = Participle.fileParticiple(path);
         TextRank textRank = new TextRank(k, d);
         for(List<Term> sentence: sentences){

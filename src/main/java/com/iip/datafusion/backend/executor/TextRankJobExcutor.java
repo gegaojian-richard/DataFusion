@@ -90,18 +90,19 @@ public class TextRankJobExcutor extends AbstractTerminatableThread implements Jo
             , List<File> files , List<List<Word>> documents){
         DataSourceRouterManager.setCurrentDataSourceKey(dataSourceKey);
         try {
+            StringBuilder sql = new StringBuilder("insert into " + tableName + " (`filepath`,`keywords`)" +
+                    " values");
             for (int i = 0; i < files.size(); i++) {
+                if(i>0) sql.append(',');
                 String data = "";
                 for (Word word : documents.get(i)) {
                     data += ";" + word.getWord();
                 }
-                StringBuilder sql = new StringBuilder("insert into " + tableName + " (`filepath`,`keywords`)" +
-                        " values('" + files.get(i).getPath() + "', '" + data.substring(1) + "')");
-                int changes = jdbcTemplate.update(sql.toString());
-                if(changes == 0){
-                    System.out.println("insert into " + tableName + " (`filepath`,`keywords`)" +
-                            " values('" + files.get(i).getPath() + "', '" + data.substring(1) + "')" + "sql add data failed");
-                }
+                sql.append("('" + files.get(i).getPath() + "', '" + data.substring(1) + "')");
+            }
+            int changes = jdbcTemplate.update(sql.toString());
+            if(changes == 0){
+                System.out.println(sql.toString() + "sql add data failed");
             }
         }catch (Exception ex){
             System.out.println(ex.getMessage());

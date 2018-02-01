@@ -27,7 +27,7 @@ public class TextRankController {
 
     @RequestMapping(path = {"/nsps/TextRank"}, method = RequestMethod.POST)
     @ResponseBody
-    public Result checkIntegrity(@RequestBody TextRankConfiguration textRankConfiguration) {
+    public Result textRank(@RequestBody TextRankConfiguration textRankConfiguration) {
 
         try{
             TextRankJob textRankJob = textRankService.commitJob(textRankConfiguration);

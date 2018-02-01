@@ -4,11 +4,26 @@ package com.iip.datafusion.backend.textprocess.util;
  * @Author Junnor.G
  * @Date 2018/1/31 下午9:34
  */
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.util.HashSet;
 import java.util.List;
 import java.util.ArrayList;
 import java.io.File;
+import java.util.Set;
 
 public class FileUtil {
+    public static void test(){
+        List<File> files = getAllFilePath(new ArrayList<>() , "ganjun_testdata");
+        for(File file : files){
+            System.out.println(file.getPath());
+        }
+    }
+
+    public static void main(String [] args){
+        test();
+    }
+    public static Set<String> stopWords = new HashSet<>();
     // 获得某个路径下的所有文件，包括所有子文件下的文件，递归查找，使用方法就是getAllFilePath(new ArrayList<>() , dir_path)
     public static List<File> getAllFilePath(List<File> files , String dirPath){
         File file = new File(dirPath);  //File can represent as file or directory
@@ -24,14 +39,39 @@ public class FileUtil {
         return files;
     }
 
-    public static void test(){
-        List<File> files = getAllFilePath(new ArrayList<>() , "ganjun_testdata");
-        for(File file : files){
-            System.out.println(file.getPath());
+    /*
+    从路径为path的文件中加载停词表。
+     */
+    public static boolean loadStopWords(String path){
+        if(stopWords.isEmpty() == false) return true; // 已经加载过停词表，不必重复加载。
+        try{
+            BufferedReader br = new BufferedReader(new FileReader(path));
+            String line;
+            while((line = br.readLine()) != null) {
+                stopWords.add(line);
+            }
+            return true;
+        }catch (Exception ex){
+            System.out.println(ex.getMessage());
+            return false;
         }
     }
 
-    public static void main(String [] args){
-        test();
+    /*
+    将一个文件中的所有数据都读取出来作为一个字符串
+     */
+    public static String readFileAsString(String filePath){
+        try{
+            String file = "";
+            BufferedReader br = new BufferedReader(new FileReader(filePath));
+            String line;
+            while((line = br.readLine()) != null) {
+                file += line;
+            }
+            return file;
+        }catch (Exception ex){
+            System.out.println(ex.getMessage());
+            return null;
+        }
     }
 }
