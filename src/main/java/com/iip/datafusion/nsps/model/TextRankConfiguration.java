@@ -8,9 +8,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 public class TextRankConfiguration {
     @JsonProperty("path")
-    String path;
+    private String path;
     @JsonProperty("topK")
-    int topK;
+    private int topK;
+    @JsonProperty("tableName")
+    private String tableName;
 
     public String getPath() {
         return path;
@@ -26,5 +28,13 @@ public class TextRankConfiguration {
 
     public void setTopK(int topK) {
         this.topK = topK;
+    }
+
+    public String getTableName() {
+        return tableName;
+    }
+
+    public void setTableName(String tableName) {
+        this.tableName = tableName;
     }
 }

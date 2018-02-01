@@ -8,6 +8,7 @@ import com.iip.datafusion.util.jsonutil.Result;
  */
 public class NameRecognitionJob {
     private String path;
+    private String tableName;
     private Result result;
 
     public NameRecognitionJob(){
@@ -24,6 +25,14 @@ public class NameRecognitionJob {
 
     public void setPath(String path) {
         this.path = path;
+    }
+
+    public String getTableName() {
+        return tableName;
+    }
+
+    public void setTableName(String tableName) {
+        this.tableName = tableName;
     }
 
     public Result getResult() {

@@ -8,7 +8,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 public class NameRecognitionConfiguration {
     @JsonProperty("path")
-    String path;
+    private String path;
+    @JsonProperty("tableName")
+    private String tableName;
 
     public String getPath() {
         return path;
@@ -17,4 +19,8 @@ public class NameRecognitionConfiguration {
     public void setPath(String path) {
         this.path = path;
     }
+
+    public String getTableName(){ return tableName; }
+
+    public void setTableName(String tableName){ this.tableName = tableName; }
 }

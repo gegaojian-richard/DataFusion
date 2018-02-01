@@ -10,6 +10,7 @@ import com.iip.datafusion.util.jsonutil.Result;
 public class TextRankJob implements Job{
     private String path;
     private int topK;
+    private String tableName;
     private Result result;
 
     public TextRankJob(){
@@ -37,6 +38,10 @@ public class TextRankJob implements Job{
     public void setTopK(int topK){
         this.topK = topK;
     }
+
+    public String getTableName(){return tableName;}
+
+    public void setTableName(String tableName) {this.tableName = tableName;}
 
     public Result getResult() {
         return result;

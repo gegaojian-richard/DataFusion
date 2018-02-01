@@ -69,8 +69,8 @@ public class TextRankJobExcutor extends AbstractTerminatableThread implements Jo
         // todo: 2. 根据文本关键词建立数据库表,并加入数据，每个文件对应的关键词
         try {
             // job.getTargetDataSourceId 数据库的id
-            createKeyWordsTable("primary" , "keywords");
-            insertKeyWordsToTable("primary" , "keywords" , files , documents);
+            createKeyWordsTable("primary" , job.getTableName());
+            insertKeyWordsToTable("primary" , job.getTableName() , files , documents);
         }catch (Exception ex){
             System.out.println(ex.getMessage());
         }
@@ -98,7 +98,8 @@ public class TextRankJobExcutor extends AbstractTerminatableThread implements Jo
                 for (Word word : documents.get(i)) {
                     data += ";" + word.getWord();
                 }
-                sql.append("('" + files.get(i).getPath() + "', '" + data.substring(1) + "')");
+                if(data.length() > 0) sql.append("('" + files.get(i).getPath() + "', '" + data.substring(1) + "')");
+                else sql.append("('" + files.get(i).getPath() + "', '')"); // 不存在关键词
             }
             int changes = jdbcTemplate.update(sql.toString());
             if(changes == 0){

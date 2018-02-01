@@ -10,14 +10,14 @@ import com.iip.datafusion.nsps.model.TextRankConfiguration;
  * @Date 2018/2/1 下午4:19
  */
 public class NameRecognitionParser implements Parser{
-    public static NameRecognitionJob parse(NameRecognitionConfiguration nameRecognitionConfiguration)throws Exception{
+    public static NameRecognitionJob parse(NameRecognitionConfiguration configuration)throws Exception{
 
-        String path = nameRecognitionConfiguration.getPath();
+        String path = configuration.getPath();
 
         NameRecognitionJob job = new NameRecognitionJob();
 
         job.setPath(path);
-
+        job.setTableName(configuration.getTableName());
         return job;
 
     }
