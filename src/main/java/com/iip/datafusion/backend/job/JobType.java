@@ -7,7 +7,7 @@ package com.iip.datafusion.backend.job;
 public enum JobType {
     CONSISTENCY("consistency"),
     ACCURACY("accuracy"),
-    INTEGRITY("integrity"),
+    INTEGRITY("doc2vec"),
     JOIN("join");
 
     private final String name;

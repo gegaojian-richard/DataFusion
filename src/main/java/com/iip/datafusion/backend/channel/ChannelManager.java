@@ -1,6 +1,7 @@
 package com.iip.datafusion.backend.channel;
 
 import com.iip.datafusion.backend.job.accuracy.AccuracyJob;
+import com.iip.datafusion.backend.job.algorithm.Doc2VecJob;
 import com.iip.datafusion.backend.job.consistency.ConsistencyJob;
 import com.iip.datafusion.backend.job.integrity.IntegrityJob;
 import com.iip.datafusion.backend.job.join.JoinJob;
@@ -15,11 +16,11 @@ public class ChannelManager {
 
     private WorkStealingEnabledChannel<IntegrityJob> integrityChannel;
 
+    private WorkStealingEnabledChannel<Doc2VecJob> doc2vecChannel;
 
     private final static ChannelManager singleInstance = new ChannelManager();
 
-    private ChannelManager(){
-    }
+    private ChannelManager(){ }
 
     public static ChannelManager getInstance(){
         return singleInstance;
@@ -41,6 +42,10 @@ public class ChannelManager {
         this.integrityChannel = integrityChannel;
     }
 
+    public void setDoc2VecChannel(WorkStealingEnabledChannel<Doc2VecJob> doc2vecChannel) {
+        this.doc2vecChannel = doc2vecChannel;
+    }
+
     public WorkStealingEnabledChannel<JoinJob> getJoinChannel() {
         return joinChannel;
     }
@@ -56,4 +61,7 @@ public class ChannelManager {
     public WorkStealingEnabledChannel<IntegrityJob> getIntegrityChannel() {
         return integrityChannel;
     }
+
+    public WorkStealingEnabledChannel<Doc2VecJob> getDoc2VecChannel() {return doc2vecChannel; }
+
 }
