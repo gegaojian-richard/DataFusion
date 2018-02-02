@@ -31,7 +31,7 @@ public class TextRankController {
 
         try{
             TextRankJob textRankJob = textRankService.commitJob(textRankConfiguration);
-            System.out.println("TextRankController: " + textRankJob.getPath());
+//            System.out.println("TextRankController: " + textRankJob.getCorpusPath());
             while(textRankJob.getResult() == null){
                 Thread.sleep(1000);
             }

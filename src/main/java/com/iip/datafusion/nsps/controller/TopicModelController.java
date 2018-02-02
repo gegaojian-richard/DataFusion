@@ -1,11 +1,11 @@
 package com.iip.datafusion.nsps.controller;
 
 import com.iip.datafusion.backend.job.algorithm.TFIDFJob;
-import com.iip.datafusion.backend.job.test.TestJob;
+import com.iip.datafusion.backend.job.algorithm.TopicModelJob;
 import com.iip.datafusion.nsps.model.TFIDFConfiguration;
-import com.iip.datafusion.nsps.model.TestConfiguration;
+import com.iip.datafusion.nsps.model.TopicModelConfiguration;
 import com.iip.datafusion.nsps.service.TFIDFService;
-import com.iip.datafusion.nsps.service.TestService;
+import com.iip.datafusion.nsps.service.TopicModelService;
 import com.iip.datafusion.util.jsonutil.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -16,22 +16,22 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
  * @Author Junnor.G
- * @Date 2018/2/1 下午9:38
+ * @Date 2018/2/3 上午2:50
  */
 @Controller
-public class TFIDFController {
+public class TopicModelController {
     @Autowired
-    TFIDFService service;
+    TopicModelService service;
 
 
 
-    @RequestMapping(path = {"/nsps/TFIDF"}, method = RequestMethod.POST)
+    @RequestMapping(path = {"/nsps/TopicModel"}, method = RequestMethod.POST)
     @ResponseBody
-    public Result tfidf(@RequestBody TFIDFConfiguration configuration) {
+    public Result topicModel(@RequestBody TopicModelConfiguration configuration) {
 
         try{
-            TFIDFJob job = service.commitJob(configuration);
-//            System.out.println("Controller: " + job.getCorpusPath());
+            TopicModelJob job = service.commitJob(configuration);
+            System.out.println("TopicModel Controller: " + job.getCorpusPath() + job.getTopicNum());
             while(job.getResult() == null){
                 Thread.sleep(1000);
             }

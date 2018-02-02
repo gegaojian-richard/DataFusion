@@ -14,7 +14,7 @@ public class TextRankParser implements Parser{
 
         TextRankJob job = new TextRankJob();
 
-        job.setPath(configuration.getPath());
+        job.setCorpusPath(configuration.getCorpusPath());
         job.setTopK(configuration.getTopK());
         job.setTableName(configuration.getTableName());
         job.setDataSourceId(configuration.getDataSourceId());

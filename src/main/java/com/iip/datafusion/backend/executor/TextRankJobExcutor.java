@@ -55,14 +55,14 @@ public class TextRankJobExcutor extends AbstractTerminatableThread implements Jo
     @Override
     public void doJob(TextRankJob job) throws Exception {
         // todo: 1. 找到文件目录路径job.path下所有文本的关键词
-        System.out.println("TextRankExcutor path : " + job.getPath());
-        System.out.println("TextRankExcutor topK: " + job.getTopK());
-        if(job.getPath() == null || job.getTopK() == 0 || job.getTableName() == null || job.getDataSourceId() == null){
+//        System.out.println("TextRankExcutor path : " + job.getCorpusPath());
+//        System.out.println("TextRankExcutor topK: " + job.getTopK());
+        if(job.getCorpusPath() == null || job.getTopK() == 0 || job.getTableName() == null || job.getDataSourceId() == null){
             job.setResult(new Result(-1, "error", "some parameters doesn't exist: " +
-                    "'path', 'topK'(>0), 'tableName', 'dataSourceId'"));
+                    "'corpusPath', 'topK'(>0), 'tableName', 'dataSourceId'"));
         }
         else {
-            Map<String, List<String>> keyWords = TextRank.topKWordsFromFile(job.getDataSourceId() , job.getTopK() , 5 , 0.85);
+            Map<String, List<String>> keyWords = TextRank.topKWordsFromFile(job.getCorpusPath() , job.getTopK() , 5 , 0.85);
             // todo: 2. 根据文本关键词建立数据库表,并加入数据，每个文件对应的关键词
             int status = MySqlDAO.createWordsTable("keywords" , jdbcTemplate , job.getDataSourceId() , job.getTableName());
             if(status == -1){

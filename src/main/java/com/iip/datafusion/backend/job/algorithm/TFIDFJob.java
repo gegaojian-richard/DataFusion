@@ -8,28 +8,28 @@ import com.iip.datafusion.util.jsonutil.Result;
  * @Date 2018/2/1 下午9:41
  */
 public class TFIDFJob implements Job{
-    private String path;
+    private String corpusPath;
     private int topK;
     private String tableName;
     private String dataSourceId;
     private Result result;
 
     public TFIDFJob(){
-        path = "";
+        corpusPath = "";
         topK = 0;
     }
 
-    public TFIDFJob(String path, int topK){
-        this.path = path;
+    public TFIDFJob(String corpusPath, int topK){
+        this.corpusPath = corpusPath;
         this.topK = topK;
     }
 
-    public String getPath() {
-        return path;
+    public String getCorpusPath() {
+        return corpusPath;
     }
 
-    public void setPath(String path) {
-        this.path = path;
+    public void setCorpusPath(String corpusPath) {
+        this.corpusPath = corpusPath;
     }
 
     public int getTopK(){

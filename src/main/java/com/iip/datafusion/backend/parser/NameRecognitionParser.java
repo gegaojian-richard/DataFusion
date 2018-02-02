@@ -14,7 +14,7 @@ public class NameRecognitionParser implements Parser{
 
         NameRecognitionJob job = new NameRecognitionJob();
 
-        job.setPath(configuration.getPath());
+        job.setCorpusPath(configuration.getCorpusPath());
         job.setTableName(configuration.getTableName());
         job.setDataSourceId(configuration.getDataSourceId());
         return job;

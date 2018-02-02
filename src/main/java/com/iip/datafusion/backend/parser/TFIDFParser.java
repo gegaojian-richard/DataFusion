@@ -14,7 +14,7 @@ public class TFIDFParser implements Parser{
 
         TFIDFJob job = new TFIDFJob();
 
-        job.setPath(configuration.getPath());
+        job.setCorpusPath(configuration.getCorpusPath());
         job.setTopK(configuration.getTopK());
         job.setTableName(configuration.getTableName());
         job.setDataSourceId(configuration.getDataSourceId());

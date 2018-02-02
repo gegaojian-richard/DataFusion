@@ -62,7 +62,7 @@ public class TFIDFManager {
 
     public void commitJob(TFIDFJob job){
         try {
-            System.out.println("TFIDFManager: " + job.getPath() + " " + job.getTopK());
+//            System.out.println("TFIDFManager: " + job.getCorpusPath() + " " + job.getTopK());
             ChannelManager.getInstance().getTfidfChannel().put(job);
             token.reservations.incrementAndGet();
         }catch (Exception e){

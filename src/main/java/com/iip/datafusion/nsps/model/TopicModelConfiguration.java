@@ -4,13 +4,13 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * @Author Junnor.G
- * @Date 2018/2/1 下午9:38
+ * @Date 2018/2/3 上午2:51
  */
-public class TFIDFConfiguration {
+public class TopicModelConfiguration {
     @JsonProperty("corpusPath")
     private String corpusPath;
-    @JsonProperty("topK")
-    private int topK;
+    @JsonProperty("topicNum")
+    private int topicNum;
     @JsonProperty("tableName")
     private String tableName;
     @JsonProperty("dataSourceId")
@@ -24,12 +24,12 @@ public class TFIDFConfiguration {
         this.corpusPath = corpusPath;
     }
 
-    public int getTopK() {
-        return topK;
+    public int getTopicNum() {
+        return topicNum;
     }
 
-    public void setTopK(int topK) {
-        this.topK = topK;
+    public void setTopicNum(int topicNum) {
+        this.topicNum = topicNum;
     }
 
     public String getTableName() {

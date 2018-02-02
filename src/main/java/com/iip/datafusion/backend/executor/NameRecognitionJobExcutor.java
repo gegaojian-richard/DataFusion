@@ -54,13 +54,13 @@ public class NameRecognitionJobExcutor  extends AbstractTerminatableThread imple
 
     @Override
     public void doJob(NameRecognitionJob job) throws Exception {
-        if(job.getPath() == null || job.getTableName() == null || job.getDataSourceId() == null){
+        if(job.getCorpusPath() == null || job.getTableName() == null || job.getDataSourceId() == null){
             job.setResult(new Result(-1, "error", "some parameters doesn't exist: " +
-                    "'path', 'tableName', 'dataSourceId'"));
+                    "'corpusPath', 'tableName', 'dataSourceId'"));
         }
         else {
             // todo: 1. 找到文件目录路径job.path下所有文本的实体
-            Map<String, List<String>> words = NameRecognition.getNameFromDir(job.getPath());
+            Map<String, List<String>> words = NameRecognition.getNameFromDir(job.getCorpusPath());
             // todo: 2. 根据每个文件的人名实体建立数据库表，并加入数据，每个文件的路径作为对应的关键词
             int status = MySqlDAO.createWordsTable("name_entities" , jdbcTemplate , job.getDataSourceId() , job.getTableName());
             if(status == -1){

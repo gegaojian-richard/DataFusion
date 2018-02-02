@@ -7,8 +7,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * @Date 2018/1/31 下午3:12
  */
 public class TextRankConfiguration {
-    @JsonProperty("path")
-    private String path;
+    @JsonProperty("corpusPath")
+    private String corpusPath;
     @JsonProperty("topK")
     private int topK;
     @JsonProperty("tableName")
@@ -16,12 +16,12 @@ public class TextRankConfiguration {
     @JsonProperty("dataSourceId")
     private String dataSourceId;
 
-    public String getPath() {
-        return path;
+    public String getCorpusPath() {
+        return corpusPath;
     }
 
-    public void setPath(String path) {
-        this.path = path;
+    public void setCorpusPath(String corpusPath) {
+        this.corpusPath = corpusPath;
     }
 
     public int getTopK() {

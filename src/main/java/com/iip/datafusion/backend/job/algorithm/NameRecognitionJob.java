@@ -7,25 +7,25 @@ import com.iip.datafusion.util.jsonutil.Result;
  * @Date 2018/2/1 下午4:18
  */
 public class NameRecognitionJob {
-    private String path;
+    private String corpusPath;
     private String tableName;
     private Result result;
     private String dataSourceId;
 
     public NameRecognitionJob(){
-        path = "";
+        corpusPath = "";
     }
 
-    public NameRecognitionJob(String path){
-        this.path = path;
+    public NameRecognitionJob(String corpusPath){
+        this.corpusPath = corpusPath;
     }
 
-    public String getPath() {
-        return path;
+    public String getCorpusPath() {
+        return corpusPath;
     }
 
-    public void setPath(String path) {
-        this.path = path;
+    public void setCorpusPath(String corpusPath) {
+        this.corpusPath = corpusPath;
     }
 
     public String getTableName() {

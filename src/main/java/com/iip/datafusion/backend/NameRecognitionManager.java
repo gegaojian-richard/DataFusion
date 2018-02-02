@@ -62,7 +62,7 @@ public class NameRecognitionManager {
 
     public void commitJob(NameRecognitionJob job){
         try {
-            System.out.println("NameRecognitionManager: " + job.getPath());
+//            System.out.println("NameRecognitionManager: " + job.getCorpusPath());
             ChannelManager.getInstance().getNameRecognitionChannel().put(job);
             token.reservations.incrementAndGet();
         }catch (Exception e){

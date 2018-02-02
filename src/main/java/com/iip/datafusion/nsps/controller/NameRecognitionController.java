@@ -28,7 +28,7 @@ public class NameRecognitionController {
 
         try{
             NameRecognitionJob job = nameRecognitionService.commitJob(configuration);
-            System.out.println("Controller: " + job.getPath());
+//            System.out.println("Controller: " + job.getCorpusPath());
             while(job.getResult() == null){
                 Thread.sleep(1000);
             }

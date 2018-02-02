@@ -7,19 +7,19 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * @Date 2018/2/1 下午4:14
  */
 public class NameRecognitionConfiguration {
-    @JsonProperty("path")
-    private String path;
+    @JsonProperty("corpusPath")
+    private String corpusPath;
     @JsonProperty("tableName")
     private String tableName;
     @JsonProperty("dataSourceId")
     private String dataSourceId;
 
-    public String getPath() {
-        return path;
+    public String getCorpusPath() {
+        return corpusPath;
     }
 
-    public void setPath(String path) {
-        this.path = path;
+    public void setCorpusPath(String corpusPath) {
+        this.corpusPath = corpusPath;
     }
 
     public String getTableName(){ return tableName; }

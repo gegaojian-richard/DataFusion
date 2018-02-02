@@ -8,28 +8,28 @@ import com.iip.datafusion.util.jsonutil.Result;
  * @Date 2018/1/31 下午3:16
  */
 public class TextRankJob implements Job{
-    private String path;
+    private String corpusPath;
     private int topK;
     private String tableName;
     private Result result;
     private String dataSourceId;
 
     public TextRankJob(){
-        path = "";
+        corpusPath = "";
         topK = 0;
     }
 
-    public TextRankJob(String path, int topK){
-        this.path = path;
+    public TextRankJob(String corpusPath, int topK){
+        this.corpusPath = corpusPath;
         this.topK = topK;
     }
 
-    public String getPath() {
-        return path;
+    public String getCorpusPath() {
+        return corpusPath;
     }
 
-    public void setPath(String path) {
-        this.path = path;
+    public void setCorpusPath(String corpusPath) {
+        this.corpusPath = corpusPath;
     }
 
     public int getTopK(){
