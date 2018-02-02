@@ -1,10 +1,11 @@
 package com.iip.datafusion.backend.channel;
 
 import com.iip.datafusion.backend.job.accuracy.AccuracyJob;
+import com.iip.datafusion.backend.job.algorithm.TextRankJob;
 import com.iip.datafusion.backend.job.consistency.ConsistencyJob;
 import com.iip.datafusion.backend.job.integrity.IntegrityJob;
 import com.iip.datafusion.backend.job.join.JoinJob;
-
+import com.iip.datafusion.backend.job.test.TestJob;
 public class ChannelManager {
 
     private WorkStealingEnabledChannel<JoinJob> joinChannel;
@@ -17,6 +18,11 @@ public class ChannelManager {
 
 
     private final static ChannelManager singleInstance = new ChannelManager();
+
+    // ganjun test
+    private WorkStealingEnabledChannel<TestJob> testChannel;
+    // ganjun textRank
+    private WorkStealingEnabledChannel<TextRankJob> textRankChannel;
 
     private ChannelManager(){
     }
@@ -55,5 +61,24 @@ public class ChannelManager {
 
     public WorkStealingEnabledChannel<IntegrityJob> getIntegrityChannel() {
         return integrityChannel;
+    }
+
+    // ganjun add TestJob
+    public WorkStealingEnabledChannel<TestJob> getTestChannel() {
+        return testChannel;
+    }
+
+    public void setTestChannel(WorkStealingEnabledChannel<TestJob> testChannel){
+        this.testChannel = testChannel;
+    }
+
+    // ganjun add TextRankJob
+
+    public WorkStealingEnabledChannel<TextRankJob> getTextRankChannel() {
+        return textRankChannel;
+    }
+
+    public void setTextRankChannel(WorkStealingEnabledChannel<TextRankJob> textRankChannel) {
+        this.textRankChannel = textRankChannel;
     }
 }
