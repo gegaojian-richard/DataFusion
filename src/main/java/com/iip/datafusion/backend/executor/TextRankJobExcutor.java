@@ -5,10 +5,13 @@ import com.iip.datafusion.backend.common.AbstractTerminatableThread;
 import com.iip.datafusion.backend.common.TerminationToken;
 import com.iip.datafusion.backend.jdbchelper.JDBCHelper;
 import com.iip.datafusion.backend.job.algorithm.TextRankJob;
+import com.iip.datafusion.backend.textprocess.cheonhye.TF_IDF;
 import com.iip.datafusion.backend.textprocess.textrank.TextRank;
 import com.iip.datafusion.backend.textprocess.textrank.Word;
 import com.iip.datafusion.backend.textprocess.util.FileUtil;
+import com.iip.datafusion.nsps.dao.MySqlDAO;
 import com.iip.datafusion.util.dbutil.DataSourceRouterManager;
+import com.iip.datafusion.util.jsonutil.JsonParse;
 import com.iip.datafusion.util.jsonutil.Result;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
@@ -16,6 +19,7 @@ import org.springframework.jdbc.core.PreparedStatementCreator;
 import java.io.File;
 import java.sql.Connection;
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.List;
 
@@ -53,61 +57,23 @@ public class TextRankJobExcutor extends AbstractTerminatableThread implements Jo
         // todo: 1. 找到文件目录路径job.path下所有文本的关键词
         System.out.println("TextRankExcutor path : " + job.getPath());
         System.out.println("TextRankExcutor topK: " + job.getTopK());
-        List<File> files = FileUtil.getAllFilePath(new ArrayList<>() , job.getPath());
-        List<List<Word>> documents = new ArrayList<>();
-        String data = "";
-        for(File file: files){
-            List<Word> words = TextRank.topKWordsFromFile(file.getPath(), job.getTopK(), 5, 0.85);
-            data += file.getPath() + ": \n";
-            for(Word word : words){
-                data +=  ";" + word.getWord();
+        if(job.getPath() == null || job.getTopK() == 0 || job.getTableName() == null || job.getDataSourceId() == null){
+            job.setResult(new Result(-1, "error", "some parameters doesn't exist: " +
+                    "'path', 'topK'(>0), 'tableName', 'dataSourceId'"));
+        }
+        else {
+            Map<String, List<String>> keyWords = TextRank.topKWordsFromFile(job.getDataSourceId() , job.getTopK() , 5 , 0.85);
+            // todo: 2. 根据文本关键词建立数据库表,并加入数据，每个文件对应的关键词
+            int status = MySqlDAO.createWordsTable("keywords" , jdbcTemplate , job.getDataSourceId() , job.getTableName());
+            if(status == -1){
+                job.setResult(new Result(-1, "error", "create table error"));
             }
-            data += "\n";
-            documents.add(words);
+            else{
+                status = MySqlDAO.insertWordsToTable("keywords" , jdbcTemplate , job.getDataSourceId() , job.getTableName() , keyWords);
+                if(status == -1) job.setResult(new Result(-1, "error", "create table error"));
+                else job.setResult(new Result(0, "right", JsonParse.getMapper().writeValueAsString(keyWords)));
+            }
         }
-
-        // todo: 2. 根据文本关键词建立数据库表,并加入数据，每个文件对应的关键词
-        try {
-            // job.getTargetDataSourceId 数据库的id
-            createKeyWordsTable(job.getDataSourceId() , job.getTableName());
-            insertKeyWordsToTable(job.getDataSourceId() , job.getTableName() , files , documents);
-        }catch (Exception ex){
-            System.out.println(ex.getMessage());
-        }
-        job.setResult(new Result(0, "good", data));
     }
 
-    // create table in the database of dataSourceKey
-    public void createKeyWordsTable(String dataSourceKey , String tableName){
-        DataSourceRouterManager.setCurrentDataSourceKey(dataSourceKey);
-        StringBuilder sql = new StringBuilder("create table if not exists `" + tableName +"` (" +
-                "`filepath` varchar(1000) CHARACTER SET utf8 NOT NULL, `keywords` varchar(5000) CHARACTER SET utf8, primary key (`filepath`))");
-        jdbcTemplate.execute(sql.toString());
-    }
-
-    // insert keywords data to table in the database of dataSourceKey
-    public void insertKeyWordsToTable(String dataSourceKey , String tableName
-            , List<File> files , List<List<Word>> documents){
-        DataSourceRouterManager.setCurrentDataSourceKey(dataSourceKey);
-        try {
-            StringBuilder sql = new StringBuilder("insert into " + tableName + " (`filepath`,`keywords`)" +
-                    " values");
-            for (int i = 0; i < files.size(); i++) {
-                if(i>0) sql.append(',');
-                String data = "";
-                for (Word word : documents.get(i)) {
-                    data += ";" + word.getWord();
-                }
-                if(data.length() > 0) sql.append("('" + files.get(i).getPath() + "', '" + data.substring(1) + "')");
-                else sql.append("('" + files.get(i).getPath() + "', '')"); // 不存在关键词
-            }
-            int changes = jdbcTemplate.update(sql.toString());
-            if(changes == 0){
-                System.out.println(sql.toString() + "sql add data failed");
-            }
-        }catch (Exception ex){
-            System.out.println(ex.getMessage());
-        }
-
-    }
 }

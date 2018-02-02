@@ -10,13 +10,17 @@ import com.iip.datafusion.backend.textprocess.entity_recognition.NameRecognition
 import com.iip.datafusion.backend.textprocess.textrank.TextRank;
 import com.iip.datafusion.backend.textprocess.textrank.Word;
 import com.iip.datafusion.backend.textprocess.util.FileUtil;
+import com.iip.datafusion.nsps.dao.MySqlDAO;
 import com.iip.datafusion.util.dbutil.DataSourceRouterManager;
+import com.iip.datafusion.util.jsonutil.JsonParse;
 import com.iip.datafusion.util.jsonutil.Result;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 
 /**
@@ -50,65 +54,25 @@ public class NameRecognitionJobExcutor  extends AbstractTerminatableThread imple
 
     @Override
     public void doJob(NameRecognitionJob job) throws Exception {
-        // todo: 1. 找到文件目录路径job.path下所有文本的实体
-        List<File> files = FileUtil.getAllFilePath(new ArrayList<>() , job.getPath());
-        List<List<String>> entities = NameRecognition.getNameFromDir(files);
-        for(List<String> list : entities){
-            for(String str : list){
-                System.out.print(str + " " );
+        if(job.getPath() == null || job.getTableName() == null || job.getDataSourceId() == null){
+            job.setResult(new Result(-1, "error", "some parameters doesn't exist: " +
+                    "'path', 'tableName', 'dataSourceId'"));
+        }
+        else {
+            // todo: 1. 找到文件目录路径job.path下所有文本的实体
+            Map<String, List<String>> words = NameRecognition.getNameFromDir(job.getPath());
+            // todo: 2. 根据每个文件的人名实体建立数据库表，并加入数据，每个文件的路径作为对应的关键词
+            int status = MySqlDAO.createWordsTable("name_entities" , jdbcTemplate , job.getDataSourceId() , job.getTableName());
+            if(status == -1){
+                job.setResult(new Result(-1, "error", "create table error"));
             }
-            System.out.println("");
+            else{
+                status = MySqlDAO.insertWordsToTable("name_entities" , jdbcTemplate , job.getDataSourceId() , job.getTableName() , words);
+                if(status == -1) job.setResult(new Result(-1, "error", "create table error"));
+                else job.setResult(new Result(0, "right", JsonParse.getMapper().writeValueAsString(words)));
+            }
         }
-        System.out.println("NameRecognition path : " + job.getPath());
-
-
-        // todo: 2. 根据每个文件的人名实体建立数据库表，并加入数据，每个文件的路径作为对应的关键词
-        try{
-            createEntitiesTable(job.getDataSourceId(), job.getTableName());
-            insertEntitiesToTable(job.getDataSourceId() , job.getTableName() , files , entities);
-            job.setResult(new Result(0, "good", "success"));
-        }catch (Exception ex){
-            System.out.println(ex.getMessage());
-            job.setResult(new Result(0, "bad", "fail"));
-        }
-
 
     }
 
-    // create table in the database of dataSourceKey
-    public void createEntitiesTable(String dataSourceKey , String tableName){
-        // todo
-        DataSourceRouterManager.setCurrentDataSourceKey(dataSourceKey);
-        StringBuilder sql = new StringBuilder("create table if not exists `" + tableName +
-        "` (`filepath` varchar(1000) CHARACTER SET utf8 NOT NULL, `entities` varchar(5000) " +
-        "CHARACTER SET utf8, primary key (`filepath`))");
-        jdbcTemplate.execute(sql.toString());
-    }
-
-    // insert keywords data to table in the database of dataSourceKey
-    public void insertEntitiesToTable(String dataSourceKey , String tableName
-            , List<File> files , List<List<String>> entities){
-       // todo
-        DataSourceRouterManager.setCurrentDataSourceKey(dataSourceKey);
-        try{
-            StringBuilder sql = new StringBuilder("insert into " + tableName + " (`filepath`,`entities`)"
-            + " values");
-            for(int i=0 ; i<files.size() ; i++){
-                if(i>0) sql.append(',');
-                String data = "";
-                for(String str : entities.get(i)){
-                    data += ";" + str;
-                }
-                if(data.length() > 0) sql.append("('" + files.get(i).getPath() + "', '" + data.substring(1) + "')");
-                else sql.append("('" + files.get(i).getPath() + "', '')"); // 不存在命名实体
-            }
-            System.out.println("insert here: " + sql.toString());
-            int changes = jdbcTemplate.update(sql.toString());
-            if(changes == 0){
-                System.out.println(sql.toString() + " sql add no data");
-            }
-        }catch (Exception ex){
-            System.out.println(ex.getMessage());
-        }
-    }
 }
