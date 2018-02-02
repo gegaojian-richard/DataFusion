@@ -69,8 +69,8 @@ public class TextRankJobExcutor extends AbstractTerminatableThread implements Jo
         // todo: 2. 根据文本关键词建立数据库表,并加入数据，每个文件对应的关键词
         try {
             // job.getTargetDataSourceId 数据库的id
-            createKeyWordsTable("primary" , job.getTableName());
-            insertKeyWordsToTable("primary" , job.getTableName() , files , documents);
+            createKeyWordsTable(job.getDataSourceId() , job.getTableName());
+            insertKeyWordsToTable(job.getDataSourceId() , job.getTableName() , files , documents);
         }catch (Exception ex){
             System.out.println(ex.getMessage());
         }

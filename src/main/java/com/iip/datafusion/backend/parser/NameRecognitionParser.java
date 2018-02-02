@@ -12,12 +12,11 @@ import com.iip.datafusion.nsps.model.TextRankConfiguration;
 public class NameRecognitionParser implements Parser{
     public static NameRecognitionJob parse(NameRecognitionConfiguration configuration)throws Exception{
 
-        String path = configuration.getPath();
-
         NameRecognitionJob job = new NameRecognitionJob();
 
-        job.setPath(path);
+        job.setPath(configuration.getPath());
         job.setTableName(configuration.getTableName());
+        job.setDataSourceId(configuration.getDataSourceId());
         return job;
 
     }

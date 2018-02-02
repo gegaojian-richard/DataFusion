@@ -23,7 +23,9 @@ public class FileUtil {
     public static void main(String [] args){
         test();
     }
+
     public static Set<String> stopWords = new HashSet<>();
+    public static String stopWordsPath = "src/main/java/com/iip/datafusion/backend/textprocess/resource/stopwords";
     // 获得某个路径下的所有文件，包括所有子文件下的文件，递归查找，使用方法就是getAllFilePath(new ArrayList<>() , dir_path)
     public static List<File> getAllFilePath(List<File> files , String dirPath){
         File file = new File(dirPath);  //File can represent as file or directory
@@ -35,6 +37,16 @@ public class FileUtil {
             else{ // this is a directory
                 files = getAllFilePath(files , fileList[i].getPath());
             }
+        }
+        return files;
+    }
+
+    // 获得某个路径下的所有文件，包括所有子文件下的文件，递归查找，使用方法就是getAllFilePath(new ArrayList<>() , dir_path)
+    public static List<String> getAllFilePath(String dirPath){
+        List<File> allFiles = getAllFilePath(new ArrayList<>() , dirPath);
+        List<String> files = new ArrayList<>();
+        for(File file : allFiles){
+            files.add(file.getPath());
         }
         return files;
     }
@@ -56,7 +68,12 @@ public class FileUtil {
             return false;
         }
     }
-
+    /*
+    从默认路径的文件中加载停词表。
+     */
+    public static boolean loadStopWords(){
+        return loadStopWords(stopWordsPath);
+    }
     /*
     将一个文件中的所有数据都读取出来作为一个字符串
      */

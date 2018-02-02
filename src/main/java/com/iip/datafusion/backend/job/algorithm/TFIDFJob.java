@@ -1,23 +1,27 @@
 package com.iip.datafusion.backend.job.algorithm;
 
+import com.iip.datafusion.backend.job.Job;
 import com.iip.datafusion.util.jsonutil.Result;
 
 /**
  * @Author Junnor.G
- * @Date 2018/2/1 下午4:18
+ * @Date 2018/2/1 下午9:41
  */
-public class NameRecognitionJob {
+public class TFIDFJob implements Job{
     private String path;
+    private int topK;
     private String tableName;
-    private Result result;
     private String dataSourceId;
+    private Result result;
 
-    public NameRecognitionJob(){
+    public TFIDFJob(){
         path = "";
+        topK = 0;
     }
 
-    public NameRecognitionJob(String path){
+    public TFIDFJob(String path, int topK){
         this.path = path;
+        this.topK = topK;
     }
 
     public String getPath() {
@@ -28,13 +32,17 @@ public class NameRecognitionJob {
         this.path = path;
     }
 
-    public String getTableName() {
-        return tableName;
+    public int getTopK(){
+        return topK;
     }
 
-    public void setTableName(String tableName) {
-        this.tableName = tableName;
+    public void setTopK(int topK){
+        this.topK = topK;
     }
+
+    public String getTableName(){return tableName;}
+
+    public void setTableName(String tableName) {this.tableName = tableName;}
 
     public Result getResult() {
         return result;

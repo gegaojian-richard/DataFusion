@@ -64,8 +64,8 @@ public class NameRecognitionJobExcutor  extends AbstractTerminatableThread imple
 
         // todo: 2. 根据每个文件的人名实体建立数据库表，并加入数据，每个文件的路径作为对应的关键词
         try{
-            createEntitiesTable("primary", job.getTableName());
-            insertEntitiesToTable("primary" , job.getTableName() , files , entities);
+            createEntitiesTable(job.getDataSourceId(), job.getTableName());
+            insertEntitiesToTable(job.getDataSourceId() , job.getTableName() , files , entities);
             job.setResult(new Result(0, "good", "success"));
         }catch (Exception ex){
             System.out.println(ex.getMessage());

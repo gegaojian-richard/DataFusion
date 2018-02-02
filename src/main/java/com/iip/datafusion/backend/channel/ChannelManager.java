@@ -2,6 +2,7 @@ package com.iip.datafusion.backend.channel;
 
 import com.iip.datafusion.backend.job.accuracy.AccuracyJob;
 import com.iip.datafusion.backend.job.algorithm.NameRecognitionJob;
+import com.iip.datafusion.backend.job.algorithm.TFIDFJob;
 import com.iip.datafusion.backend.job.algorithm.TextRankJob;
 import com.iip.datafusion.backend.job.consistency.ConsistencyJob;
 import com.iip.datafusion.backend.job.integrity.IntegrityJob;
@@ -26,6 +27,8 @@ public class ChannelManager {
     private WorkStealingEnabledChannel<TextRankJob> textRankChannel;
     // ganjun nameRecognition
     private WorkStealingEnabledChannel<NameRecognitionJob> nameRecognitionChannel;
+    // ganjun tfidf
+    private WorkStealingEnabledChannel<TFIDFJob> tfidfChannel;
 
     private ChannelManager(){
     }
@@ -93,5 +96,15 @@ public class ChannelManager {
 
     public void setNameRecognitionChannel(WorkStealingEnabledChannel<NameRecognitionJob> nameRecognitionChannel) {
         this.nameRecognitionChannel = nameRecognitionChannel;
+    }
+
+    // ganjun add tf idf job
+
+    public WorkStealingEnabledChannel<TFIDFJob> getTfidfChannel() {
+        return tfidfChannel;
+    }
+
+    public void setTfidfChannel(WorkStealingEnabledChannel<TFIDFJob> tfidfChannel) {
+        this.tfidfChannel = tfidfChannel;
     }
 }

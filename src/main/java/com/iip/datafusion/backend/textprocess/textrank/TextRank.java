@@ -97,7 +97,7 @@ public class TextRank {
     d: 阻尼系数
      */
     public static List<Word> topKWordsFromFile(String path , int topK , int k , double d){
-        FileUtil.loadStopWords("src/main/java/com/iip/datafusion/nsps/resource/stopwords");
+        FileUtil.loadStopWords();
         List<List<Term>> sentences = Participle.fileParticiple(path);
         TextRank textRank = new TextRank(k, d);
         for(List<Term> sentence: sentences){

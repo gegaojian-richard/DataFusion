@@ -12,6 +12,7 @@ public class TextRankJob implements Job{
     private int topK;
     private String tableName;
     private Result result;
+    private String dataSourceId;
 
     public TextRankJob(){
         path = "";
@@ -49,5 +50,13 @@ public class TextRankJob implements Job{
 
     public void setResult(Result result) {
         this.result = result;
+    }
+
+    public String getDataSourceId() {
+        return dataSourceId;
+    }
+
+    public void setDataSourceId(String dataSourceId) {
+        this.dataSourceId = dataSourceId;
     }
 }

@@ -11,6 +11,8 @@ public class NameRecognitionConfiguration {
     private String path;
     @JsonProperty("tableName")
     private String tableName;
+    @JsonProperty("dataSourceId")
+    private String dataSourceId;
 
     public String getPath() {
         return path;
@@ -23,4 +25,12 @@ public class NameRecognitionConfiguration {
     public String getTableName(){ return tableName; }
 
     public void setTableName(String tableName){ this.tableName = tableName; }
+
+    public String getDataSourceId() {
+        return dataSourceId;
+    }
+
+    public void setDataSourceId(String dataSourceId) {
+        this.dataSourceId = dataSourceId;
+    }
 }

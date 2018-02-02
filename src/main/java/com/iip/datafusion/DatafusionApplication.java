@@ -37,6 +37,7 @@ public class DatafusionApplication {
 		TestManager.getInstance().init();
 		TextRankManager.getInstance().init();
 		NameRecognitionManager.getInstance().init();
+		TFIDFManager.getInstance().init();
 	}
 
 }
