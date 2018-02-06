@@ -58,12 +58,19 @@ public class JoinJobExecutor extends AbstractTerminatableThread implements JobEx
             for (int i = 1; i < sqlTasks.size(); i++) {
                 Map<String, Object> tempResult;
                 DataSourceRouterManager.setCurrentDataSourceKey(sqlTasks.get(i).getDatasourceID());
-                String value = (String)instance.get(sqlTasks.get(i).getWhereFieldName());
+                // todo:int转string有问题
+                String value;
+                if (i == 1){
+                    value = String.valueOf(instance.get(sqlTasks.get(i).getWhereFieldName()));
+                }else{
+                    value = String.valueOf(instance.get(sqlTasks.get(i).getParentJoinUnit()+":"+sqlTasks.get(i).getWhereFieldName()));
+                }
                 tempResult = jdbcTemplate.queryForMap(sqlTasks.get(i).getSql(), value);
 
                 for (String key : tempResult.keySet()
                      ) {
-                    instance.put(key, tempResult.get(key));
+                    // todo:将key加上joinunit标识
+                    instance.put(sqlTasks.get(i).getCurrentJoinUnit() + ":" + key, tempResult.get(key));
                 }
             }
         }
@@ -78,7 +85,14 @@ public class JoinJobExecutor extends AbstractTerminatableThread implements JobEx
                 int j = 1;
                 for (String key : sourceFields
                      ) {
-                    preparedStatement.setString(j,(String) resultSet.get(i).get(key));
+                    String value;
+                    if (resultSet.get(i).get(key)!=null)
+                        value = String.valueOf(resultSet.get(i).get(key));
+                    else {
+                        value = String.valueOf(resultSet.get(i).get(key.split(":")[2]));
+                    }
+                    preparedStatement.setString(j,value);
+                    j++;
                 }
             }
 

@@ -35,7 +35,7 @@ public class DfsController {
     public Result commitJob(@RequestBody JoinConfiguration joinConfiguration){
 
         //        todo: 测试
-        JoinManager.getInstance().init();
+//        JoinManager.getInstance().init();
         Map map = dataFusionService.commitJob(joinConfiguration);
 
         return new Result();

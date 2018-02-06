@@ -91,10 +91,11 @@ public class EntityController {
     @RequestMapping(path={"/entity/create"},method={RequestMethod.POST})
     @ResponseBody
     public Result createEntityDB(@RequestBody Entity entity){
+        // 1. 到目标数据库创建Entity表
         Result result;
         int id = userManager.getUserId();
         result = entityService.createEntityTable(entity,id);
-        if(result.getStatus()==1){
+        if(result.getStatus()==0){
             return result;
         }
 

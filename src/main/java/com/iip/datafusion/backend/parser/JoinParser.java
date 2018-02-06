@@ -29,11 +29,12 @@ public class JoinParser implements Parser{
         Map<String, JoinUnit> joinUnits = new HashMap<>();
         for (String joinUnit : joinConfiguration.getJoinUnits()
                 ) {
+            // todo: split函数的参数是正则表达式，而.是正则表达式中的关键字，所以如果要以.作为分隔符需要使用转义\\.
             String[] temp = joinUnit.split(":");
             joinUnits.put(joinUnit, new JoinUnit(temp[0], temp[1]));
         }
         // 设置主要JoinUnit
-        job.setPrimaryJoinUnitKey(joinConfiguration.getJoinUnits().get(0).split(":")[0]);
+        job.setPrimaryJoinUnitKey(joinConfiguration.getJoinUnits().get(0));
 
         String[] temp;
         // 遍历关系组织joinUnits关系
