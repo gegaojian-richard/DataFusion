@@ -1,4 +1,4 @@
-package com.iip.datafusion.nsps.process.textrank;
+package com.iip.datafusion.backend.textprocess.textrank;
 
 /**
  * Created by ganjun on 2018/1/3.
@@ -8,6 +8,7 @@ import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.corpus.tag.Nature;
 import com.hankcs.hanlp.seg.Segment;
 import com.hankcs.hanlp.seg.common.Term;
+import com.iip.datafusion.backend.textprocess.util.FileUtil;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -17,25 +18,6 @@ import java.util.Set;
 import java.util.List;
 
 public class Participle {
-    private static Set<String> stopWords = new HashSet<>();
-
-    /*
-    从路径为path的文件中加载停词表。
-     */
-    public static boolean loadStopWords(String path){
-        if(stopWords.isEmpty() == false) return true; // 已经加载过停词表，不必重复加载。
-        try{
-            BufferedReader br = new BufferedReader(new FileReader(path));
-            String line;
-            while((line = br.readLine()) != null) {
-                stopWords.add(line);
-            }
-            return true;
-        }catch (Exception ex){
-            System.out.println(ex.getMessage());
-            return false;
-        }
-    }
 
     public static List<String> sentenceParticiple(String path){
         List<String> sentences = new ArrayList<>();
@@ -70,7 +52,7 @@ public class Participle {
     public static List<Term> removeInvalidWords(List<Term> sentence){
         List<Term> validSentence = new ArrayList<>();
         for(Term word : sentence){
-            if(stopWords.contains(word.word)) continue;
+            if(FileUtil.stopWords.contains(word.word)) continue;
             Nature nature = word.nature; // 词性
             if(nature.firstChar()  == 'n' || nature.firstChar() == 'v'
                     || nature.firstChar() == 'a' || nature.firstChar() == 'd'){
@@ -94,13 +76,4 @@ public class Participle {
         return sentenceTerms;
     }
 
-
-
-    public static void main(String [] args){
-
-        List<Word> ret = TextRank.topKWordsFromFile("a", 20, 5, 0.85);
-        for(int i=0 ; i<ret.size() ; i++){
-            System.out.println(ret.get(i).getWord() + "->" + ret.get(i).getWeight());
-        }
-    }
 }

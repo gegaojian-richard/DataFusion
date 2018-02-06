@@ -1,16 +1,15 @@
-package com.iip.datafusion.nsps.process.textrank;
+package com.iip.datafusion.backend.textprocess.textrank;
 
 /**
  * Created by ganjun on 2018/1/3.
  */
 import com.hankcs.hanlp.seg.common.Term;
+import com.iip.datafusion.backend.textprocess.util.FileUtil;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.io.File;
+import java.util.*;
 
 public class TextRank {
-
 
     TextRankGraph graph ;
     double d;  // 阻尼系数
@@ -92,21 +91,31 @@ public class TextRank {
     /*
     核心接口，根据文件，返回前topK个关键词
     参数：
-    path: 文件路径
+    dirPath: 文件目录路径
     topK: 前topK个关键词
     k: textrank 的窗口大小
     d: 阻尼系数
+    输出：
+    String 表示文件相对路径
+    List<String> 表示对应文件下的keywords列表
      */
-    public static List<Word> topKWordsFromFile(String path , int topK , int k , double d){
-        Participle.loadStopWords("src/main/java/com/iip/datafusion/nsps/resource/stopwords");
-        List<List<Term>> sentences = Participle.fileParticiple(path);
-        TextRank textRank = new TextRank(k, d);
-        for(List<Term> sentence: sentences){
-            textRank.addSentenceTerm(sentence);
+    public static Map<String, List<String>> topKWordsFromFile(String dirPath , int topK , int k , double d){
+        Map<String, List<String>> keyWords = new HashMap<>();
+        FileUtil.loadStopWords();
+        List<String> filePaths = FileUtil.getAllFilePath(dirPath);
+        for(String path : filePaths) {
+            List<List<Term>> sentences = Participle.fileParticiple(path);
+            TextRank textRank = new TextRank(k, d);
+            for (List<Term> sentence : sentences) {
+                textRank.addSentenceTerm(sentence);
+            }
+            List<Double> weights = textRank.calWordRankValue();
+            List<Word> ret = textRank.getFirstKWords(weights, topK);
+            List<String> keys = new ArrayList<>();
+            for(Word word : ret) keys.add(word.getWord());
+            keyWords.put(path , keys);
         }
-        List<Double> weights = textRank.calWordRankValue();
-        List<Word> ret = textRank.getFirstKWords(weights , topK);
 
-        return ret;
+        return keyWords;
     }
 }

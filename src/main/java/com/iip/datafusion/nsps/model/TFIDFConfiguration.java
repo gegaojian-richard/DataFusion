@@ -4,9 +4,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * @Author Junnor.G
- * @Date 2018/1/31 下午3:12
+ * @Date 2018/2/1 下午9:38
  */
-public class TextRankConfiguration {
+public class TFIDFConfiguration {
     @JsonProperty("corpusPath")
     private String corpusPath;
     @JsonProperty("topK")

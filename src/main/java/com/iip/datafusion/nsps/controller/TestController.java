@@ -27,7 +27,7 @@ public class TestController {
 
     @RequestMapping(path = {"/nsps/Test"}, method = RequestMethod.POST)
     @ResponseBody
-    public Result checkIntegrity(@RequestBody TestConfiguration testConfiguration) {
+    public Result checkTest(@RequestBody TestConfiguration testConfiguration) {
 
         try{
             TestJob testJob = testService.commitJob(testConfiguration);
