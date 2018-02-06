@@ -215,6 +215,9 @@
   </div>
 </template>
 <style>
+  .el-input input{
+    color:#909399;
+  }
   .el-input__inner{
     height:30px;
     margin-top: 5px;
