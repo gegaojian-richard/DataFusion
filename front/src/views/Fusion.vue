@@ -10,6 +10,7 @@
             <div style="display:inline" v-for="connect in selectTableProp">
               <div style="display:inline" v-for="tab in connect.data" >
                 <div class="forselect"
+                    v-bind:title="''+table.id+':'+table.displayName"
                   draggable="true"
                   @dragstart='drag($event,connect.id,tab.tableName,column.name)'
                 v-show="connect.id==table.id && tab.tableName==table.displayName && table.show"
@@ -29,7 +30,7 @@
         <div>
           <div  class='relation' @drop='drop($event,item.name)' @dragover='allowDrop($event)'  v-for="item in selectEntityInfo.properties" style="height:50px;border-bottom: 1px solid #b8b8b8">
             <span style="line-height: 50px; font-size: larger">{{item.name}}--{{item.type}}</span>
-            <span class="glyphicon glyphicon-star" v-if="item.prime"></span>
+            <span class="glyphicon glyphicon-star" v-if="item.prime==1"></span>
           </div>
           </div>
       </div>
@@ -40,14 +41,14 @@
           <span>left</span>
           <el-cascader
             :options="join_units"
-            v-model="relations[n].left"
+            v-model="relations[n-1].left"
             @change="handleChange">
           </el-cascader>
           <span>join on </span>
           <span>right</span>
           <el-cascader
             :options="join_units"
-            v-model="relations[n].right"
+            v-model="relations[n-1].right"
             @change="handleChange">
           </el-cascader>
         </div>
@@ -148,6 +149,7 @@
   export default{
     data(){
       return {
+          showtips:false,
         selectdata:false,
         defaultProps: {
           children: 'tables',
@@ -211,6 +213,10 @@
       },
       drop:function(event,entitycolumn){
         event.preventDefault();
+//        console.log(event.target.lastChild.nodeName)
+        if(event.target.lastChild.nodeName=="DIV"){
+           return;
+        }
         event.target.appendChild(this.dom);
         var  pieces2t={
             tfn:null,
@@ -248,14 +254,20 @@
                     this.conRewrite[i].tables[j].show=false;
                 }
             }
-            this.selectdata=false;
+        this.selectdata=false;
         this.s2t=[];
-        this.join_units=[];
-        this.relations=[{left:[],right:[]}]
+        $(".relation").each(function(){
+          $(this).children("div:last-child").remove();
+        });
+        $(".tablecolumn").each(function(){
+          $(this).children("div:last-child").remove();
+        });
       },
       emitSelect(){
         var selectDB=[];
         this.relations=[{left:[],right:[]}];
+        this.join_units=[];
+        this.selectTableProp=[];
         for(let i=0;i<this.conRewrite.length;i++){
           for(let j=0;j<this.conRewrite[i].tables.length;j++){
             if(this.conRewrite[i].tables[j].show==true){
@@ -352,9 +364,20 @@
         }
         result.s2t = this.s2t;
         for (let i = 0; i < this.join_units.length; i++) {
-                result.join_units.push(this.join_units.label);
+                result.join_units.push(this.join_units[i].label);
         }
-        result.relations=this.relations;
+        for(let j=0;j<this.relations.length;j++){
+            if(this.relations[j].left[0]){
+                var templeft=this.relations[j].left.join(":");
+                var tempright=this.relations[j].right.join(":");
+                var temp={
+                    left:templeft,
+                    right:tempright
+                }
+                result.relations.push(temp)
+            }
+        }
+
         result.target_table_name=this.target_table_name;
 
         axios.post("/kjb/dfs/commitjob",
