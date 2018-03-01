@@ -5,21 +5,21 @@ import com.iip.datafusion.util.jsonutil.Result;
 
 /**
  * @Author Junnor.G
- * @Date 2018/1/31 下午3:16
+ * @Date 2018/2/1 下午9:41
  */
-public class TextRankJob implements Job{
+public class TFIDFJob implements Job{
     private String corpusPath;
     private int topK;
     private String tableName;
-    private Result result;
     private String dataSourceId;
+    private Result result;
 
-    public TextRankJob(){
+    public TFIDFJob(){
         corpusPath = "";
         topK = 0;
     }
 
-    public TextRankJob(String corpusPath, int topK){
+    public TFIDFJob(String corpusPath, int topK){
         this.corpusPath = corpusPath;
         this.topK = topK;
     }

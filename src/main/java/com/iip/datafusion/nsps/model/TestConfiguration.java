@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Configuration;
 
 public class TestConfiguration {
     @JsonProperty("path")
-    String path;
+    private String path;
 
     public String getPath() {
         return path;

@@ -1,11 +1,11 @@
 package com.iip.datafusion.nsps.controller;
 
-import com.iip.datafusion.backend.job.algorithm.TextRankJob;
+import com.iip.datafusion.backend.job.algorithm.TFIDFJob;
 import com.iip.datafusion.backend.job.test.TestJob;
+import com.iip.datafusion.nsps.model.TFIDFConfiguration;
 import com.iip.datafusion.nsps.model.TestConfiguration;
-import com.iip.datafusion.nsps.model.TextRankConfiguration;
+import com.iip.datafusion.nsps.service.TFIDFService;
 import com.iip.datafusion.nsps.service.TestService;
-import com.iip.datafusion.nsps.service.TextRankService;
 import com.iip.datafusion.util.jsonutil.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -16,26 +16,26 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
  * @Author Junnor.G
- * @Date 2018/1/31 下午3:10
+ * @Date 2018/2/1 下午9:38
  */
 @Controller
-public class TextRankController {
+public class TFIDFController {
     @Autowired
-    TextRankService textRankService;
+    TFIDFService service;
 
 
 
-    @RequestMapping(path = {"/nsps/TextRank"}, method = RequestMethod.POST)
+    @RequestMapping(path = {"/nsps/TFIDF"}, method = RequestMethod.POST)
     @ResponseBody
-    public Result textRank(@RequestBody TextRankConfiguration textRankConfiguration) {
+    public Result tfidf(@RequestBody TFIDFConfiguration configuration) {
 
         try{
-            TextRankJob textRankJob = textRankService.commitJob(textRankConfiguration);
-//            System.out.println("TextRankController: " + textRankJob.getCorpusPath());
-            while(textRankJob.getResult() == null){
+            TFIDFJob job = service.commitJob(configuration);
+//            System.out.println("Controller: " + job.getCorpusPath());
+            while(job.getResult() == null){
                 Thread.sleep(1000);
             }
-            return textRankJob.getResult();
+            return job.getResult();
         }catch (Exception e){
             return new Result(0,e.getMessage(),null);
         }

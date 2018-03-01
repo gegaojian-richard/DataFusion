@@ -4,9 +4,9 @@ import com.iip.datafusion.backend.channel.ChannelManager;
 import com.iip.datafusion.backend.channel.WorkStealingChannel;
 import com.iip.datafusion.backend.common.TerminationToken;
 import com.iip.datafusion.backend.config.Capabilities;
-import com.iip.datafusion.backend.executor.TestJobExecutor;
+import com.iip.datafusion.backend.executor.NameRecognitionJobExcutor;
 import com.iip.datafusion.backend.executor.TextRankJobExcutor;
-import com.iip.datafusion.backend.job.algorithm.TextRankJob;
+import com.iip.datafusion.backend.job.algorithm.NameRecognitionJob;
 import com.iip.datafusion.backend.job.algorithm.TextRankJob;
 
 import java.util.concurrent.BlockingQueue;
@@ -14,37 +14,37 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * @Author Junnor.G
- * @Date 2018/1/31 下午3:20
+ * @Date 2018/2/1 下午4:27
  */
-public class TextRankManager {
+public class NameRecognitionManager {
     private final TerminationToken token= new TerminationToken();
 
     // 关闭标识
     private volatile boolean shutdownRequested = false;
 
-    private final static TextRankManager singleInstance = new TextRankManager();
+    private final static NameRecognitionManager singleInstance = new NameRecognitionManager();
 
-    private TextRankJobExcutor[] textRankJobExecutors = new TextRankJobExcutor[Capabilities.JOBEXECUTOR_COUNT];
+    private NameRecognitionJobExcutor[] excutors = new NameRecognitionJobExcutor[Capabilities.JOBEXECUTOR_COUNT];
 
-    private TextRankManager(){
+    private NameRecognitionManager(){
         @SuppressWarnings("unchecked")
-        BlockingQueue<TextRankJob>[] managedQueues = new LinkedBlockingQueue[Capabilities.JOBEXECUTOR_COUNT];
+        BlockingQueue<NameRecognitionJob>[] managedQueues = new LinkedBlockingQueue[Capabilities.JOBEXECUTOR_COUNT];
 
-        ChannelManager.getInstance().setTextRankChannel(new WorkStealingChannel<>(managedQueues));
+        ChannelManager.getInstance().setNameRecognitionChannel(new WorkStealingChannel<>(managedQueues));
 
         for (int i = 0; i < Capabilities.JOBEXECUTOR_COUNT; ++i){
             managedQueues[i] = new LinkedBlockingQueue<>();
-            textRankJobExecutors[i] = new TextRankJobExcutor(token, managedQueues[i]);
+            excutors[i] = new NameRecognitionJobExcutor(token, managedQueues[i]);
         }
     }
 
-    public static TextRankManager getInstance(){
+    public static NameRecognitionManager getInstance(){
         return singleInstance;
     }
 
     public void init(){
         for (int i = 0; i < Capabilities.JOBEXECUTOR_COUNT; ++i){
-            textRankJobExecutors[i].start();
+            excutors[i].start();
         }
     }
 
@@ -54,16 +54,16 @@ public class TextRankManager {
         }
 
         for (int i = 0; i < Capabilities.JOBEXECUTOR_COUNT; ++i){
-            textRankJobExecutors[i].terminate();
+            excutors[i].terminate();
         }
 
         shutdownRequested = true;
     }
 
-    public void commitJob(TextRankJob textRankJob){
+    public void commitJob(NameRecognitionJob job){
         try {
-//            System.out.println("TextRankManager: " + textRankJob.getCorpusPath() + " " + textRankJob.getTopK());
-            ChannelManager.getInstance().getTextRankChannel().put(textRankJob);
+//            System.out.println("NameRecognitionManager: " + job.getCorpusPath());
+            ChannelManager.getInstance().getNameRecognitionChannel().put(job);
             token.reservations.incrementAndGet();
         }catch (Exception e){
             e.printStackTrace();

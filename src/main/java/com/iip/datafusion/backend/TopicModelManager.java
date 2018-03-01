@@ -4,47 +4,45 @@ import com.iip.datafusion.backend.channel.ChannelManager;
 import com.iip.datafusion.backend.channel.WorkStealingChannel;
 import com.iip.datafusion.backend.common.TerminationToken;
 import com.iip.datafusion.backend.config.Capabilities;
-import com.iip.datafusion.backend.executor.TestJobExecutor;
-import com.iip.datafusion.backend.executor.TextRankJobExcutor;
-import com.iip.datafusion.backend.job.algorithm.TextRankJob;
-import com.iip.datafusion.backend.job.algorithm.TextRankJob;
+import com.iip.datafusion.backend.executor.TopicModelExecutor;
+import com.iip.datafusion.backend.job.algorithm.TopicModelJob;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * @Author Junnor.G
- * @Date 2018/1/31 下午3:20
+ * @Date 2018/2/3 上午2:52
  */
-public class TextRankManager {
+public class TopicModelManager {
     private final TerminationToken token= new TerminationToken();
 
     // 关闭标识
     private volatile boolean shutdownRequested = false;
 
-    private final static TextRankManager singleInstance = new TextRankManager();
+    private final static TopicModelManager singleInstance = new TopicModelManager();
 
-    private TextRankJobExcutor[] textRankJobExecutors = new TextRankJobExcutor[Capabilities.JOBEXECUTOR_COUNT];
+    private TopicModelExecutor[] executors = new TopicModelExecutor[Capabilities.JOBEXECUTOR_COUNT];
 
-    private TextRankManager(){
+    private TopicModelManager(){
         @SuppressWarnings("unchecked")
-        BlockingQueue<TextRankJob>[] managedQueues = new LinkedBlockingQueue[Capabilities.JOBEXECUTOR_COUNT];
+        BlockingQueue<TopicModelJob>[] managedQueues = new LinkedBlockingQueue[Capabilities.JOBEXECUTOR_COUNT];
 
-        ChannelManager.getInstance().setTextRankChannel(new WorkStealingChannel<>(managedQueues));
+        ChannelManager.getInstance().setTopicModeChannel(new WorkStealingChannel<>(managedQueues));
 
         for (int i = 0; i < Capabilities.JOBEXECUTOR_COUNT; ++i){
             managedQueues[i] = new LinkedBlockingQueue<>();
-            textRankJobExecutors[i] = new TextRankJobExcutor(token, managedQueues[i]);
+            executors[i] = new TopicModelExecutor(token, managedQueues[i]);
         }
     }
 
-    public static TextRankManager getInstance(){
+    public static TopicModelManager getInstance(){
         return singleInstance;
     }
 
     public void init(){
         for (int i = 0; i < Capabilities.JOBEXECUTOR_COUNT; ++i){
-            textRankJobExecutors[i].start();
+            executors[i].start();
         }
     }
 
@@ -54,16 +52,16 @@ public class TextRankManager {
         }
 
         for (int i = 0; i < Capabilities.JOBEXECUTOR_COUNT; ++i){
-            textRankJobExecutors[i].terminate();
+            executors[i].terminate();
         }
 
         shutdownRequested = true;
     }
 
-    public void commitJob(TextRankJob textRankJob){
+    public void commitJob(TopicModelJob job){
         try {
-//            System.out.println("TextRankManager: " + textRankJob.getCorpusPath() + " " + textRankJob.getTopK());
-            ChannelManager.getInstance().getTextRankChannel().put(textRankJob);
+            System.out.println("TopicManager: " + job.getCorpusPath() + " " + job.getTopicNum());
+            ChannelManager.getInstance().getTopicModeChannel().put(job);
             token.reservations.incrementAndGet();
         }catch (Exception e){
             e.printStackTrace();

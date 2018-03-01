@@ -1,27 +1,23 @@
 package com.iip.datafusion.backend.job.algorithm;
 
-import com.iip.datafusion.backend.job.Job;
 import com.iip.datafusion.util.jsonutil.Result;
 
 /**
  * @Author Junnor.G
- * @Date 2018/1/31 下午3:16
+ * @Date 2018/2/1 下午4:18
  */
-public class TextRankJob implements Job{
+public class NameRecognitionJob {
     private String corpusPath;
-    private int topK;
     private String tableName;
     private Result result;
     private String dataSourceId;
 
-    public TextRankJob(){
+    public NameRecognitionJob(){
         corpusPath = "";
-        topK = 0;
     }
 
-    public TextRankJob(String corpusPath, int topK){
+    public NameRecognitionJob(String corpusPath){
         this.corpusPath = corpusPath;
-        this.topK = topK;
     }
 
     public String getCorpusPath() {
@@ -32,17 +28,13 @@ public class TextRankJob implements Job{
         this.corpusPath = corpusPath;
     }
 
-    public int getTopK(){
-        return topK;
+    public String getTableName() {
+        return tableName;
     }
 
-    public void setTopK(int topK){
-        this.topK = topK;
+    public void setTableName(String tableName) {
+        this.tableName = tableName;
     }
-
-    public String getTableName(){return tableName;}
-
-    public void setTableName(String tableName) {this.tableName = tableName;}
 
     public Result getResult() {
         return result;

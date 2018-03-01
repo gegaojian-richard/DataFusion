@@ -1,4 +1,4 @@
-package com.iip.datafusion.nsps.process.textrank;
+package com.iip.datafusion.backend.textprocess.textrank;
 
 /**
  * Created by ganjun on 2018/1/3.

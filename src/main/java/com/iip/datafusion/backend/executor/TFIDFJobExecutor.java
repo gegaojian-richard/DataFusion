@@ -4,47 +4,40 @@ import com.iip.datafusion.backend.channel.ChannelManager;
 import com.iip.datafusion.backend.common.AbstractTerminatableThread;
 import com.iip.datafusion.backend.common.TerminationToken;
 import com.iip.datafusion.backend.jdbchelper.JDBCHelper;
-import com.iip.datafusion.backend.job.algorithm.TextRankJob;
+import com.iip.datafusion.backend.job.algorithm.TFIDFJob;
 import com.iip.datafusion.backend.textprocess.cheonhye.TF_IDF;
-import com.iip.datafusion.backend.textprocess.textrank.TextRank;
-import com.iip.datafusion.backend.textprocess.textrank.Word;
-import com.iip.datafusion.backend.textprocess.util.FileUtil;
 import com.iip.datafusion.nsps.dao.MySqlDAO;
 import com.iip.datafusion.util.dbutil.DataSourceRouterManager;
-import com.iip.datafusion.util.jsonutil.JsonParse;
 import com.iip.datafusion.util.jsonutil.Result;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.PreparedStatementCreator;
+import com.iip.datafusion.util.jsonutil.JsonParse;
 
-import java.io.File;
-import java.sql.Connection;
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.BlockingQueue;
-import java.util.List;
 
 /**
  * @Author Junnor.G
- * @Date 2018/1/31 下午3:24
+ * @Date 2018/2/1 下午9:42
  */
-public class TextRankJobExcutor extends AbstractTerminatableThread implements JobExecutor<TextRankJob> {
-    private final BlockingQueue<TextRankJob> workQueue;
+public class TFIDFJobExecutor  extends AbstractTerminatableThread implements JobExecutor<TFIDFJob> {
+    private final BlockingQueue<TFIDFJob> workQueue;
 
 
     private final JdbcTemplate jdbcTemplate = JDBCHelper.getJdbcTemplate();
 
 
-    public TextRankJobExcutor(TerminationToken token, BlockingQueue<TextRankJob> workQueue) {
+    public TFIDFJobExecutor(TerminationToken token, BlockingQueue<TFIDFJob> workQueue) {
         super(token);
         this.workQueue = workQueue;
     }
 
     @Override
     protected void doRun() throws Exception {
-        TextRankJob textRankJob = ChannelManager.getInstance().getTextRankChannel().take(workQueue);
+        TFIDFJob job = ChannelManager.getInstance().getTfidfChannel().take(workQueue);
 
         try {
-            doJob(textRankJob);
+            doJob(job);
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -53,16 +46,16 @@ public class TextRankJobExcutor extends AbstractTerminatableThread implements Jo
     }
 
     @Override
-    public void doJob(TextRankJob job) throws Exception {
+    public void doJob(TFIDFJob job) throws Exception {
         // todo: 1. 找到文件目录路径job.path下所有文本的关键词
-//        System.out.println("TextRankExcutor path : " + job.getCorpusPath());
-//        System.out.println("TextRankExcutor topK: " + job.getTopK());
+//        System.out.println("TFIDFExcutor path : " + job.getPath());
+//        System.out.println("TFIDFExcutor topK: " + job.getTopK());
         if(job.getCorpusPath() == null || job.getTopK() == 0 || job.getTableName() == null || job.getDataSourceId() == null){
             job.setResult(new Result(-1, "error", "some parameters doesn't exist: " +
                     "'corpusPath', 'topK'(>0), 'tableName', 'dataSourceId'"));
         }
         else {
-            Map<String, List<String>> keyWords = TextRank.topKWordsFromFile(job.getCorpusPath() , job.getTopK() , 5 , 0.85);
+            Map<String, List<String>> keyWords = TF_IDF.tfIdf(job.getCorpusPath(), job.getTopK());
             // todo: 2. 根据文本关键词建立数据库表,并加入数据，每个文件对应的关键词
             int status = MySqlDAO.createWordsTable("keywords" , jdbcTemplate , job.getDataSourceId() , job.getTableName());
             if(status == -1){
@@ -75,5 +68,6 @@ public class TextRankJobExcutor extends AbstractTerminatableThread implements Jo
             }
         }
     }
+
 
 }

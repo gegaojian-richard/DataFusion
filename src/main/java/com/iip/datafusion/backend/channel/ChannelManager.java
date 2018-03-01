@@ -1,7 +1,10 @@
 package com.iip.datafusion.backend.channel;
 
 import com.iip.datafusion.backend.job.accuracy.AccuracyJob;
+import com.iip.datafusion.backend.job.algorithm.NameRecognitionJob;
+import com.iip.datafusion.backend.job.algorithm.TFIDFJob;
 import com.iip.datafusion.backend.job.algorithm.TextRankJob;
+import com.iip.datafusion.backend.job.algorithm.TopicModelJob;
 import com.iip.datafusion.backend.job.consistency.ConsistencyJob;
 import com.iip.datafusion.backend.job.integrity.IntegrityJob;
 import com.iip.datafusion.backend.job.join.JoinJob;
@@ -23,6 +26,12 @@ public class ChannelManager {
     private WorkStealingEnabledChannel<TestJob> testChannel;
     // ganjun textRank
     private WorkStealingEnabledChannel<TextRankJob> textRankChannel;
+    // ganjun nameRecognition
+    private WorkStealingEnabledChannel<NameRecognitionJob> nameRecognitionChannel;
+    // ganjun tfidf
+    private WorkStealingEnabledChannel<TFIDFJob> tfidfChannel;
+    // ganjun topic model
+    private WorkStealingEnabledChannel<TopicModelJob> topicModeChannel;
 
     private ChannelManager(){
     }
@@ -80,5 +89,34 @@ public class ChannelManager {
 
     public void setTextRankChannel(WorkStealingEnabledChannel<TextRankJob> textRankChannel) {
         this.textRankChannel = textRankChannel;
+    }
+
+    // ganjun add name recognition job
+
+    public WorkStealingEnabledChannel<NameRecognitionJob> getNameRecognitionChannel() {
+        return nameRecognitionChannel;
+    }
+
+    public void setNameRecognitionChannel(WorkStealingEnabledChannel<NameRecognitionJob> nameRecognitionChannel) {
+        this.nameRecognitionChannel = nameRecognitionChannel;
+    }
+
+    // ganjun add tf idf job
+
+    public WorkStealingEnabledChannel<TFIDFJob> getTfidfChannel() {
+        return tfidfChannel;
+    }
+
+    public void setTfidfChannel(WorkStealingEnabledChannel<TFIDFJob> tfidfChannel) {
+        this.tfidfChannel = tfidfChannel;
+    }
+    // ganjun add topic model
+
+    public WorkStealingEnabledChannel<TopicModelJob> getTopicModeChannel() {
+        return topicModeChannel;
+    }
+
+    public void setTopicModeChannel(WorkStealingEnabledChannel<TopicModelJob> topicModeChannel) {
+        this.topicModeChannel = topicModeChannel;
     }
 }
