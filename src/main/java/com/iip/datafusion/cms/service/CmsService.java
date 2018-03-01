@@ -63,14 +63,6 @@ public class CmsService {
 
     //删除数据源
     public Result delCon(String id){
-        //为了适配传递id为displayName的情况
-        if(!id.equals("primary") && (id.length()<4 || !id.substring(0,3).equals("db_"))) {
-            List<DataSourceProperties> list = dataSourceRouterManager.getDataSourceProperties();
-            for (DataSourceProperties item : list) {
-                if (item.getDisplayName().equals(id))
-                    id = item.getId();
-            }
-        }
 
         dataSourceRouterManager.deleteConnection(id);
         return new Result(1,null,null);
@@ -78,16 +70,6 @@ public class CmsService {
 
     //得到数据库的表结构，及每列的结构
     public Result  desCon(String id){
-        //为了适配传递id为display
-        if(!id.equals("primary") && (id.length()<4 || !id.substring(0,3).equals("db_"))) {
-            List<DataSourceProperties> list = dataSourceRouterManager.getDataSourceProperties();
-            for (DataSourceProperties item : list) {
-                if (item.getDisplayName().equals(id))
-                    id = item.getId();
-            }
-        }
-
-
         Map<String,Object> map = cmsDao.getDatabaseStructure(id);
         //如果含有错误信息直接返回错误
         if(map.containsKey("msg")){
@@ -140,13 +122,6 @@ public class CmsService {
             dbTableList.add(dbTable);
         }
 
-//        if(!properties.isEmpty())
-//            try {
-//                jsonStr.append(JsonParse.getMapper().writeValueAsString(properties));
-//            }catch (JsonProcessingException e){
-//                e.printStackTrace();
-//                return new Result(0,"json转化失败"+e.getMessage(),null);
-//            }
         try {
             jsonStr.append(JsonParse.getMapper().writeValueAsString(dbTableList));
         }catch (JsonProcessingException e){
@@ -158,15 +133,6 @@ public class CmsService {
 
     //得到某个id的数据库的某张表的预览信息
     public Result previewCon(String id, String table,String num) {
-        //为了适配传递id为display
-        if(!id.equals("primary") && (id.length()<4 || !id.substring(0,3).equals("db_"))) {
-            List<DataSourceProperties> list = dataSourceRouterManager.getDataSourceProperties();
-            for (DataSourceProperties item : list) {
-                if (item.getDisplayName().equals(id))
-                    id = item.getId();
-            }
-        }
-
         PreviewStructure previewStructure = cmsDao.previewCon(id,table,num);
         if(previewStructure == null){
             return new Result(0,"previewStructure is null",null);
