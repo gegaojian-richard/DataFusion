@@ -109,7 +109,7 @@ public class EntityController {
         for (DataSourceProperties d : dataSourceRouterManager.getDataSourceProperties()) {
             if (d.getId().equals(entity.getDbPosition())) {
                 //将URL前缀的"jdbc:mysql://",后缀的"?useUnicode.."去除
-                entity.setDbPosition(d.getUrl().split("\\?")[0].split("jdbc:mysql://")[1]);
+                entity.setDbPosition(d.getUrl().split("\\?")[0]);
             }
         }
 
