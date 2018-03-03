@@ -125,6 +125,9 @@
         return temp;
       }
     },
+    mounted(){
+      this.$store.dispatch('GetConnect');
+    },
     data() {
       return {
         defaultProps: {
