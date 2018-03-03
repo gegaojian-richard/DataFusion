@@ -35,6 +35,9 @@ public class EntityController {
             return new Result(0,"用户未登录",null);
         }
         List<Entity> list = entityService.getEntityByUserId(userId);
+
+        // todo:遍历list检查每个Entity是否已连接，已连接-获得DataSourceId，未连接-空字符串
+
         if(list==null) {
             return new Result(0, "entity not exist for user " + userId, null);
         }
