@@ -86,10 +86,21 @@
 			<artifactId>hanlp</artifactId>
 			<version>portable-1.5.3</version>
 		</dependency>
-
-
+		<dependency>
+			<groupId>lucene</groupId>
+			<artifactId>core</artifactId>
+			<version>3.4.0</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/src/main/resources/lib/lucene-core-3.4.0.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>lucene</groupId>
+			<artifactId>ikanalyzer</artifactId>
+			<version>2012</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/src/main/resources/lib/IKAnalyzer-2012.jar</systemPath>
+		</dependency>
 	</dependencies>
-
 
 	<build>
 		<plugins>

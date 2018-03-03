@@ -23,7 +23,7 @@ public class ColumnList {
 
     public void pretreatment() {
         for(ColumnStructure item:this.list){
-            item.setColumnType("INT");
+//            item.setColumnType("INT");
             item.setColumnName("`"+item.getColumnName()+"`");
         }
     }
