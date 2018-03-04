@@ -135,4 +135,9 @@ public class CmsDao {
             return new Result(0,"SQL语句执行错误@createTable",null);
         }
     }
+
+    public void deleteTable(String dbID, String tableName) {
+        dataSourceRouterManager.setCurrentDataSourceKey(dbID);
+        jdbcTemplate.execute("DROP TABLE IF EXISTS "+tableName);
+    }
 }

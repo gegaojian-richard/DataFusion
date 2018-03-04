@@ -54,7 +54,10 @@ public class EntityController {
     @RequestMapping(path={"/entity/delete"},method={RequestMethod.GET})
     @ResponseBody
     public Result  deleteEntity(@RequestParam(value="entityId") int entityId){
-        if(!(entityService.deleteEntity(entityId) && userEntityService.deleteEntity(entityId))){
+        //删除实体对应的目标数据库
+        boolean del = entityService.delEntDB(entityId);
+
+        if(!(entityService.deleteEntity(entityId) && userEntityService.deleteEntity(entityId)&&del)){
             return new Result(0,"删除实体失败",null);
         }
         return  new Result(1,"删除实体成功",null);
