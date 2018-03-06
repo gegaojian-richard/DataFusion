@@ -6,6 +6,7 @@ import com.iip.datafusion.cms.model.ColumnStructure;
 import com.iip.datafusion.cms.model.DataBaseStructure;
 import com.iip.datafusion.cms.model.TableStructure;
 import com.iip.datafusion.util.dbutil.DataSourceRouterManager;
+import com.iip.datafusion.util.dbutil.DataType;
 import com.iip.datafusion.util.jsonutil.Result;
 
 import java.sql.Connection;
@@ -67,7 +68,7 @@ public class test {
                 while (column.next()){
                     ColumnStructure columnStructure = new ColumnStructure();
                     columnStructure.setColumnName(column.getString("COLUMN_NAME"));
-                    columnStructure.setColumnType(column.getString("TYPE_NAME"));
+                    columnStructure.setColumnType(DataType.valueOf(column.getString("TYPE_NAME")));
                     columnStructure.setDataSize(column.getInt("COLUMN_SIZE"));
                     columnStructure.setDigits(column.getInt("DECIMAL_DIGITS"));
                     columnStructure.setNullable(column.getInt("NULLABLE"));

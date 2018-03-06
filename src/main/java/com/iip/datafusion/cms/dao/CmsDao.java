@@ -5,6 +5,7 @@ import com.iip.datafusion.eems.model.Entity;
 import com.iip.datafusion.util.dbutil.DataSourceProperties;
 import com.iip.datafusion.util.dbutil.DataSourceRouter;
 import com.iip.datafusion.util.dbutil.DataSourceRouterManager;
+import com.iip.datafusion.util.dbutil.DataType;
 import com.iip.datafusion.util.jsonutil.JsonParse;
 import com.iip.datafusion.util.jsonutil.Result;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,7 +57,7 @@ public class CmsDao {
                 for(int i=1;i<=rowSetMetaData.getColumnCount();i++){
                     ColumnStructure columnStructure = new ColumnStructure();
                     columnStructure.setColumnName(rowSetMetaData.getColumnName(i));
-                    columnStructure.setColumnType(rowSetMetaData.getColumnTypeName(i));
+                    columnStructure.setColumnType(DataType.valueOf(rowSetMetaData.getColumnTypeName(i)));
                     table.addColumn(columnStructure);
                 }
                 dataBaseStructure.addTable(table);
@@ -116,7 +117,7 @@ public class CmsDao {
             list.pretreatment();
 
             for(ColumnStructure item:list.getList()){
-                stringBuilder.append(item.getColumnName()+" "+item.getColumnType()+",");
+                stringBuilder.append(item.getColumnName()+" "+item.getColumnType().toString()+",");
                 stringBuilder.append(item.getIsPrime()==1 ? "PRIMARY KEY ("+item.getColumnName()+")," : "");
             }
 
