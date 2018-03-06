@@ -1,11 +1,12 @@
 package com.iip.datafusion.backend.job.accuracy;
 
 import com.iip.datafusion.backend.job.Job;
+import com.iip.datafusion.backend.job.JobBase;
 import com.iip.datafusion.dgs.model.accuracy.Param;
 
 import java.util.List;
 
-public class AccuracyJob implements Job {
+public class AccuracyJob extends JobBase implements Job {
 
     private String dataSourceId;
     private String tableName;
@@ -38,5 +39,10 @@ public class AccuracyJob implements Job {
 
     public void setParamList(List<Param> paramList) {
         this.paramList = paramList;
+    }
+
+    @Override
+    public String getDescription() {
+        return "this is a AccuracyJob: "+this.getJobID();
     }
 }

@@ -5,6 +5,7 @@ import com.iip.datafusion.backend.channel.WorkStealingChannel;
 import com.iip.datafusion.backend.common.TerminationToken;
 import com.iip.datafusion.backend.config.Capabilities;
 import com.iip.datafusion.backend.executor.TopicModelExecutor;
+import com.iip.datafusion.backend.job.JobType;
 import com.iip.datafusion.backend.job.algorithm.TopicModelJob;
 
 import java.util.concurrent.BlockingQueue;
@@ -60,8 +61,9 @@ public class TopicModelManager {
 
     public void commitJob(TopicModelJob job){
         try {
-            System.out.println("TopicManager: " + job.getCorpusPath() + " " + job.getTopicNum());
+//            System.out.println("TopicManager: " + job.getCorpusPath() + " " + job.getTopicNum());
             ChannelManager.getInstance().getTopicModeChannel().put(job);
+            job.setJobType(JobType.TOPIC_MODEL);
             token.reservations.incrementAndGet();
         }catch (Exception e){
             e.printStackTrace();

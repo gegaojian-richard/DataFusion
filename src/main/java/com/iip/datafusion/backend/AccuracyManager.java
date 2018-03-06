@@ -5,6 +5,7 @@ import com.iip.datafusion.backend.channel.WorkStealingChannel;
 import com.iip.datafusion.backend.common.TerminationToken;
 import com.iip.datafusion.backend.config.Capabilities;
 import com.iip.datafusion.backend.executor.AccuracyJobExecutor;
+import com.iip.datafusion.backend.job.JobType;
 import com.iip.datafusion.backend.job.accuracy.AccuracyJob;
 
 import java.util.concurrent.BlockingQueue;
@@ -57,6 +58,7 @@ public class AccuracyManager {
     public void commitJob(AccuracyJob accuracyJob){
         try {
             ChannelManager.getInstance().getAccuracyChannel().put(accuracyJob);
+            accuracyJob.setJobType(JobType.ACCURACY);
             token.reservations.incrementAndGet();
         }catch (Exception e){
             e.printStackTrace();

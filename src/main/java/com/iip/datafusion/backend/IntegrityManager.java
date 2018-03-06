@@ -6,6 +6,7 @@ import com.iip.datafusion.backend.common.TerminationToken;
 import com.iip.datafusion.backend.config.Capabilities;
 import com.iip.datafusion.backend.executor.ConsistencyJobExecutor;
 import com.iip.datafusion.backend.executor.IntegrityJobExecutor;
+import com.iip.datafusion.backend.job.JobType;
 import com.iip.datafusion.backend.job.consistency.ConsistencyJob;
 import com.iip.datafusion.backend.job.integrity.IntegrityJob;
 
@@ -59,6 +60,7 @@ public class IntegrityManager {
     public void commitJob(IntegrityJob integrityJob){
         try {
             ChannelManager.getInstance().getIntegrityChannel().put(integrityJob);
+            integrityJob.setJobType(JobType.INTEGRITY);
             token.reservations.incrementAndGet();
         }catch (Exception e){
             e.printStackTrace();

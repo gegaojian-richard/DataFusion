@@ -5,6 +5,7 @@ import com.iip.datafusion.backend.channel.WorkStealingChannel;
 import com.iip.datafusion.backend.common.TerminationToken;
 import com.iip.datafusion.backend.config.Capabilities;
 import com.iip.datafusion.backend.executor.JoinJobExecutor;
+import com.iip.datafusion.backend.job.JobType;
 import com.iip.datafusion.backend.job.join.JoinJob;
 
 import java.util.concurrent.BlockingQueue;
@@ -57,6 +58,7 @@ public class JoinManager {
     public void commitJob(JoinJob joinJob){
         try {
             ChannelManager.getInstance().getJoinChannel().put(joinJob);
+            joinJob.setJobType(JobType.JOIN);
             token.reservations.incrementAndGet();
         }catch (Exception e){
             e.printStackTrace();

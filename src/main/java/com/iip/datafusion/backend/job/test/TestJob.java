@@ -1,12 +1,13 @@
 package com.iip.datafusion.backend.job.test;
 
 import com.iip.datafusion.backend.job.Job;
+import com.iip.datafusion.backend.job.JobBase;
 
 /**
  * @Author Junnor.G
  * @Date 2018/1/31 下午2:25
  */
-public class TestJob implements Job{
+public class TestJob extends JobBase implements Job{
     private String path;
 
     public String getPath() {
@@ -15,5 +16,10 @@ public class TestJob implements Job{
 
     public void setPath(String path) {
         this.path = path;
+    }
+
+    @Override
+    public String getDescription(){
+        return "this is TestJob";
     }
 }

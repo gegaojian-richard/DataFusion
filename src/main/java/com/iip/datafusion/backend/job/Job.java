@@ -1,10 +1,11 @@
 package com.iip.datafusion.backend.job;
 
 public interface Job {
-//    String JobID="";
-//
-//    String getUserID();
-//    JobType getJobType();
-//    String getJobID();
-//    String getDescription();
+    Integer getUserID();
+    JobType getJobType();
+    Integer getJobID();
+    String getDescription();
+    void setJobID(Integer id);
+    void setStatus(JobStatusType status);
+    void setJobType(JobType jobType);
 }

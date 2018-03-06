@@ -1,6 +1,7 @@
 package com.iip.datafusion.backend.job.integrity;
 
 import com.iip.datafusion.backend.job.Job;
+import com.iip.datafusion.backend.job.JobBase;
 import com.iip.datafusion.util.dbutil.DataSourceRouterManager;
 import com.iip.datafusion.util.jsonutil.Result;
 import net.sf.json.JSONArray;
@@ -19,22 +20,13 @@ import java.util.List;
  * Created by GeGaojian on 2018/01/18.
  */
 
-public class IntegrityJob implements Job {
+public class IntegrityJob extends JobBase implements Job {
 
     private String dataSourceId;
     private String tableName;
     private List<String> sqlList;
-    private String jobType;
     private Result result;
 
-
-    public String getJobType() {
-        return jobType;
-    }
-
-    public void setJobType(String jobType) {
-        this.jobType = jobType;
-    }
 
     public String getDataSourceId() {
         return dataSourceId;
@@ -103,4 +95,8 @@ public class IntegrityJob implements Job {
 
     }
 
+    @Override
+    public String getDescription() {
+        return "this is a Integrity_job :"+ this.getJobID();
+    }
 }

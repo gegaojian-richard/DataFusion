@@ -6,6 +6,7 @@ import com.iip.datafusion.backend.common.TerminationToken;
 import com.iip.datafusion.backend.config.Capabilities;
 import com.iip.datafusion.backend.executor.TFIDFJobExecutor;
 import com.iip.datafusion.backend.executor.TextRankJobExcutor;
+import com.iip.datafusion.backend.job.JobType;
 import com.iip.datafusion.backend.job.algorithm.TFIDFJob;
 import com.iip.datafusion.backend.job.algorithm.TextRankJob;
 
@@ -64,6 +65,7 @@ public class TFIDFManager {
         try {
 //            System.out.println("TFIDFManager: " + job.getCorpusPath() + " " + job.getTopK());
             ChannelManager.getInstance().getTfidfChannel().put(job);
+            job.setJobType(JobType.TF_IDF);
             token.reservations.incrementAndGet();
         }catch (Exception e){
             e.printStackTrace();

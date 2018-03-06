@@ -5,6 +5,7 @@ import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.lookup.AbstractRoutingDataSource;
 import org.springframework.stereotype.Component;
 
@@ -23,9 +24,13 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 @Component(value = "dataSource")
 public class DataSourceRouter extends AbstractRoutingDataSource {
+    @Autowired
+    JdbcTemplate jdbcTemplate;
     // 2017/12/29:尝试使用@Value注解将主数据库配置信息从配置文件中导入，但是@Value注解在构造函数完成后才会对成员变量注入值，失败！！
 
     private volatile AtomicInteger DATASOURCE_COUNT = new AtomicInteger();
+
+    private volatile AtomicInteger JOB_COUNT = new AtomicInteger();
 
     private Map<Object, Object> customDataSource = new HashMap<>();
 
@@ -46,6 +51,15 @@ public class DataSourceRouter extends AbstractRoutingDataSource {
 
         // 初始化DataSource计数
         DATASOURCE_COUNT.set(0);
+
+        // 初始化Job计数
+        try {
+            Integer integer = jdbcTemplate.queryForObject("select max(id) from job", java.lang.Integer.class);
+            JOB_COUNT.set(integer+1);
+        }catch (NullPointerException e){  //若job表中尚无记录，会nptr，直接初始化为0
+            e.printStackTrace();
+            JOB_COUNT.set(1);
+        }
     }
 
     // 添加数据源
@@ -87,7 +101,6 @@ public class DataSourceRouter extends AbstractRoutingDataSource {
         }
 
         result.setStatus(1);
-        //TODO 成功无需返回数据
         result.setData("{\"dbid\":\"" + properties.getId() + "\"}");
 
         return result;
@@ -185,5 +198,9 @@ public class DataSourceRouter extends AbstractRoutingDataSource {
         }
 
         return result;
+    }
+
+    public AtomicInteger getJOB_COUNT() {
+        return JOB_COUNT;
     }
 }

@@ -1,10 +1,7 @@
-CREATE TABLE `kjb`.`job_state` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `job_id` INT NOT NULL,
-  `job_type` VARCHAR(45) NOT NULL,
-  `job_description` VARCHAR(150) NOT NULL,
-  `job_state` INT NOT NULL,
-  `user_id` INT NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE INDEX `id_UNIQUE` (`id` ASC),
-  UNIQUE INDEX `job_id_UNIQUE` (`job_id` ASC, `user_id` ASC));
+CREATE TABLE `kjb`.`job` (
+    `id` INT NOT NULL,
+    `userID` INT NOT NULL,
+    `jobtype` VARCHAR(45) ,
+    `jobdescription` VARCHAR(100) ,
+    `timestamp` DATETIME ,
+    PRIMARY KEY (`id`));

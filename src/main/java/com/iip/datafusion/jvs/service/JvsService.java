@@ -11,7 +11,7 @@ public class JvsService {
     public Result allTasks() {
         String res = "";
         try{
-            res += JsonParse.getMapper().writeValueAsString(JobRegistry.getInstance().getSubmittedJobRegistry());
+            res += JsonParse.getMapper().writeValueAsString(JobRegistry.getInstance().getUserJobList());
         }catch (Exception e){
             e.printStackTrace();
         }
