@@ -462,13 +462,12 @@
 
         result.target_table_name=this.target_table_name;
        // console.log(result)
-        axios.post("/kjb/commitjob",result
-        ).then((response)=>{
+        axios.post("/kjb/dfs/commitjob",result).then((response)=>{
           var res=response.data;
-          if(res.status==1){
-            var receive=JSON.parse(res.data);
-            this.previewData=receive.items;
-          }
+//          if(res.status==1){
+//            var receive=JSON.parse(res.data);
+//            this.previewData=receive.items;
+//          }
 
         })
 

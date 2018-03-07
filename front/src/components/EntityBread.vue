@@ -35,8 +35,8 @@
               ... ...
             </div>
             <div class="entity-tab">
-              <a href="javascript:void(0);" v-on:click="startEdit(index)" >编辑</a>
-              <a href="javascript:void(0);" v-on:click="deleteEntity(index)">删除</a>
+              <a href="javascript:void(0);" v-on:click="startEdit(index)" v-if="item.dbID" >编辑</a>
+              <a href="javascript:void(0);" v-on:click="deleteEntity(index)" v-if="item.dbID">删除</a>
               <a href="javascript:void(0)"  v-if="!item.dbID" v-on:click="connectDB(item.dbPosition)" style="color: #2bc4e2">连接</a>
             </div>
           </li>
@@ -128,8 +128,8 @@
                       label="类型"
                       width="100">
                       <template slot-scope="scope">
-                        <span class="blockspan" v-if="editingRow!=scope.$index" @click="handleEdit(scope.$index)">{{ scope.row.type }}</span>
-                        <el-select v-if="editingRow==scope.$index" v-model="scope.row.type"  width="40px">
+                        <span class="blockspan" v-if="editingRow!=scope.$index" @click="handleEdit(scope.$index)">{{ typetoShow[scope.row.type] }}</span>
+                        <el-select v-if="editingRow==scope.$index" v-model="scope.row.type" >
                           <el-option v-for="item in optionsType" :key="item.value" :value="item.value" :label="item.label"></el-option>
                         </el-select>
                       </template>
@@ -139,8 +139,8 @@
                       label="主键"
                       width="100px">
                       <template slot-scope="scope">
-                        <span class="blockspan" v-if="editingRow!=scope.$index" @click="handleEdit(scope.$index)">{{ scope.row.prime }}</span>
-                        <el-select v-if="editingRow==scope.$index" v-model="scope.row.prime"  width="40px">
+                        <span class="blockspan" v-if="editingRow!=scope.$index" @click="handleEdit(scope.$index)">{{ primetoShow[scope.row.prime] }}</span>
+                        <el-select v-if="editingRow==scope.$index" v-model="scope.row.prime" >
                           <el-option v-for="item in optionsPrim" :key="item.value" :value="item.value" :label="item.label"></el-option>
                         </el-select>
                       </template>
@@ -152,9 +152,9 @@
                       <template slot-scope="scope">
                          <!--<span v-if="editingRow!=scope.$index" class="cell-icon" @click="handleEdit(scope.$index)">  <i-->
                                   <!--class="el-icon-edit"></i> </span>-->
-                        <!--<span v-if="editingRow!=scope.$index" class="cell-icon" @click="handleDelete(scope.$index)">  <i class="el-icon-delete"></i> </span>-->
-                        <span v-if="editingRow==scope.$index" class="cell-icon" @click="handleSave(scope.$index)">  <i
-                          class="el-icon-document"></i> </span>
+                        <span v-if="editingRow!=scope.$index" class="cell-icon" @click="handleDelete(scope.$index)">  <i class="el-icon-delete"></i> </span>
+                        <!--<span v-if="editingRow==scope.$index" class="cell-icon" @click="handleSave(scope.$index)">  <i-->
+                          <!--class="el-icon-document"></i> </span>-->
                       </template>
                     </el-table-column>
                   </el-table>
@@ -214,8 +214,8 @@
                       label="类型"
                       width="100">
                       <template slot-scope="scope">
-                        <span class="blockspan" v-if="editingRow!=scope.$index" @click="handleEdit(scope.$index)">{{ scope.row.type }}</span>
-                        <el-select v-if="editingRow==scope.$index" v-model="scope.row.type"  width="40px">
+                        <span class="blockspan" v-if="editingRow!=scope.$index" @click="handleEdit(scope.$index)">{{ typetoShow[scope.row.type]}}</span>
+                        <el-select v-if="editingRow==scope.$index" v-model="scope.row.type" >
                           <el-option v-for="item in optionsType" :key="item.value" :value="item.value" :label="item.label"></el-option>
                         </el-select>
                       </template>
@@ -225,8 +225,8 @@
                       label="主键"
                       width="100px">
                       <template slot-scope="scope">
-                        <span class="blockspan" v-if="editingRow!=scope.$index" @click="handleEdit(scope.$index)">{{ scope.row.prime }}</span>
-                        <el-select v-if="editingRow==scope.$index" v-model="scope.row.prime"  width="40px">
+                        <span class="blockspan" v-if="editingRow!=scope.$index" @click="handleEdit(scope.$index)">{{ primetoShow[scope.row.prime ]}}</span>
+                        <el-select v-if="editingRow==scope.$index" v-model="scope.row.prime" >
                           <el-option v-for="item in optionsPrim" :key="item.value" :value="item.value" :label="item.label"></el-option>
                         </el-select>
                       </template>
@@ -274,7 +274,7 @@
     color: #2bc4e2;
   }
   .el-input input{
-    color:#909399;
+    color: #0c0709;
   }
   .el-input__inner{
     height:30px;
@@ -383,6 +383,8 @@
         addOne:{'displayName':'','dbPosition':'','tableName':'','entityType':'','properties':''},
         editShow:false,
         addShow:false,
+        primetoShow:{"1":"Y","0":"N"},
+        typetoShow:{"0":"短文本","1":"长文本","2":"整数","3":"小数","4":"日期","5":"日期时间"},
         optionsPrim:[{'label':'Y','value':'1'},{'label':'N',"value":'0'}],
         optionsType:[{"label":"短文本","value":"0"},{"label":"长文本","value":"1"},{"label":"整数","value":"2"},{"label":"小数","value":"3"},
           {"label":"日期","value":"4"},{"label":"日期时间","value":"5"}],
