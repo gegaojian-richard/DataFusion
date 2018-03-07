@@ -408,12 +408,12 @@
         })
       },
       selectEntity(value){
-       //   console.log(value);
+         console.log(value);
         if(value.dbID){
           this.s2t=[];
           this.selectEntityInfo.displayName=value.displayName;
           this.selectEntityInfo.properties=JSON.parse(value.properties);
-          this.target_table_name=value.displayName;
+          this.target_table_name=value.tableName;
         }else{
             this.addMySql=true;
             this.dataUrl=value.dbPosition.split("//")[1];
