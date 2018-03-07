@@ -11,7 +11,7 @@ public class ColumnStructure {
     @JsonProperty("name")
     private String columnName;
     @JsonProperty("type")
-    private DataType columnType; //
+    private String columnType; //
     @JsonProperty("prime")
     private int isPrime; // 0表示非主键 1表示为主键
     private int dataSize;
@@ -24,7 +24,7 @@ public class ColumnStructure {
 
     @JsonCreator
     public ColumnStructure(@JsonProperty("name") String columnName,
-                           @JsonProperty("type") DataType columnType,
+                           @JsonProperty("type") String columnType,
                            @JsonProperty("prime") int isPrime){
         this.columnName = columnName;
         this.columnType = columnType;
@@ -43,11 +43,11 @@ public class ColumnStructure {
         this.columnName = columnName;
     }
 
-    public DataType getColumnType() {
+    public String getColumnType() {
         return columnType;
     }
 
-    public void setColumnType(DataType columnType) {
+    public void setColumnType(String columnType) {
         this.columnType = columnType;
     }
 

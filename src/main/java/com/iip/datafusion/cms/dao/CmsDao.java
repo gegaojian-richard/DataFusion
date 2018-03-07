@@ -57,7 +57,7 @@ public class CmsDao {
                 for(int i=1;i<=rowSetMetaData.getColumnCount();i++){
                     ColumnStructure columnStructure = new ColumnStructure();
                     columnStructure.setColumnName(rowSetMetaData.getColumnName(i));
-                    columnStructure.setColumnType(DataType.valueOf(rowSetMetaData.getColumnTypeName(i)));
+                    columnStructure.setColumnType(rowSetMetaData.getColumnTypeName(i));
                     table.addColumn(columnStructure);
                 }
                 dataBaseStructure.addTable(table);
@@ -117,7 +117,7 @@ public class CmsDao {
             list.pretreatment();
 
             for(ColumnStructure item:list.getList()){
-                stringBuilder.append(item.getColumnName()+" "+item.getColumnType().toString()+",");
+                stringBuilder.append(item.getColumnName()+" "+DataType.values()[Integer.parseInt(item.getColumnType())].toString()+",");
                 stringBuilder.append(item.getIsPrime()==1 ? "PRIMARY KEY ("+item.getColumnName()+")," : "");
             }
 

@@ -68,7 +68,7 @@ public class test {
                 while (column.next()){
                     ColumnStructure columnStructure = new ColumnStructure();
                     columnStructure.setColumnName(column.getString("COLUMN_NAME"));
-                    columnStructure.setColumnType(DataType.valueOf(column.getString("TYPE_NAME")));
+                    columnStructure.setColumnType(column.getString("TYPE_NAME"));
                     columnStructure.setDataSize(column.getInt("COLUMN_SIZE"));
                     columnStructure.setDigits(column.getInt("DECIMAL_DIGITS"));
                     columnStructure.setNullable(column.getInt("NULLABLE"));
