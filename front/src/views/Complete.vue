@@ -71,7 +71,7 @@
   }
   .imagetable th {
     font-weight:bold;
-    background-color: #103251;
+    /*background-color: #103251;*/
     color:#bfcbd9;
     font-size:0.95em;
     text-align:center;
