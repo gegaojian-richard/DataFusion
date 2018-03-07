@@ -4,7 +4,7 @@
       <dl>
         <dt><span style="width:100px;display:inline-block">实体库</span></dt>
         <dd v-for="(value,index) in entityLi">
-         <a @click="emitChoose(value)">{{value.displayName}}</a>
+         <a  v-bind:class="{blue:value.dbID}"  @click="emitChoose(value)">{{value.displayName}}</a>
         </dd>
       </dl>
     </div>
@@ -19,6 +19,9 @@
   </div>
 </template>
 <style>
+  .blue{
+    color: #2bc4e2;
+  }
   .sidebar{
     height:100%;
     /*border-left:2px solid #bfcbd9;*/
@@ -35,7 +38,8 @@
       data(){
           return{
             entityLi:[],
-            eventLi:[]
+            eventLi:[],
+
           }
       },
     computed: {

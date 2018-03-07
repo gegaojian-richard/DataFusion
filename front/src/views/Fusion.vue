@@ -30,7 +30,7 @@
         <div>
           <div  class='relation' @drop='drop($event,item.name)' @dragover='allowDrop($event)'  v-for="item in selectEntityInfo.properties" style="height:50px;border-bottom: 1px solid #b8b8b8">
             <span style="line-height: 50px; font-size: larger">{{item.name}}--{{item.type}}</span>
-            <span class="glyphicon glyphicon-star" v-if="item.prime==1"></span>
+            <span v-if="item.prime==1">（主键）</span>
           </div>
           </div>
       </div>
@@ -59,6 +59,47 @@
       </div>
     </div>
     <div>
+      <!--连接需要连接的实体-->
+      <div class="md-modal modal-msg md-modal-transition" style="width:400px"  v-bind:class="{'md-show':addMySql}">
+        <div class="md-modal-inner">
+          <div class="md-top">
+            <div class="md-title">添加mysql连接</div>
+            <button class="md-close" @click="addMySql=false">Close</button>
+          </div>
+          <div class="md-content" >
+            <div class="confirm-tips">
+              <div class="error-wrap">
+                <span class="error error-show" v-show="errorTip">信息填写不完整</span>
+              </div>
+              <div class="alert alert-warning alert-dismissible" role="alert" v-show="createError">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <strong>创建连接失败</strong>
+              </div>
+              <ul>
+                <li class="regi_form_input noMargin">
+                  <input type="text" tabindex="1"  name="displayName" v-model="displayName" class="regi_login_input regi_login_input_left login-input-no input_text" placeholder="连接名">
+                </li>
+                <li class="regi_form_input">
+                  <input type="text" tabindex="2" name="dataUrl" v-model="dataUrl" class="regi_login_input regi_login_input_left" placeholder="数据库URL" data-type="loginname">
+                </li>
+                <li class="regi_form_input noMargin">
+                  <i class="icon IconPeople"></i>
+                  <input type="text" tabindex="3"  name="dataUserName" v-model="dataUserName" class="regi_login_input regi_login_input_left login-input-no input_text" placeholder="用户名">
+                </li>
+                <li class="regi_form_input noMargin">
+                  <i class="icon IconPwd"></i>
+                  <input type="password" tabindex="4"  name="dataPassword" v-model="dataPassword" class="regi_login_input regi_login_input_left login-input-no input_text" placeholder="密码">
+                </li>
+
+              </ul>
+            </div>
+            <div class="login-wrap">
+              <a href="javascript:void(0)" class="btn-login" @click="addMysqlConnect">连接</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!--选择需要的实体-->
     <div class="md-modal modal-msg md-modal-transition" style="width:550px" v-bind:class="{'md-show':selectdata}">
       <div class="md-modal-inner">
         <div class="md-top">
@@ -174,7 +215,14 @@
         },
         s2t:[],
         join_units:[],
-        target_table_name:""
+        target_table_name:"",
+        addMySql:false,
+        dataUrl:"",//添加连接地址
+        displayName:"",
+        dataPassword:"",
+        dataUserName:"",
+        errorTip:false,
+        createError:false,
       }
     },
     components: {
@@ -205,6 +253,34 @@
 
     },
     methods: {
+      addMysqlConnect(){
+        if(!this.dataUrl||!this.dataUserName||!this.displayName){
+          this.errorTip=true;
+          return;
+        }
+        var param = {
+          //id:this.mysqlform.conname,
+          displayName:this.displayName,
+          type:"mysql",
+          url:this.dataUrl,
+          user:this.dataUserName,
+          pwd:this.dataPassword
+        };
+        axios.post("/kjb/cms/creationDataBase", param
+        ).then((response) => {
+          var res = response.data;
+          if (res.status == 1) {
+            this.$store.dispatch('GetConnect');
+            this.addMySql = false;
+          } else {
+            this.createError = true;
+          }
+        })
+        this.getEntity();
+      },
+      getEntity(){
+        this.$store.dispatch('GetEntity');
+      },
       drag:function(event,conn,table,column){
         this.dom = event.currentTarget
         this.dragitem.connectid=conn
@@ -333,10 +409,16 @@
       },
       selectEntity(value){
        //   console.log(value);
-        this.s2t=[];
-        this.selectEntityInfo.displayName=value.displayName;
-        this.selectEntityInfo.properties=JSON.parse(value.properties);
-        this.target_table_name=value.displayName;
+        if(value.dbID){
+          this.s2t=[];
+          this.selectEntityInfo.displayName=value.displayName;
+          this.selectEntityInfo.properties=JSON.parse(value.properties);
+          this.target_table_name=value.displayName;
+        }else{
+            this.addMySql=true;
+            this.dataUrl=value.dbPosition.split("//")[1];
+        }
+
       },
 
       removerelation1(){
@@ -379,18 +461,18 @@
         }
 
         result.target_table_name=this.target_table_name;
-
-        axios.post("/kjb/dfs/commitjob",
-           result
+       // console.log(result)
+        axios.post("/kjb/commitjob",result
         ).then((response)=>{
-                            var res=response.data;
-                            if(res.status==1){
-                              alert("success")
-                            }
-                            }
+          var res=response.data;
+          if(res.status==1){
+            var receive=JSON.parse(res.data);
+            this.previewData=receive.items;
+          }
 
-                          )
-        }
+        })
+
       }
     }
+  }
 </script>
