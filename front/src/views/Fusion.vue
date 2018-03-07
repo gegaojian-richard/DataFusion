@@ -216,6 +216,7 @@
         s2t:[],
         join_units:[],
         target_table_name:"",
+        target_datasource_id:"",
         addMySql:false,
         dataUrl:"",//添加连接地址
         displayName:"",
@@ -414,6 +415,7 @@
           this.selectEntityInfo.displayName=value.displayName;
           this.selectEntityInfo.properties=JSON.parse(value.properties);
           this.target_table_name=value.tableName;
+          this.target_datasource_id=value.dbID;
         }else{
             this.addMySql=true;
             this.dataUrl=value.dbPosition.split("//")[1];
@@ -442,7 +444,8 @@
           s2t: [],
           join_units: [],
           relations: [],
-          target_table_name: ""
+          target_table_name: "",
+          target_datasource_id:""
         }
         result.s2t = this.s2t;
         for (let i = 0; i < this.join_units.length; i++) {
@@ -461,6 +464,7 @@
         }
 
         result.target_table_name=this.target_table_name;
+        result.target_datasource_id=this.target_datasource_id;
        // console.log(result)
         axios.post("/kjb/dfs/commitjob",result).then((response)=>{
           var res=response.data;
