@@ -21,9 +21,9 @@
       </div>
     </div>  <!-- 显示字段那列结束 -->
     <div >  <!-- 弹出选择类型 -->
-      <div id = 'jump' class="md-modal modal-msg md-modal-transition" style="width:170px;border:1px solid #3333;" v-bind:class="{'md-show':show}">
-        <div class="md-modal-inner">
-          <div class="md-top">
+      <div id = 'jump' class="md-modal modal-msg md-modal-transition" style="width:170px;border:1px solid #3333;border-radius: 2px" v-bind:class="{'md-show':show}">
+        <div class="md-modal-inner" >
+          <div class="md-top" style="height:10px">
             <button class="md-close" @click="show=false">Close</button>
           </div>
           <div class="md-content" style="position: relative" >
@@ -54,27 +54,26 @@
     </div>   <!-- 弹出窗口来选择检查类型 -->
 
     <div >  <!-- 弹出类型1输入 -->
-      <div id = 'jump' class="md-modal modal-msg md-modal-transition"  v-bind:class="{'md-show':click_flag1}">
-        <div class="md-modal-inner">
+      <div  class="md-modal modal-msg md-modal-transition"  v-bind:class="{'md-show':click_flag1}">
+        <div class="md-modal-inner" style="overflow:scroll;height:500px;">
           <div class="md-top">
             <button class="md-close " @click="flag1_close">Close</button>
           </div>
           <div>
-            <h4>当前的属性是:{{save_item}}</h4>
-            <div style="margin:5px 0px">
+            <h4>公式检查</h4>
+            <span>当前的属性是:{{save_item}}</span>
+            <div style="margin:25px 20px;text-align: left">
             <span style="margin-right: 15px">公式：{{save_item}} = </span>
-            <input v-model="type1_formu"/>
+            <input v-model="type1_formu" type="text" class="edit">
+              <el-button type="primary" plain @click="type1_ok">确定</el-button>
             </div>
-            <button type="button" class=" button" aria-label="Left Align" @click="type1_ok">
-              <span class="glyphicon glyphicon-plus" >确定</span>
-            </button>
             <button type="button" class="  button" aria-label="Left Align" @click="type1_add_newcolumn">
               <span class="glyphicon glyphicon-plus" >添加新的字段</span>
             </button>
             <br><br>
             <dl v-for = "(change_for_add,index) in all_for_change" class = "imagetable">
             <span>公式中非数值字段</span>
-            <input v-model="newclos[index].save"/>
+            <input v-model="newclos[index].save"type="text" class="edit">
               <br><br>
             <button type="button" class="  button" aria-label="Left Align" @click="type1_add(index)">
               <span class="glyphicon glyphicon-plus" >添加对应关系</span>
@@ -89,10 +88,10 @@
               <tbody>
               <tr v-for = "item in change_for_add" >
                 <td >
-                  <input v-model="item.mean">
+                  <input v-model="item.mean" type="text" class="edit">
                 </td>
                 <td>
-                  <input v-model="item.truevalue">
+                  <input v-model="item.truevalue"type="text" class="edit">
                 </td>
               </tr>
               </tbody>
@@ -101,9 +100,10 @@
           </div>
         </div>
       </div>
+      <div class="md-overlay" v-if="click_flag1" @click="click_flag1=false"></div>
     </div>   <!-- 类型1弹窗 -->
     <div >  <!-- 弹出类型2输入 -->
-      <div id = 'jump' class="md-modal modal-msg md-modal-transition" style="width:40%" v-bind:class="{'md-show':click_flag2}">
+      <div  class="md-modal modal-msg md-modal-transition" style="width:40%" v-bind:class="{'md-show':click_flag2}">
         <div class="md-modal-inner">
           <div class="md-top">
             <button class="md-close" @click="flag2_close">Close</button>
@@ -112,10 +112,10 @@
             当前的属性是:{{save_item}}
             <br><br>
             <button type="button" class = "button" @click = "type2_ok">
-              <sapn>确定</sapn>
+              <span>确定</span>
             </button>
             <button type="button" class = "button" @click="flag2_close">
-              <sapn>取消</sapn>
+              <span>取消</span>
             </button>
             <br><br>
             <button type="button" class = "button" @click ="flag2_add">
@@ -131,10 +131,10 @@
               <tbody>
               <tr v-for = "item in type2_change" >
                 <td >
-                  <input v-model="item.num">
+                  <input v-model="item.num" type="text" class="edit">
                 </td>
                 <td>
-                  <input v-model="item.condition">
+                  <input v-model="item.condition" type="text" class="edit">
                 </td>
               </tr>
               </tbody>
@@ -142,10 +142,10 @@
           </div>
         </div>
       </div>
-
+      <div class="md-overlay" v-if="click_flag2" @click="click_flag2=false"></div>
     </div>   <!-- 类型2弹窗 -->
     <div >  <!-- 弹出类型3输入   位数检查-->
-      <div id = 'jump' class="md-modal modal-msg md-modal-transition" style="width:40%" v-bind:class="{'md-show':click_flag3}">
+      <div  class="md-modal modal-msg md-modal-transition" style="width:40%" v-bind:class="{'md-show':click_flag3}">
         <div class="md-modal-inner">
           <div class="md-top">
             <button class="md-close" @click="flag3_close">Close</button>
@@ -154,7 +154,7 @@
             当前的属性是:{{save_item}}
             <br>
              <span>位数</span>&nbsp &nbsp
-             <input v-model="type3_value"/>
+             <input v-model="type3_value" type="text" class="edit">
           </div>
           <button class = "button" type = "button" @click = "clcik_flag3_button_ok">
             <span>确定</span>
@@ -164,7 +164,7 @@
           </button>
         </div>
       </div>
-
+      <div class="md-overlay" v-if="click_flag3" @click="click_flag3=false"></div>
     </div>   <!-- 类型3弹窗 -->
     <div >  <!-- 弹出类型4输入 -->
       <div id = 'jump' class="md-modal modal-msg md-modal-transition" style="width:40%" v-bind:class="{'md-show':click_flag4}">
@@ -176,10 +176,10 @@
              当前的属性是:{{save_item}}
               <br><br>
               <span> 上限</span>
-              <input v-model="type4_max"/>
+              <input v-model="type4_max" type="text" class="edit">
               <br><br>
               <span >下限</span>
-              <input v-model="type4_min" />
+              <input v-model="type4_min" type="text" class="edit">
               <br>
              <button type = "button " class = "button" @click = "clcik_flag4_button_ok">
                <span>确定</span>
@@ -190,7 +190,7 @@
           </div>
         </div>
       </div>
-
+      <div class="md-overlay" v-if="click_flag4" @click="click_flag4=false"></div>
     </div>   <!-- 类型4弹窗 -->
     <el-button type = "primary" plain @click="submit()">提交</el-button>
   </div>
@@ -198,6 +198,9 @@
 
 
 <style>
+  .edit{
+    height:20px;
+  }
   .md-modal .md-modal-inner{
     padding:30px 0px 0px 0px ;
   }
@@ -236,7 +239,7 @@
   }
   .imagetable th {
     font-weight:bold;
-    background-color: #103251;
+    /*background-color: #103251;*/
     color:#bfcbd9;
     font-size:0.95em;
     text-align:center;

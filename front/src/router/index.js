@@ -64,6 +64,28 @@ export const constantRouterMap=[
     }]
   },
   {
+    path:'/task',
+    component:Layout,
+    redirect:'/task/index',
+    children:[{
+      path:'index',
+      component:_import('Task'),
+      name:'Task',
+      meta:{title:'任务管理',icon:'dashboard',noCache:true}
+    }]
+  },
+  {
+    path:'/algorithm',
+    component:Layout,
+    redirect:'/algorithm/index',
+    children:[{
+      path:'index',
+      component:_import('Algorithm'),
+      name:'Algorithm',
+      meta:{title:'算法',icon:'clipboard',noCache:true}
+    }]
+  },
+  {
     path: '/check',
     component: Layout,
     redirect: 'noredirect',
