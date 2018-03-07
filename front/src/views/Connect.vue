@@ -73,9 +73,9 @@
         previewData:[]
       }
     },
-    mounted(){
-      this.getConnect();
-    },
+//    mounted(){
+//      this.getConnect();
+//    },
     methods: {
       descriptTable(index){
         this.tableDetail=this.databaseDetail[index].colmnuStructures;
@@ -109,9 +109,9 @@
         })
 
       },
-      getConnect(){
-        this.$store.dispatch('GetConnect')
-      },
+//      getConnect(){
+//        this.$store.dispatch('GetConnect')
+//      },
       descriptDataBase(param){
         this.nowConn=param;
         axios.get("/kjb/cms/descriptionDataBase",{

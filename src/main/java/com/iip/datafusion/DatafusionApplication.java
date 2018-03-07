@@ -1,10 +1,9 @@
 package com.iip.datafusion;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.iip.datafusion.backend.AccuracyManager;
-import com.iip.datafusion.backend.ConsistencyManager;
-import com.iip.datafusion.backend.IntegrityManager;
-import com.iip.datafusion.backend.JoinManager;
+import com.iip.datafusion.backend.*;
+import com.iip.datafusion.backend.job.algorithm.TextRankJob;
+import com.iip.datafusion.backend.job.algorithm.TopicModelJob;
 import com.iip.datafusion.util.dbutil.DataSourceRouter;
 import com.iip.datafusion.util.dbutil.DataSourceRouterManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +33,13 @@ public class DatafusionApplication {
 		AccuracyManager.getInstance().init();
 		ConsistencyManager.getInstance().init();
 		IntegrityManager.getInstance().init();
+
+		// ganjun Manager init()
+		TestManager.getInstance().init();
+		TextRankManager.getInstance().init();
+		NameRecognitionManager.getInstance().init();
+		TFIDFManager.getInstance().init();
+		TopicModelManager.getInstance().init();
 	}
 
 }
