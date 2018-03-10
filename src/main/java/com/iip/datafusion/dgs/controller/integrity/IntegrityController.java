@@ -17,7 +17,7 @@ public class IntegrityController {
 
 
 
-    @RequestMapping(path = {"/dgs/checkIntegrity"}, method = RequestMethod.POST)
+    @RequestMapping(path = {"/dgs/integrity/commitjob"}, method = RequestMethod.POST)
     @ResponseBody
     public Result checkIntegrity(@RequestBody IntegrityConfiguration integrityConfiguration) {
 

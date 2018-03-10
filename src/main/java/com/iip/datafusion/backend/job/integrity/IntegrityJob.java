@@ -77,7 +77,7 @@ public class IntegrityJob implements Job {
             trueColumnNames.add(sqlRsmd.getColumnName(i));
 
         }
-
+        JSONObject wholeJsonObj = new JSONObject();
         JSONArray array = new JSONArray();
 
 
@@ -97,8 +97,9 @@ public class IntegrityJob implements Job {
             }
             array.add(jsonObj);
         }
+        wholeJsonObj.put("items",array);
         //System.out.println(array.toString());
-        return array.toString();
+        return wholeJsonObj.toString();
 
 
     }
