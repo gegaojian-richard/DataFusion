@@ -2,6 +2,7 @@ package com.iip.datafusion.cms.model;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.iip.datafusion.util.dbutil.DataType;
 
 /**
  * Created by jingwei on 2017/12/19.
@@ -10,7 +11,7 @@ public class ColumnStructure {
     @JsonProperty("name")
     private String columnName;
     @JsonProperty("type")
-    private String columnType;
+    private String columnType; //
     @JsonProperty("prime")
     private int isPrime; // 0表示非主键 1表示为主键
     private int dataSize;
@@ -19,7 +20,6 @@ public class ColumnStructure {
 
     public ColumnStructure(String columnName){
         this.columnName =columnName;
-        this.columnType = "";
     }
 
     @JsonCreator

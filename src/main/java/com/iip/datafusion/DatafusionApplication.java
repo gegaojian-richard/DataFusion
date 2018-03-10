@@ -29,7 +29,7 @@ public class DatafusionApplication {
 		SpringApplication.run(DatafusionApplication.class, args);
 
 		// 初始化底层功能模块
-//		JoinManager.getInstance().init();
+		JoinManager.getInstance().init();
 		AccuracyManager.getInstance().init();
 		ConsistencyManager.getInstance().init();
 		IntegrityManager.getInstance().init();

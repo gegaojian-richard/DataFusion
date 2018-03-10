@@ -3,15 +3,19 @@ package com.iip.datafusion.backend.job.join;
 public class SQLTask {
     String sql;
     String whereFieldName;
+    String parentJoinUnit;
+    String currentJoinUnit;
     String datasourceID;
     boolean async;
 
     public SQLTask(){
     }
 
-    public SQLTask(String sql, String whereFieldName, String datasourceID, boolean async) {
+    public SQLTask(String sql, String whereFieldName, String parentJoinUnit, String currentJoinUnit, String datasourceID, boolean async) {
         this.sql = sql;
         this.whereFieldName = whereFieldName;
+        this.parentJoinUnit = parentJoinUnit;
+        this.currentJoinUnit = currentJoinUnit;
         this.datasourceID = datasourceID;
         this.async = async;
     }
@@ -30,6 +34,22 @@ public class SQLTask {
 
     public void setWhereFieldName(String whereFieldName) {
         this.whereFieldName = whereFieldName;
+    }
+
+    public String getParentJoinUnit() {
+        return parentJoinUnit;
+    }
+
+    public void setParentJoinUnit(String parentJoinUnit) {
+        this.parentJoinUnit = parentJoinUnit;
+    }
+
+    public String getCurrentJoinUnit() {
+        return currentJoinUnit;
+    }
+
+    public void setCurrentJoinUnit(String currentJoinUnit) {
+        this.currentJoinUnit = currentJoinUnit;
     }
 
     public String getDatasourceID() {
