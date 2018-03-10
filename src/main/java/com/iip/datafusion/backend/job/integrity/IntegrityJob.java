@@ -21,6 +21,7 @@ import java.util.List;
 
 public class IntegrityJob implements Job {
 
+    private String JobId;
     private String dataSourceId;
     private String tableName;
     private List<String> sqlList;
@@ -68,6 +69,14 @@ public class IntegrityJob implements Job {
         this.result = result;
     }
 
+    public String getJobId() {
+        return JobId;
+    }
+
+    public void setJobId(String jobId) {
+        JobId = jobId;
+    }
+
     public String rowSetToJson(SqlRowSet sqlRowSet) {
 
         SqlRowSetMetaData sqlRsmd = sqlRowSet.getMetaData();
@@ -103,5 +112,7 @@ public class IntegrityJob implements Job {
 
 
     }
+
+
 
 }

@@ -1,7 +1,9 @@
 package com.iip.datafusion.backend.parser;
 
+import com.iip.datafusion.backend.JobRegistry;
 import com.iip.datafusion.backend.job.integrity.IntegrityJob;
 import com.iip.datafusion.dgs.model.integrity.IntegrityConfiguration;
+import com.iip.datafusion.jvs.model.JobRandom;
 
 import java.util.ArrayList;
 
@@ -44,11 +46,13 @@ public class IntegrityParser implements Parser{
         IntegrityJob integrityJob = new IntegrityJob();
         integrityJob.setDataSourceId(dataSourceId);
         integrityJob.setTableName(tableName);
+        String jobId = JobRandom.getRandomStr();
+        integrityJob.setJobId(jobId);
         ArrayList<String> sqlList = new ArrayList<>();
         sqlList.add(sql);
         integrityJob.setSqlList(sqlList);
         integrityJob.setJobType("query");
-
+        JobRegistry.getInstance().regist(integrityJob,jobId);
         return integrityJob;
 
     }
