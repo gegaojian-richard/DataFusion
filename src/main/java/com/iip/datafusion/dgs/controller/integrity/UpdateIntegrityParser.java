@@ -1,5 +1,6 @@
 package com.iip.datafusion.dgs.controller.integrity;
 
+import com.iip.datafusion.backend.job.JobType;
 import com.iip.datafusion.backend.job.integrity.IntegrityJob;
 import com.iip.datafusion.dgs.model.integrity.UpdateIntegrityConfiguration;
 
@@ -49,7 +50,7 @@ public class UpdateIntegrityParser  {
         integrityJob.setDataSourceId(dataSourceId);
         integrityJob.setTableName(tableName);
         integrityJob.setSqlList(sqlList);
-        integrityJob.setJobType("execute");
+        integrityJob.setJobType(JobType.INTEGRITY);
 
         return new IntegrityJob();
     }

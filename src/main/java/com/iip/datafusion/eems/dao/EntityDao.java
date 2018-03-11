@@ -39,12 +39,8 @@ public class EntityDao{
 
     public boolean deleteEntity(int del_id){
         DataSourceRouterManager.setCurrentDataSourceKey("primary");
-        boolean flag=false;
         int i=jdbcTemplate.update("delete from entity where id=?",new Object[]{del_id});
-        if(i>=0){
-            flag=true;
-        }
-        return flag;
+        return i>0;
     }
     public boolean updateEntity(int update_id,String property,String newValue){
         DataSourceRouterManager.setCurrentDataSourceKey("primary");

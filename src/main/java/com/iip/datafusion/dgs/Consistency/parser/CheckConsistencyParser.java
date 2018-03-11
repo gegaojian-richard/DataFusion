@@ -1,5 +1,6 @@
 package com.iip.datafusion.dgs.Consistency.parser;
 
+import com.iip.datafusion.backend.job.JobType;
 import com.iip.datafusion.backend.job.consistency.ConsistencyJob;
 import com.iip.datafusion.dgs.Consistency.model.CheckConsistencyConfiguration;
 import com.iip.datafusion.dgs.Consistency.model.MapEntries;
@@ -46,7 +47,6 @@ public class CheckConsistencyParser {
             sqlList.add(sql1);
             sqlList.add(sql2);
             ConsistencyJob.setSqlList(sqlList);
-            ConsistencyJob.setJobType("Consistency");
             ConsistencyJoblist.add(ConsistencyJob);
 
         }

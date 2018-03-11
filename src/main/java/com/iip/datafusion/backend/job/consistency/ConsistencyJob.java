@@ -1,6 +1,7 @@
 package com.iip.datafusion.backend.job.consistency;
 
 import com.iip.datafusion.backend.job.Job;
+import com.iip.datafusion.backend.job.JobBase;
 
 import java.util.List;
 
@@ -8,7 +9,7 @@ import java.util.List;
  * 一致性检查工作描述
  * Created by GeGaojian on 2018/01/18.
  */
-public class ConsistencyJob implements Job {
+public class ConsistencyJob extends JobBase implements Job {
     private String mainDatasourceID;
     private String mainTableName;
     private String mainColumnName;
@@ -18,7 +19,6 @@ public class ConsistencyJob implements Job {
     private String followColumnName;
     private String primary_key2;
     private List<String> sqlList;
-    private String jobType;
 
 
     //    public ConsistencyJob(String mainDatasourceID, String mainTableName) {
@@ -72,12 +72,6 @@ public class ConsistencyJob implements Job {
     }
     public void setSqlList(List<String> sqlList) {
         this.sqlList = sqlList;
-    }
-    public String getJobType() {
-        return jobType;
-    }
-    public void setJobType(String jobType) {
-        this.jobType = jobType;
     }
 }
 

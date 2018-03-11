@@ -7,6 +7,7 @@ import com.iip.datafusion.nsps.model.TopicModelConfiguration;
 import com.iip.datafusion.nsps.service.TFIDFService;
 import com.iip.datafusion.nsps.service.TopicModelService;
 import com.iip.datafusion.util.jsonutil.Result;
+import com.iip.datafusion.util.userutil.UserManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,15 +23,15 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class TopicModelController {
     @Autowired
     TopicModelService service;
-
-
+    @Autowired
+    UserManager userManager;
 
     @RequestMapping(path = {"/nsps/TopicModel"}, method = RequestMethod.POST)
     @ResponseBody
     public Result topicModel(@RequestBody TopicModelConfiguration configuration) {
 
         try{
-            TopicModelJob job = service.commitJob(configuration);
+            TopicModelJob job = service.commitJob(configuration,userManager.getUserId());
             System.out.println("TopicModel Controller: " + job.getCorpusPath() + job.getTopicNum());
             while(job.getResult() == null){
                 Thread.sleep(1000);

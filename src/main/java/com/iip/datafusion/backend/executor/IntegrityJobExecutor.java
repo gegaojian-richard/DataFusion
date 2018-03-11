@@ -1,9 +1,11 @@
 package com.iip.datafusion.backend.executor;
 
+import com.iip.datafusion.backend.JobRegistry;
 import com.iip.datafusion.backend.channel.ChannelManager;
 import com.iip.datafusion.backend.common.AbstractTerminatableThread;
 import com.iip.datafusion.backend.common.TerminationToken;
 import com.iip.datafusion.backend.jdbchelper.JDBCHelper;
+import com.iip.datafusion.backend.job.JobStatusType;
 import com.iip.datafusion.backend.job.integrity.IntegrityJob;
 
 import com.iip.datafusion.util.dbutil.DataSourceRouterManager;
@@ -37,11 +39,14 @@ public class IntegrityJobExecutor extends AbstractTerminatableThread implements 
     @Override
     protected void doRun() throws Exception {
         IntegrityJob integrityJob = ChannelManager.getInstance().getIntegrityChannel().take(workQueue);
+        JobRegistry.getInstance().update(integrityJob, JobStatusType.EXECUTING);
 
         try{
             doJob(integrityJob);
+            JobRegistry.getInstance().update(integrityJob, JobStatusType.SUCCESS);
         } catch (Exception e){
             e.printStackTrace();
+            JobRegistry.getInstance().update(integrityJob, JobStatusType.ERROR);
         } finally {
             terminationToken.reservations.decrementAndGet();
         }
