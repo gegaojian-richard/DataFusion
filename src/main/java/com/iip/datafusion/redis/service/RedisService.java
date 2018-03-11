@@ -1,7 +1,5 @@
-package com.iip.datafusion.jvs.service;
+package com.iip.datafusion.redis.service;
 
-import com.iip.datafusion.jvs.model.RedisHelper;
-import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.redis.connection.RedisConnection;

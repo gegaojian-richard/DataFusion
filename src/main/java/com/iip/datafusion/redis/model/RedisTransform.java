@@ -1,4 +1,4 @@
-package com.iip.datafusion.dgs.model.redis;
+package com.iip.datafusion.redis.model;
 
 import net.sf.json.JSONObject;
 import org.springframework.data.redis.core.RedisTemplate;

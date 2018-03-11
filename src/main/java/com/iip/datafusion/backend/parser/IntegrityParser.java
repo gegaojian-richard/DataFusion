@@ -3,7 +3,7 @@ package com.iip.datafusion.backend.parser;
 import com.iip.datafusion.backend.JobRegistry;
 import com.iip.datafusion.backend.job.integrity.IntegrityJob;
 import com.iip.datafusion.dgs.model.integrity.IntegrityConfiguration;
-import com.iip.datafusion.jvs.model.JobRandom;
+import com.iip.datafusion.redis.model.JobRandom;
 
 import java.util.ArrayList;
 

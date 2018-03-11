@@ -7,9 +7,8 @@ import com.iip.datafusion.backend.common.TerminationToken;
 import com.iip.datafusion.backend.jdbchelper.JDBCHelper;
 import com.iip.datafusion.backend.job.integrity.IntegrityJob;
 
-import com.iip.datafusion.dgs.model.redis.RedisTransform;
-import com.iip.datafusion.jvs.model.RedisHelper;
-import com.iip.datafusion.jvs.model.JobRandom;
+import com.iip.datafusion.redis.model.RedisTransform;
+import com.iip.datafusion.redis.model.RedisHelper;
 import com.iip.datafusion.util.dbutil.DataSourceRouterManager;
 import com.iip.datafusion.util.jsonutil.Result;
 

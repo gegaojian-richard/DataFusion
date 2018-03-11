@@ -1,4 +1,4 @@
-package com.iip.datafusion.jvs.model;
+package com.iip.datafusion.redis.model;
 
 import java.util.Random;
 

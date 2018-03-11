@@ -1,4 +1,4 @@
-package com.iip.datafusion.jvs.dao;
+package com.iip.datafusion.redis.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
