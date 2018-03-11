@@ -7,6 +7,7 @@ import com.iip.datafusion.backend.common.TerminationToken;
 import com.iip.datafusion.backend.jdbchelper.JDBCHelper;
 import com.iip.datafusion.backend.job.integrity.IntegrityJob;
 
+import com.iip.datafusion.dgs.model.redis.RedisTransform;
 import com.iip.datafusion.jvs.model.RedisHelper;
 import com.iip.datafusion.jvs.model.JobRandom;
 import com.iip.datafusion.util.dbutil.DataSourceRouterManager;
@@ -68,7 +69,8 @@ public class IntegrityJobExecutor extends AbstractTerminatableThread implements 
 
                 job.setResult(new Result(1,null,json));
 
-                rowsetToRedis(resRowset,job.getJobId());
+                //rowsetToRedis(resRowset,job.getJobId());
+                RedisTransform.rowsetToRedis(resRowset,job.getJobId(),redisTemplate);
                 JobRegistry.getInstance().update(job.getJobId(),1);
             }else if(job.getJobType().equals("execute")){
                 //todo: 更新任务
@@ -107,11 +109,11 @@ public class IntegrityJobExecutor extends AbstractTerminatableThread implements 
             }
             lists.add(jsonObj.toString());
         }
-        System.out.println(lists);
+        //System.out.println(lists);
         String id = jobId;
-        System.out.println(id);
+        //System.out.println(id);
         redisTemplate.opsForList().leftPushAll(id, lists);
-        System.out.println(redisTemplate.opsForList().range(id,0,2));
+        //System.out.println(redisTemplate.opsForList().range(id,0,2));
 
         return true;
     }

@@ -104,6 +104,9 @@
         save_item:"",        //  当前选中的字段名
         show : false,        //  确认检查弹窗显示标志变量
         res_all:[],          //  最终存的数组
+        dataSourceId:"",     //  数据库id
+        tableName:"",         //  当前表名
+        jobId:""              //任务id
       }
     },   ///   data
     components: {
@@ -125,7 +128,10 @@
             this.flag = true;
           }
         })
+
         this.res_all=[];    ///  这里用于换表的时候清空之前的
+        this.dataSourceId = emitdata.database
+        this.tableName = emitdata.table
       },
       // 鼠标右键的点击事件
       sha(item) {
@@ -142,33 +148,58 @@
       },
       /// 添加操作
       click_type1() {
+
         for(var i =0;i<this.res_all.length;i++)
         {
           if(this.res_all[i] == this.save_item)
           {
             this.show = false;
-          //  alert('已经选中了');
+            alert('已经选中了');
             return;
           }
 
         }
+
         this.res_all.push(this.save_item);
         this.show = false;
       },
       ///  删除操作
       delete_click(index){
         this.res_all.splice(index,1);
+      },
+      submit(emitdata){
+        var param ={
+          "dataSourceId": this.dataSourceId,
+          "tableName": this.tableName,
+          "columnNames":this.res_all
+        }
+        axios.post("/kjb/dgs/integrity/commitjob",param).then
+        ((response)=>{
+          var res=response.data;
+          if(res.status==1){
+            alert("submit complete check success,jobId is "+res.msg);
+          }
+          this.jobId = res.msg
+        })
+
+
+        var redisParam = {
+          "key": this.jobId,
+          "start": 0,
+          "end": -1
+        }
+
+        axios.post("/kjb/tvs/redisData",redisParam).then
+        ((response)=>{
+          var res=response.data;
+          if(res.status==1){
+            alert("jobid: "+redisParam.key + " "+res.data);
+          }
+        })
+
       }
     } ,  ///  method
-//    submit(){
-//        axios.post("/kjb/dgs/accuracy/commitjob",this.res_all).then
-//        ((response)=>{
-//            var res=response.data;
-//            if(res.status==1){
-//                alert("submit complete check success");
-//            }
-//      })
-//    }
+
   }
 </script>
 

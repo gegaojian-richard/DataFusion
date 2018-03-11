@@ -7,7 +7,4 @@ public interface Job {
 //    JobType getJobType();
 //    String getJobID();
 //    String getDescription();
-
-
-
 }
