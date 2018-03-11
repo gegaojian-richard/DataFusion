@@ -63,7 +63,6 @@ public class TopicModelManager {
         try {
 //            System.out.println("TopicManager: " + job.getCorpusPath() + " " + job.getTopicNum());
             ChannelManager.getInstance().getTopicModeChannel().put(job);
-            job.setJobType(JobType.TOPIC_MODEL);
             token.reservations.incrementAndGet();
         }catch (Exception e){
             e.printStackTrace();

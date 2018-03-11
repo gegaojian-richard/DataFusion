@@ -58,7 +58,6 @@ public class AccuracyManager {
     public void commitJob(AccuracyJob accuracyJob){
         try {
             ChannelManager.getInstance().getAccuracyChannel().put(accuracyJob);
-            accuracyJob.setJobType(JobType.ACCURACY);
             token.reservations.incrementAndGet();
         }catch (Exception e){
             e.printStackTrace();

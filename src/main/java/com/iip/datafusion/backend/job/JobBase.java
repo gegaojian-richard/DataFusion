@@ -3,19 +3,22 @@ package com.iip.datafusion.backend.job;
 import com.iip.datafusion.util.userutil.UserManager;
 import javafx.print.PrinterJob;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 public class JobBase implements Job{
-    @Autowired
-    UserManager userManager;
 
     Integer JobID=0;
     Integer UserID=0;
     JobStatusType status;
     JobType jobType;  //在各个manager中的commitJob中设置
 
+
+    public void setUserID(Integer userID) {
+        UserID = userID;
+    }
+
     @Override
     public Integer getUserID() {
-        UserID = userManager.getUserId();
         return UserID;
     }
 

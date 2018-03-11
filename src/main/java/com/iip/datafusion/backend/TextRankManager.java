@@ -65,7 +65,6 @@ public class TextRankManager {
         try {
 //            System.out.println("TextRankManager: " + textRankJob.getCorpusPath() + " " + textRankJob.getTopK());
             ChannelManager.getInstance().getTextRankChannel().put(textRankJob);
-            textRankJob.setJobType(JobType.TEXT_RANK);
             token.reservations.incrementAndGet();
         }catch (Exception e){
             e.printStackTrace();

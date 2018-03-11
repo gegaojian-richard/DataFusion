@@ -58,7 +58,6 @@ public class ConsistencyManager {
     public void commitJob(ConsistencyJob consistencyJob){
         try {
             ChannelManager.getInstance().getConsistencyChannel().put(consistencyJob);
-            consistencyJob.setJobType(JobType.CONSISTENCY);
             token.reservations.incrementAndGet();
         }catch (Exception e){
             e.printStackTrace();

@@ -1,6 +1,8 @@
 package com.iip.datafusion.dgs.Consistency.service;
 
 import com.iip.datafusion.backend.ConsistencyManager;
+import com.iip.datafusion.backend.JobRegistry;
+import com.iip.datafusion.backend.job.JobType;
 import com.iip.datafusion.backend.job.consistency.ConsistencyJob;
 import com.iip.datafusion.dgs.Consistency.model.CheckConsistencyConfiguration;
 import com.iip.datafusion.dgs.Consistency.parser.CheckConsistencyParser;
@@ -18,6 +20,8 @@ public class CheckConsistencyService {
         ArrayList<ConsistencyJob> consistencyJoblist = CheckConsistencyParser.parse(checkConsistencyConfiguration);
 
         for(int i = 0;i<consistencyJoblist.size();i++){
+            consistencyJoblist.get(i).setJobType(JobType.CONSISTENCY);
+            JobRegistry.getInstance().regist(consistencyJoblist.get(i));
             ConsistencyManager.getInstance().commitJob(consistencyJoblist.get(i));
         }
 

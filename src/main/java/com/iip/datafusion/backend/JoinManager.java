@@ -58,7 +58,6 @@ public class JoinManager {
     public void commitJob(JoinJob joinJob){
         try {
             ChannelManager.getInstance().getJoinChannel().put(joinJob);
-            joinJob.setJobType(JobType.JOIN);
             token.reservations.incrementAndGet();
         }catch (Exception e){
             e.printStackTrace();

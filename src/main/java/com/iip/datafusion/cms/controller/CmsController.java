@@ -1,5 +1,7 @@
 package com.iip.datafusion.cms.controller;
 
+import com.iip.datafusion.backend.AccuracyManager;
+import com.iip.datafusion.backend.job.accuracy.AccuracyJob;
 import com.iip.datafusion.cms.dao.CmsDao;
 import com.iip.datafusion.cms.service.CmsService;
 import com.iip.datafusion.ums.service.UmsService;
@@ -27,10 +29,12 @@ public class CmsController {
     @Autowired
     CmsDao cmsDao;
 
-    @RequestMapping("test")
+    @RequestMapping("testJvs")
     @ResponseBody
     public Result test(@RequestParam(value ="db") String dbID,
                        @RequestParam(value="table") String tableName){
+
+
         cmsDao.deleteTable(dbID,tableName);
         return new Result(0,null,null);
     }

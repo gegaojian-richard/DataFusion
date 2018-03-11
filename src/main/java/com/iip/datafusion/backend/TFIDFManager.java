@@ -65,7 +65,6 @@ public class TFIDFManager {
         try {
 //            System.out.println("TFIDFManager: " + job.getCorpusPath() + " " + job.getTopK());
             ChannelManager.getInstance().getTfidfChannel().put(job);
-            job.setJobType(JobType.TF_IDF);
             token.reservations.incrementAndGet();
         }catch (Exception e){
             e.printStackTrace();
