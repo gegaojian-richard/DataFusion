@@ -57,7 +57,7 @@ public class TestJobExecutor extends AbstractTerminatableThread implements JobEx
             // todo: 实现完整性检查工作
 
             System.out.println("testjob is running...");
-            this.sleep(100000);
+            this.sleep(50000);
 //            job.setResult(new Result(0,"wawawawawa",null));
 
             System.out.println("here is : " + job.getPath());
