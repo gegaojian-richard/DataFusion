@@ -41,6 +41,9 @@ public class EntityController {
             return new Result(0,"用户未登录",null);
         }
         List<Entity> list = entityService.getEntityByUserId(userId);
+
+        // todo:遍历list检查每个Entity是否已连接，已连接-获得DataSourceId，未连接-空字符串
+
         if(list==null) {
             return new Result(0, "entity not exist for user " + userId, null);
         }
@@ -65,6 +68,8 @@ public class EntityController {
 
 //    @RequestMapping(path={"/entity/insert"},method={RequestMethod.POST})
 //    @ResponseBody
+//    //TODO:插入实体时相同用户不能同时创建两个一样的实体；
+//    //TODO insertEntity的逻辑应该在成功创建实体库之后
 //    public Result  insertEntity(@RequestBody Map<String,String> map){
 //        Entity entity=null;
 //        entity=new Entity();

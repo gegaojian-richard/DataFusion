@@ -6,6 +6,7 @@ import com.iip.datafusion.cms.model.ColumnStructure;
 import com.iip.datafusion.cms.model.DataBaseStructure;
 import com.iip.datafusion.cms.model.TableStructure;
 import com.iip.datafusion.util.dbutil.DataSourceRouterManager;
+import com.iip.datafusion.util.dbutil.DataType;
 import com.iip.datafusion.util.jsonutil.Result;
 
 import java.sql.Connection;

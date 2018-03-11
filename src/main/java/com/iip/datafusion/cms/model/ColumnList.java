@@ -1,5 +1,7 @@
 package com.iip.datafusion.cms.model;
 
+import com.iip.datafusion.util.dbutil.DataType;
+
 import java.util.List;
 
 public class ColumnList {

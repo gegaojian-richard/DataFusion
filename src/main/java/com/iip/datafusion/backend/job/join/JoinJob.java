@@ -39,7 +39,11 @@ public class JoinJob extends JobBase implements Job {
     }
 
     public String getInsertSQL(){
-        List<String> fields = (ArrayList<String>)s2tMap.values();
+        List<String> fields = new ArrayList<>();
+        for (String field : s2tMap.values()
+             ) {
+            fields.add(field);
+        }
         StringBuilder result = new StringBuilder("INSERT INTO ");
         result.append(targetTableName).append(" (").append(fields.get(0));
         for (int i = 1; i < fields.size(); i++) {

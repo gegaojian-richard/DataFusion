@@ -2,10 +2,6 @@ package com.iip.datafusion.eems.model;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.iip.datafusion.cms.model.ColumnStructure;
-
-import java.util.List;
 
 public class Entity{
     @JsonProperty("id")
