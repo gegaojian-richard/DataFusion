@@ -23,8 +23,8 @@ public class JvsService {
         return new Result(1,null,res);
     }
 
-    public Result privateTasks(String userId) {
-        List<JobBase> list = JobRegistry.getInstance().getUserJobList().get(Integer.parseInt(userId));
+    public Result privateTasks(int userId) {
+        List<JobBase> list = JobRegistry.getInstance().getUserJobList().get(userId);
         try {
             String json = JsonParse.getMapper().writeValueAsString(list);
             return new Result(1,null,json);

@@ -18,9 +18,10 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class TextRankService {
-    public TextRankJob commitJob(TextRankConfiguration textRankConfiguration)throws Exception{
+    public TextRankJob commitJob(TextRankConfiguration textRankConfiguration,int userID)throws Exception{
         TextRankJob textRankJob = TextRankParser.parse(textRankConfiguration);
         textRankJob.setJobType(JobType.TEXT_RANK);
+        textRankJob.setUserID(userID);
         JobRegistry.getInstance().regist(textRankJob);
         TextRankManager.getInstance().commitJob(textRankJob);
 

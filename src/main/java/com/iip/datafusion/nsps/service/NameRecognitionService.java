@@ -15,9 +15,10 @@ import org.springframework.stereotype.Service;
 @Service
 public class NameRecognitionService {
 
-    public NameRecognitionJob commitJob(NameRecognitionConfiguration configuration)throws Exception{
+    public NameRecognitionJob commitJob(NameRecognitionConfiguration configuration,int userID)throws Exception{
         NameRecognitionJob job = NameRecognitionParser.parse(configuration);
         job.setJobType(JobType.NAME_RECOGNITION);
+        job.setUserID(userID);
         JobRegistry.getInstance().regist(job);
         NameRecognitionManager.getInstance().commitJob(job);
 

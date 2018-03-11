@@ -77,6 +77,7 @@ public class DataSourceRouter extends AbstractRoutingDataSource {
 //            String dataSourceID = properties.getDisplayName();
             String dataSourceID = "db_" + DATASOURCE_COUNT.incrementAndGet();
             properties.setId(dataSourceID);
+            //TODO 这边有问题，应该先创建数据源再存储数据源信息。否则创建失败的数据源信息也会出现在customDataSourceProperties中
             customDataSourceProperties.put(dataSourceID, properties);
 
             // 2. 创建DataSource并添加至TargetDataSource

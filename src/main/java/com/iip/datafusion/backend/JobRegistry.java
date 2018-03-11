@@ -55,7 +55,7 @@ public class JobRegistry {
 
         //test
         try {
-            System.out.print(JsonParse.getMapper().writeValueAsString(userJobList));
+            System.out.print(JsonParse.getMapper().writeValueAsString(userJobList.get(job.getUserID())));
         }
         catch (JsonProcessingException e ){
             e.printStackTrace();
@@ -70,10 +70,10 @@ public class JobRegistry {
      */
     public void update(JobBase job, JobStatusType state){
         job.setStatus(state);
-        if(state.equals(JobStatusType.ERROR) || state.equals(JobStatusType.SUCCESS)) {
-            userJobList.get(job.getUserID()).remove(job);
-            //TODO job信息入库存储
-        }
+//        if(state.equals(JobStatusType.ERROR) || state.equals(JobStatusType.SUCCESS)) {
+//            userJobList.get(job.getUserID()).remove(job);
+//            //TODO job信息入库存储
+//        }
     }
 
     public ConcurrentMap<Integer,List<JobBase>> getUserJobList(){

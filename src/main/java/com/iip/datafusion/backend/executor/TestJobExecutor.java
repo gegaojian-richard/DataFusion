@@ -1,9 +1,11 @@
 package com.iip.datafusion.backend.executor;
 
+import com.iip.datafusion.backend.JobRegistry;
 import com.iip.datafusion.backend.channel.ChannelManager;
 import com.iip.datafusion.backend.common.AbstractTerminatableThread;
 import com.iip.datafusion.backend.common.TerminationToken;
 import com.iip.datafusion.backend.jdbchelper.JDBCHelper;
+import com.iip.datafusion.backend.job.JobStatusType;
 import com.iip.datafusion.backend.job.integrity.IntegrityJob;
 import com.iip.datafusion.backend.job.test.TestJob;
 import com.iip.datafusion.util.dbutil.DataSourceRouterManager;
@@ -37,11 +39,14 @@ public class TestJobExecutor extends AbstractTerminatableThread implements JobEx
         @Override
         protected void doRun() throws Exception {
             TestJob testJob = ChannelManager.getInstance().getTestChannel().take(workQueue);
+            JobRegistry.getInstance().update(testJob, JobStatusType.EXECUTING);
 
             try{
                 doJob(testJob);
+                JobRegistry.getInstance().update(testJob, JobStatusType.SUCCESS);
             } catch (Exception e){
                 e.printStackTrace();
+                JobRegistry.getInstance().update(testJob, JobStatusType.ERROR);
             } finally {
                 terminationToken.reservations.decrementAndGet();
             }
@@ -51,8 +56,9 @@ public class TestJobExecutor extends AbstractTerminatableThread implements JobEx
         public void doJob(TestJob job) throws Exception {
             // todo: 实现完整性检查工作
 
-            //System.out.println("finished hahah");
-            //job.setResult(new Result(0,"wawawawawa",null));
+            System.out.println("testjob is running...");
+            this.sleep(100000);
+//            job.setResult(new Result(0,"wawawawawa",null));
 
             System.out.println("here is : " + job.getPath());
 

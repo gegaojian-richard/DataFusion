@@ -50,4 +50,8 @@ public class JobBase implements Job{
     public String getDescription() {
         return null;
     }
+
+    public JobStatusType getStatus() {
+        return status;
+    }
 }

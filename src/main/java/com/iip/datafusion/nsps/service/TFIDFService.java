@@ -18,9 +18,10 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class TFIDFService {
-    public TFIDFJob commitJob(TFIDFConfiguration configuration)throws Exception{
+    public TFIDFJob commitJob(TFIDFConfiguration configuration,int userID)throws Exception{
         TFIDFJob job = TFIDFParser.parse(configuration);
         job.setJobType(JobType.TF_IDF);
+        job.setUserID(userID);
         JobRegistry.getInstance().regist(job);
         TFIDFManager.getInstance().commitJob(job);
 

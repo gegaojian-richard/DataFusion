@@ -18,9 +18,10 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class TopicModelService {
-    public TopicModelJob commitJob(TopicModelConfiguration configuration)throws Exception{
+    public TopicModelJob commitJob(TopicModelConfiguration configuration,int userID)throws Exception{
         TopicModelJob job = TopicModelParser.parse(configuration);
         job.setJobType(JobType.TOPIC_MODEL);
+        job.setUserID(userID);
         JobRegistry.getInstance().regist(job);
         TopicModelManager.getInstance().commitJob(job);
 
