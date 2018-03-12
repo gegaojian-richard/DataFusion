@@ -69,8 +69,8 @@ public class IntegrityJobExecutor extends AbstractTerminatableThread implements 
                 job.setResult(new Result(1,null,json));
 
                 //rowsetToRedis(resRowset,job.getJobId());
-                RedisTransform.rowsetToRedis(resRowset,job.getJobId(),redisTemplate);
-                JobRegistry.getInstance().update(job.getJobId(),1);
+                //RedisTransform.rowsetToRedis(resRowset,job.getJobId(),redisTemplate);
+                //JobRegistry.getInstance().update(job.getJobId(),1);
             }else if(job.getJobType().equals("execute")){
                 //todo: 更新任务
             }

@@ -27,7 +27,7 @@ public class IntegrityController {
 
             }
             Result res = integrityJob.getResult();
-            res.setMsg(integrityJob.getJobId());
+            //res.setMsg(integrityJob.getJobId());
             return res;
         }catch (Exception e){
             return new Result(0,e.getMessage(),null);

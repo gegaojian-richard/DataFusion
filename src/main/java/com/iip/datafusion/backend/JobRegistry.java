@@ -36,16 +36,6 @@ public class JobRegistry {
         submittedJobRegistry.put(key, -1);
     }
 
-    public void regist(Job job,String jobId) {
-        String key = "userid - jobtype - job id and decription"; // 从job中获得
-        submittedJobRegistry.put(jobId, -1);
-    }
-
-    public void update(String jobId, int state){
-        String key = "userid - jobtype - job id and decription"; // 从job中获得
-        submittedJobRegistry.put(jobId, state);
-    }
-
     /**
      * 调用之前更新相应Executor的terminationToken.reservations
      * @param job

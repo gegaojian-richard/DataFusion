@@ -46,13 +46,12 @@ public class IntegrityParser implements Parser{
         IntegrityJob integrityJob = new IntegrityJob();
         integrityJob.setDataSourceId(dataSourceId);
         integrityJob.setTableName(tableName);
-        String jobId = JobRandom.getRandomStr();
-        integrityJob.setJobId(jobId);
+
         ArrayList<String> sqlList = new ArrayList<>();
         sqlList.add(sql);
         integrityJob.setSqlList(sqlList);
         integrityJob.setJobType("query");
-        JobRegistry.getInstance().regist(integrityJob,jobId);
+        //JobRegistry.getInstance().regist(integrityJob);
         return integrityJob;
 
     }
