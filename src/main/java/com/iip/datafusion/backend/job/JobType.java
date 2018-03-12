@@ -8,7 +8,11 @@ public enum JobType {
     CONSISTENCY("consistency"),
     ACCURACY("accuracy"),
     INTEGRITY("integrity"),
-    JOIN("join");
+    JOIN("join"),
+    NAME_RECOGNITION("name_recognition"),
+    TEXT_RANK("text_rank"),
+    TF_IDF("tf_idf"),
+    TOPIC_MODEL("topic_model");
 
     private final String name;
     private JobType(String name){

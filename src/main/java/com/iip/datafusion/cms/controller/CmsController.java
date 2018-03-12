@@ -1,5 +1,8 @@
 package com.iip.datafusion.cms.controller;
 
+import com.iip.datafusion.backend.AccuracyManager;
+import com.iip.datafusion.backend.job.accuracy.AccuracyJob;
+import com.iip.datafusion.cms.dao.CmsDao;
 import com.iip.datafusion.cms.service.CmsService;
 import com.iip.datafusion.ums.service.UmsService;
 import com.iip.datafusion.util.dbutil.DataSourceProperties;
@@ -23,13 +26,17 @@ public class CmsController {
     @Autowired
     UserManager userManager;
 
-    @RequestMapping("test")
-    @ResponseBody
-    public Result test(HttpSession session){
-//        Result res = umsService.getUserNameByTicket(ticket);
+    @Autowired
+    CmsDao cmsDao;
 
-        return new Result(1, null, "qq, this sessionid is: " + session.getId() +
-                    ";the user name is "+userManager.getUserName());
+    @RequestMapping("testJvs")
+    @ResponseBody
+    public Result test(@RequestParam(value ="db") String dbID,
+                       @RequestParam(value="table") String tableName){
+
+
+        cmsDao.deleteTable(dbID,tableName);
+        return new Result(0,null,null);
     }
 
     /*创建连接

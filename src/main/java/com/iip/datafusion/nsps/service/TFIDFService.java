@@ -1,7 +1,9 @@
 package com.iip.datafusion.nsps.service;
 
+import com.iip.datafusion.backend.JobRegistry;
 import com.iip.datafusion.backend.TFIDFManager;
 import com.iip.datafusion.backend.TextRankManager;
+import com.iip.datafusion.backend.job.JobType;
 import com.iip.datafusion.backend.job.algorithm.TFIDFJob;
 import com.iip.datafusion.backend.job.algorithm.TextRankJob;
 import com.iip.datafusion.backend.parser.TFIDFParser;
@@ -16,8 +18,11 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class TFIDFService {
-    public TFIDFJob commitJob(TFIDFConfiguration configuration)throws Exception{
+    public TFIDFJob commitJob(TFIDFConfiguration configuration,int userID)throws Exception{
         TFIDFJob job = TFIDFParser.parse(configuration);
+        job.setJobType(JobType.TF_IDF);
+        job.setUserID(userID);
+        JobRegistry.getInstance().regist(job);
         TFIDFManager.getInstance().commitJob(job);
 
         return job;

@@ -1,9 +1,11 @@
 package com.iip.datafusion.backend.executor;
 
+import com.iip.datafusion.backend.JobRegistry;
 import com.iip.datafusion.backend.channel.ChannelManager;
 import com.iip.datafusion.backend.common.AbstractTerminatableThread;
 import com.iip.datafusion.backend.common.TerminationToken;
 import com.iip.datafusion.backend.jdbchelper.JDBCHelper;
+import com.iip.datafusion.backend.job.JobStatusType;
 import com.iip.datafusion.backend.job.algorithm.NameRecognitionJob;
 import com.iip.datafusion.backend.job.algorithm.TextRankJob;
 import com.iip.datafusion.backend.textprocess.entity_recognition.NameRecognition;
@@ -42,11 +44,14 @@ public class NameRecognitionJobExcutor  extends AbstractTerminatableThread imple
     @Override
     protected void doRun() throws Exception {
         NameRecognitionJob job = ChannelManager.getInstance().getNameRecognitionChannel().take(workQueue);
+        JobRegistry.getInstance().update(job, JobStatusType.EXECUTING);
 
         try {
             doJob(job);
+            JobRegistry.getInstance().update(job, JobStatusType.SUCCESS);
         } catch (Exception e) {
             e.printStackTrace();
+            JobRegistry.getInstance().update(job, JobStatusType.ERROR);
         } finally {
             terminationToken.reservations.decrementAndGet();
         }

@@ -1,9 +1,11 @@
 package com.iip.datafusion.backend.executor;
 
+import com.iip.datafusion.backend.JobRegistry;
 import com.iip.datafusion.backend.channel.ChannelManager;
 import com.iip.datafusion.backend.common.AbstractTerminatableThread;
 import com.iip.datafusion.backend.common.TerminationToken;
 import com.iip.datafusion.backend.jdbchelper.JDBCHelper;
+import com.iip.datafusion.backend.job.JobStatusType;
 import com.iip.datafusion.backend.job.join.JoinJob;
 import com.iip.datafusion.backend.job.join.SQLTask;
 import com.iip.datafusion.util.dbutil.DataSourceRouterManager;
@@ -33,11 +35,14 @@ public class JoinJobExecutor extends AbstractTerminatableThread implements JobEx
     @Override
     protected void doRun() throws Exception {
         JoinJob joinJob = ChannelManager.getInstance().getJoinChannel().take(workQueue);
+        JobRegistry.getInstance().update(joinJob, JobStatusType.EXECUTING);
 
         try{
             doJob(joinJob);
+            JobRegistry.getInstance().update(joinJob, JobStatusType.SUCCESS);
         } catch (Exception e){
             e.printStackTrace();
+            JobRegistry.getInstance().update(joinJob, JobStatusType.ERROR);
         } finally {
             terminationToken.reservations.decrementAndGet();
         }

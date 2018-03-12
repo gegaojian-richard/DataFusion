@@ -1,13 +1,14 @@
 package com.iip.datafusion.backend.job.algorithm;
 
 import com.iip.datafusion.backend.job.Job;
+import com.iip.datafusion.backend.job.JobBase;
 import com.iip.datafusion.util.jsonutil.Result;
 
 /**
  * @Author Junnor.G
  * @Date 2018/1/31 下午3:16
  */
-public class TextRankJob implements Job{
+public class TextRankJob extends JobBase implements Job{
     private String corpusPath;
     private int topK;
     private String tableName;
@@ -58,5 +59,10 @@ public class TextRankJob implements Job{
 
     public void setDataSourceId(String dataSourceId) {
         this.dataSourceId = dataSourceId;
+    }
+
+    @Override
+    public String getDescription() {
+        return "TextRankJob: "+ this.getJobID();
     }
 }
