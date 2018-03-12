@@ -1,5 +1,6 @@
 package com.iip.datafusion.backend.parser;
 
+import com.iip.datafusion.backend.job.JobType;
 import com.iip.datafusion.backend.JobRegistry;
 import com.iip.datafusion.backend.job.integrity.IntegrityJob;
 import com.iip.datafusion.dgs.model.integrity.IntegrityConfiguration;
@@ -46,11 +47,12 @@ public class IntegrityParser implements Parser{
         IntegrityJob integrityJob = new IntegrityJob();
         integrityJob.setDataSourceId(dataSourceId);
         integrityJob.setTableName(tableName);
-
         ArrayList<String> sqlList = new ArrayList<>();
         sqlList.add(sql);
         integrityJob.setSqlList(sqlList);
-        integrityJob.setJobType("query");
+        integrityJob.setJobType(JobType.INTEGRITY);
+
+        integrityJob.setInnerJobType("query");
         //JobRegistry.getInstance().regist(integrityJob);
         return integrityJob;
 

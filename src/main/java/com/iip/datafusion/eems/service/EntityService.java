@@ -70,4 +70,25 @@ public class EntityService{
 
         return cmsDao.createTable(entity);
     }
+
+    public boolean delEntDB(int entityId) {
+        //找到id对应的数据库，表
+        Entity entity = getEntityByEntityID(entityId);
+        if (entity == null)  return false;
+
+        cmsDao.deleteTable(entity.getDbID(),entity.getTableName());
+        return true;
+    }
+
+    public Entity getEntityByEntityID(int entityId) {
+        Entity entity = entityDao.getEntityById(entityId);
+        if(entity==null) return entity;
+
+        for(DataSourceProperties d:dataSourceRouterManager.getDataSourceProperties()){
+            if(d.getUrl().equals(entity.getDbPosition())){
+                entity.setDbID(d.getId());
+            }
+        }
+        return entity;
+    }
 }

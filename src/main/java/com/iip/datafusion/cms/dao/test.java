@@ -13,44 +13,22 @@ import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
+import java.util.Scanner;
 
 /**
  * Created by jingwei on 2017/12/18.
  */
 public class test {
     public static void main(String [] args) {
-
-//        String url = "jdbc:mysql://localhost:3306/qq";
-//        String type = "com.mysql.jdbc.Driver";
-//        String user = "root";
-//        String pwd = "123456";
-//        Connection connection = null;
-//
-//        try {
-//            Class.forName(type);
-//            connection = DriverManager.getConnection(url, user, pwd);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//
-//        System.out.println(desCon(connection));
-
-        DataBaseStructure structure = new DataBaseStructure();
-        for(int i=0;i<9;i++) {
-            TableStructure tableStructure = new TableStructure("t"+i);
-            for(int j=0;j<9;j++) {
-                tableStructure.addColumn(new ColumnStructure("c"+j));
-            }
-            structure.addTable(tableStructure);
-        }
-
-        try {
-
-            ObjectMapper objectMapper = new ObjectMapper();
-            String json = objectMapper.writeValueAsString(structure);
-            System.out.println(json);
-        }catch (Exception e){
-            e.printStackTrace();
+        Scanner input=new Scanner(System.in);
+        String flag = "";
+        while (!flag.equals("%")) {
+            System.out.println("在primary中删除表，输入表名：");
+            String tableName = input.next();
+            CmsDao c = new CmsDao();
+            c.deleteTable("primary", tableName);
+            System.out.println("表格已删除请检查，输入%结束：");
+            flag = input.next();
         }
     }
 

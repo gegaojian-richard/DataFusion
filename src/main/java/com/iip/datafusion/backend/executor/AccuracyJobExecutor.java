@@ -1,9 +1,11 @@
 package com.iip.datafusion.backend.executor;
 
+import com.iip.datafusion.backend.JobRegistry;
 import com.iip.datafusion.backend.channel.ChannelManager;
 import com.iip.datafusion.backend.common.AbstractTerminatableThread;
 import com.iip.datafusion.backend.common.TerminationToken;
 import com.iip.datafusion.backend.jdbchelper.JDBCHelper;
+import com.iip.datafusion.backend.job.JobStatusType;
 import com.iip.datafusion.backend.job.accuracy.AccuracyJob;
 import com.iip.datafusion.dgs.model.accuracy.*;
 import com.iip.datafusion.util.dbutil.DataSourceRouterManager;
@@ -32,11 +34,14 @@ public class AccuracyJobExecutor extends AbstractTerminatableThread implements J
     @Override
     protected void doRun() throws Exception {
         AccuracyJob accuracyJob = ChannelManager.getInstance().getAccuracyChannel().take(workQueue);
+        JobRegistry.getInstance().update(accuracyJob, JobStatusType.EXECUTING);
 
         try{
             doJob(accuracyJob);
+            JobRegistry.getInstance().update(accuracyJob,JobStatusType.SUCCESS);
         } catch (Exception e){
             e.printStackTrace();
+            JobRegistry.getInstance().update(accuracyJob,JobStatusType.ERROR);
         } finally {
             terminationToken.reservations.decrementAndGet();
         }

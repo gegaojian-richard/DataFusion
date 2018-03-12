@@ -1,13 +1,16 @@
 package com.iip.datafusion.backend.job.algorithm;
 
 import com.iip.datafusion.backend.job.Job;
+import com.iip.datafusion.backend.job.JobBase;
 import com.iip.datafusion.util.jsonutil.Result;
+
+import javax.swing.*;
 
 /**
  * @Author Junnor.G
  * @Date 2018/2/1 下午9:41
  */
-public class TFIDFJob implements Job{
+public class TFIDFJob extends JobBase implements Job{
     private String corpusPath;
     private int topK;
     private String tableName;
@@ -58,5 +61,9 @@ public class TFIDFJob implements Job{
 
     public void setDataSourceId(String dataSourceId) {
         this.dataSourceId = dataSourceId;
+    }
+
+    public String getDescription() {
+        return "TFIDFJob: "+ this.getJobID();
     }
 }

@@ -5,6 +5,7 @@ import com.iip.datafusion.backend.channel.ChannelManager;
 import com.iip.datafusion.backend.common.AbstractTerminatableThread;
 import com.iip.datafusion.backend.common.TerminationToken;
 import com.iip.datafusion.backend.jdbchelper.JDBCHelper;
+import com.iip.datafusion.backend.job.JobStatusType;
 import com.iip.datafusion.backend.job.integrity.IntegrityJob;
 
 import com.iip.datafusion.redis.model.RedisTransform;
@@ -12,8 +13,10 @@ import com.iip.datafusion.redis.model.RedisHelper;
 import com.iip.datafusion.util.dbutil.DataSourceRouterManager;
 import com.iip.datafusion.util.jsonutil.Result;
 
+import com.iip.datafusion.util.userutil.UserManager;
 import net.sf.json.JSONObject;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
@@ -25,7 +28,6 @@ import java.util.concurrent.BlockingQueue;
 
 public class IntegrityJobExecutor extends AbstractTerminatableThread implements JobExecutor<IntegrityJob> {
     private final BlockingQueue<IntegrityJob> workQueue;
-
 
     private final JdbcTemplate jdbcTemplate = JDBCHelper.getJdbcTemplate();
 
@@ -41,11 +43,14 @@ public class IntegrityJobExecutor extends AbstractTerminatableThread implements 
     @Override
     protected void doRun() throws Exception {
         IntegrityJob integrityJob = ChannelManager.getInstance().getIntegrityChannel().take(workQueue);
+        JobRegistry.getInstance().update(integrityJob, JobStatusType.EXECUTING);
 
         try{
             doJob(integrityJob);
+            JobRegistry.getInstance().update(integrityJob, JobStatusType.SUCCESS);
         } catch (Exception e){
             e.printStackTrace();
+            JobRegistry.getInstance().update(integrityJob, JobStatusType.ERROR);
         } finally {
             terminationToken.reservations.decrementAndGet();
         }
@@ -61,17 +66,18 @@ public class IntegrityJobExecutor extends AbstractTerminatableThread implements 
         DataSourceRouterManager.setCurrentDataSourceKey(job.getDataSourceId());
 
         try{
-            if(job.getJobType().equals("query")) {
+            if(job.getInnerJobType().equals("query")) {
                 SqlRowSet resRowset = jdbcTemplate.queryForRowSet(job.getSqlList().get(0));
                 String json = job.rowSetToJson(resRowset);
                 resRowset = jdbcTemplate.queryForRowSet(job.getSqlList().get(0));
 
-                job.setResult(new Result(1,null,json));
+                String key = job.getUserID() + "-" + job.getJobID();
+                job.setResult(new Result(1,key,json));
 
                 //rowsetToRedis(resRowset,job.getJobId());
-                //RedisTransform.rowsetToRedis(resRowset,job.getJobId(),redisTemplate);
-                //JobRegistry.getInstance().update(job.getJobId(),1);
-            }else if(job.getJobType().equals("execute")){
+
+                RedisTransform.rowsetToRedis(resRowset,key,redisTemplate);
+            }else if(job.getInnerJobType().equals("execute")){
                 //todo: 更新任务
             }
 
