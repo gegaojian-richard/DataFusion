@@ -1,12 +1,12 @@
-package com.iip.datafusion.dgs.model.integrity;
+package com.iip.datafusion.redis.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * @author zengc
- * @date 2018/1/25 17:54
+ * @date 2018/3/10 18:16
  */
-public class RedisParam {
+public class RedisConfiguration {
 
     @JsonProperty("key")
     private String key;
