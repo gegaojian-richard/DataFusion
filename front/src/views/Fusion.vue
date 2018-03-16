@@ -468,11 +468,9 @@
        // console.log(result)
         axios.post("/kjb/dfs/commitjob",result).then((response)=>{
           var res=response.data;
-//          if(res.status==1){
-//            var receive=JSON.parse(res.data);
-//            this.previewData=receive.items;
-//          }
-
+          if(res.status==1){
+            this.$message('任务提交成功，请在任务管理处查看进度');
+          }
         })
 
       }
