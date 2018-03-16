@@ -24,10 +24,8 @@ public class IntegrityController {
         System.out.println("Get checkIntegrity message");
         try{
             IntegrityJob integrityJob = integrityService.commitJob(integrityConfiguration,userManager.getUserId());
-            while (integrityJob.getResult()==null){
 
-            }
-            Result res = integrityJob.getResult();
+            Result res = new Result(1,"Task Submitted successfully",null);;
             //res.setMsg(integrityJob.getJobId());
             return res;
         }catch (Exception e){
