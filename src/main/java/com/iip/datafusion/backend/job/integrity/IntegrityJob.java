@@ -26,7 +26,15 @@ public class IntegrityJob extends JobBase implements Job {
     private String tableName;
     private List<String> sqlList;
     private Result result;
+    private String innerJobType;
 
+    public String getInnerJobType() {
+        return innerJobType;
+    }
+
+    public void setInnerJobType(String innerJobType) {
+        this.innerJobType = innerJobType;
+    }
 
     public String getDataSourceId() {
         return dataSourceId;
@@ -69,7 +77,7 @@ public class IntegrityJob extends JobBase implements Job {
             trueColumnNames.add(sqlRsmd.getColumnName(i));
 
         }
-
+        JSONObject wholeJsonObj = new JSONObject();
         JSONArray array = new JSONArray();
 
 
@@ -89,8 +97,9 @@ public class IntegrityJob extends JobBase implements Job {
             }
             array.add(jsonObj);
         }
+        wholeJsonObj.put("items",array);
         //System.out.println(array.toString());
-        return array.toString();
+        return wholeJsonObj.toString();
 
 
     }
