@@ -1,10 +1,12 @@
 package com.iip.datafusion.dgs.model.accuracy;
 
 import com.iip.datafusion.dgs.dao.AccuracyDao;
+import com.iip.datafusion.redis.model.RedisTransform;
 import com.iip.datafusion.util.jsonutil.Result;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
 
@@ -16,6 +18,9 @@ public class AccuracyCheckUnit {
 
     @Autowired
     private AccuracyDao accuracyDao;
+
+    @Autowired
+    private StringRedisTemplate redisTemplate;
 
     public Result doCheck(String tableName, FormulaParam formulaParam){
         String whereClause = formulaParam.getWhereClause();
@@ -41,6 +46,7 @@ public class AccuracyCheckUnit {
         try{
             SqlRowSet sqlRowSet = accuracyDao.doSelect(tableName,selectClause,newWhereClause);
             ArrayList<String> columnNames = accuracyDao.getTableColumnList(tableName);
+            List<String> lists = new ArrayList<String>();
             JSONArray data_items = new JSONArray();
             while(sqlRowSet.next()) {
                 JSONObject item = new JSONObject();
@@ -49,9 +55,11 @@ public class AccuracyCheckUnit {
                 }
                 item.put(newColumnName,sqlRowSet.getString(newColumnName));
                 data_items.add(item);
+                lists.add(item.toString());
             }
             JSONObject result_data = new JSONObject();
             result_data.put("items", data_items);
+            redisTemplate.opsForList().leftPushAll("222",lists);
 
             Result result = new Result(1,null,result_data.toString());
             return result;
@@ -71,12 +79,11 @@ public class AccuracyCheckUnit {
             for(int i = 0; i < columnNames.size();i++){
                 if(columnNames.get(i).equals(columnName)){
                     columnType = accuracyDao.getColumnType(tableName,i);
-                    System.out.println(columnName);
-                    System.out.println(columnType);
                     break;
                 }
             }
 
+            List<String> lists = new ArrayList<String>();
             JSONArray data_items = new JSONArray();
             for(ConditionValue cv : conditionValues) {
                 String condition = cv.getCondition();
@@ -101,10 +108,13 @@ public class AccuracyCheckUnit {
                     }
                     item.put(newColumnName,value);
                     data_items.add(item);
+                    lists.add(item.toString());
                 }
             }
             JSONObject result_data = new JSONObject();
             result_data.put("items",data_items);
+
+            redisTemplate.opsForList().leftPushAll("222",lists);
 
             Result result = new Result(1,null,result_data.toString());
             return result;
@@ -180,6 +190,7 @@ public class AccuracyCheckUnit {
 
     private JSONObject getResultData(String tableName,SqlRowSet sqlRowSet, String newColumnName, String newValue) {
         ArrayList<String> columnNames = accuracyDao.getTableColumnList(tableName);
+        List<String> lists = new ArrayList<String>();
         JSONArray data_items = new JSONArray();
         while (sqlRowSet.next()){
             JSONObject item = new JSONObject();
@@ -188,9 +199,12 @@ public class AccuracyCheckUnit {
             }
             item.put(newColumnName,newValue);
             data_items.add(item);
+            lists.add(item.toString());
         }
         JSONObject result_data = new JSONObject();
         result_data.put("items",data_items);
+
+        redisTemplate.opsForList().leftPushAll("222",lists);
 
         return result_data;
     }
