@@ -1,12 +1,13 @@
 package com.iip.datafusion.backend.job.algorithm;
 
+import com.iip.datafusion.backend.job.JobBase;
 import com.iip.datafusion.util.jsonutil.Result;
 
 /**
  * @Author Junnor.G
  * @Date 2018/2/1 下午4:18
  */
-public class NameRecognitionJob {
+public class NameRecognitionJob extends JobBase {
     private String corpusPath;
     private String tableName;
     private Result result;
@@ -50,5 +51,9 @@ public class NameRecognitionJob {
 
     public void setDataSourceId(String dataSourceId) {
         this.dataSourceId = dataSourceId;
+    }
+
+    public String getDescription() {
+        return "NameRecognitionJob: "+ this.getJobID();
     }
 }

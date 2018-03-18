@@ -1,6 +1,7 @@
 package com.iip.datafusion.backend.job.consistency;
 
 import com.iip.datafusion.backend.job.Job;
+import com.iip.datafusion.backend.job.JobBase;
 
 import java.util.List;
 
@@ -8,7 +9,7 @@ import java.util.List;
  * 一致性检查工作描述
  * Created by GeGaojian on 2018/01/18.
  */
-public class ConsistencyJob implements Job {
+public class ConsistencyJob extends JobBase implements Job {
     private String mainDatasourceID;
     private String mainTableName;
     private String mainColumnName;
@@ -18,13 +19,20 @@ public class ConsistencyJob implements Job {
     private String followColumnName;
     private String primary_key2;
     private List<String> sqlList;
-    private String jobType;
+    private String innerJobType;
 
 
     //    public ConsistencyJob(String mainDatasourceID, String mainTableName) {
 //        this.mainDatasourceID = mainDatasourceID;
 //        this.mainTableName = mainTableName;
 //    }
+    public String getInnerJobType() {
+        return innerJobType;
+    }
+
+    public void setInnerJobType(String innerJobType) {
+        this.innerJobType = innerJobType;
+    }
     public String getmainDataSourceID() {
         return mainDatasourceID;
     }
@@ -34,7 +42,7 @@ public class ConsistencyJob implements Job {
     public String getmainTableName() {
         return mainTableName;
     }
-    public void setmainTableName(String tableName) {
+    public void setmainTableName(String mainTableName) {
         this.mainTableName = mainTableName;
     }
     public String getmainColumnName() { return mainColumnName; }
@@ -58,7 +66,7 @@ public class ConsistencyJob implements Job {
     public String getfollowTableName() {
         return followTableName;
     }
-    public void setfollowTableName(String tableName) {
+    public void setfollowTableName(String followTableName) {
         this.followTableName = followTableName;
     }
 
@@ -73,11 +81,11 @@ public class ConsistencyJob implements Job {
     public void setSqlList(List<String> sqlList) {
         this.sqlList = sqlList;
     }
-    public String getJobType() {
-        return jobType;
-    }
-    public void setJobType(String jobType) {
-        this.jobType = jobType;
-    }
+//    public String getJobType() {
+//        return jobType;
+//    }
+//    public void setJobType(String jobType) {
+//        this.jobType = jobType;
+//    }
 }
 

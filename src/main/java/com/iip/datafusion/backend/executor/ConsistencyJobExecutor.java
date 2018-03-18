@@ -12,13 +12,20 @@ import com.iip.datafusion.util.jsonutil.Result;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
+import org.springframework.data.redis.core.RedisTemplate;
+import com.iip.datafusion.redis.model.RedisTransform;
+import com.iip.datafusion.redis.model.RedisHelper;
 
+import java.util.ArrayList;
 import java.util.concurrent.BlockingQueue;
 
 public class ConsistencyJobExecutor extends AbstractTerminatableThread implements JobExecutor<ConsistencyJob> {
     @Autowired
     private final JdbcTemplate jdbcTemplate = JDBCHelper.getJdbcTemplate();
     private final BlockingQueue<ConsistencyJob> workQueue;
+
+    private RedisTemplate<String, String> redisTemplate = RedisHelper.getRedisTemplate();
+
 
     public ConsistencyJobExecutor(TerminationToken token, BlockingQueue<ConsistencyJob> workQueue){
         super(token);
@@ -45,13 +52,14 @@ public class ConsistencyJobExecutor extends AbstractTerminatableThread implement
         System.out.println(job.getSqlList().size());
         try{
             if(job.getSqlList().size()>0) {
-                if(job.getJobType().equals("Consistency")) {
-
+                if(job.getInnerJobType().equals("query")) {
                     SqlRowSet sqlRowSet1 = jdbcTemplate.queryForRowSet(job.getSqlList().get(0));
                     SqlRowSet sqlRowSet2 = jdbcTemplate.queryForRowSet(job.getSqlList().get(1));
                     System.out.println(job.getSqlList().get(0));
                     System.out.println(job.getSqlList().get(1));
-                    JSONArray json = new JSONArray();
+                    //JSONArray json = new JSONArray();
+                    ArrayList<String> lists = new ArrayList<>();
+                    String jobId = job.getUserID() + "-" + job.getJobID();
 //                    while (sqlRowSet2.next()) {
 //                        System.out.println(sqlRowSet2.isLast());
 //                        System.out.println(sqlRowSet2.getString(1));}
@@ -67,7 +75,7 @@ public class ConsistencyJobExecutor extends AbstractTerminatableThread implement
                             String value2=sqlRowSet2.getString(2);
                             System.out.println("value2："+value2);
                             if(value1==null||value2==null) break;
-                            if(key1.compareTo(key2)!=0) ;
+                            if(key1.compareTo(key2)!=0) ;//相等返回0，小于返回-1，大于返回1
                             if(key1.compareTo(key2)==0){
                                 if(value1.compareTo(value2)!=0){
                                     JSONObject jo = new JSONObject();
@@ -83,7 +91,7 @@ public class ConsistencyJobExecutor extends AbstractTerminatableThread implement
                                     jo.put("key2",key2);
                                     jo.put("ColumnName2",job.getfollowColumnName());
                                     jo.put("value2",value2);
-                                    json.add(jo);
+                                    lists.add(jo.toString());
                                 }
                             }
                             if (sqlRowSet2.isLast()) {
@@ -91,7 +99,9 @@ public class ConsistencyJobExecutor extends AbstractTerminatableThread implement
                                 break;}
                         }
                     }
-                    Result result = new Result(0,"数据不一致",json.toString());
+                    String id = "1";
+                    redisTemplate.opsForList().leftPushAll(jobId, lists);
+                    Result result = new Result(0,"数据不一致",lists.toString());
                     System.out.println("aaaa");
                     System.out.println(result);
                 }

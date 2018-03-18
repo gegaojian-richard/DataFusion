@@ -1,6 +1,7 @@
 package com.iip.datafusion.backend.job.join;
 
 import com.iip.datafusion.backend.job.Job;
+import com.iip.datafusion.backend.job.JobBase;
 import com.iip.datafusion.util.dbutil.DataSourceRouterManager;
 
 import java.util.*;
@@ -9,7 +10,7 @@ import java.util.*;
  * 数据整合工作描述
  * Created by GeGaojian on 2018/01/18.
  */
-public class JoinJob implements Job {
+public class JoinJob extends JobBase implements Job {
     Map<String,Integer> sqlRegistry;
     List<SQLTask> sqlTasks = new ArrayList<>();
     String targetTableName;
@@ -40,7 +41,7 @@ public class JoinJob implements Job {
     public String getInsertSQL(){
         List<String> fields = new ArrayList<>();
         for (String field : s2tMap.values()
-             ) {
+                ) {
             fields.add(field);
         }
         StringBuilder result = new StringBuilder("INSERT INTO ");
@@ -79,7 +80,7 @@ public class JoinJob implements Job {
         while (!queue.isEmpty()){
             JoinUnit currentJoinUnit = queue.poll();
             for (JoinUnit joinUnit : currentJoinUnit.getJoinUnits()
-                 ) {
+                    ) {
                 queue.offer(joinUnit);
             }
             sqlTasks.add(currentJoinUnit.getSQLTask());
@@ -90,5 +91,10 @@ public class JoinJob implements Job {
 
     public String getTargetDatasourceID() {
         return targetDatasourceID;
+    }
+
+    @Override
+    public String getDescription() {
+        return "this is join job: "+this.getJobID();
     }
 }

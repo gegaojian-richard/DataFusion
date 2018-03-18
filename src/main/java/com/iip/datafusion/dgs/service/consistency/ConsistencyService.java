@@ -1,9 +1,9 @@
-package com.iip.datafusion.dgs.Consistency.service;
+package com.iip.datafusion.dgs.service.consistency;
 
 import com.iip.datafusion.backend.ConsistencyManager;
 import com.iip.datafusion.backend.job.consistency.ConsistencyJob;
-import com.iip.datafusion.dgs.Consistency.model.CheckConsistencyConfiguration;
-import com.iip.datafusion.dgs.Consistency.parser.CheckConsistencyParser;
+import com.iip.datafusion.dgs.model.consistency.ConsistencyConfiguration;
+import com.iip.datafusion.backend.parser.ConsistencyParser;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -11,11 +11,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Service
-public class CheckConsistencyService {
-    public Map<String, Object> commitJob(CheckConsistencyConfiguration checkConsistencyConfiguration){
+public class ConsistencyService {
+    public Map<String, Object> commitJob(ConsistencyConfiguration ConsistencyConfiguration){
         Map<String,Object> map = new HashMap();
 
-        ArrayList<ConsistencyJob> consistencyJoblist = CheckConsistencyParser.parse(checkConsistencyConfiguration);
+        ArrayList<ConsistencyJob> consistencyJoblist = ConsistencyParser.parse(ConsistencyConfiguration);
 
         for(int i = 0;i<consistencyJoblist.size();i++){
             ConsistencyManager.getInstance().commitJob(consistencyJoblist.get(i));

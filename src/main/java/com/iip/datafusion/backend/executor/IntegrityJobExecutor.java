@@ -57,7 +57,7 @@ public class IntegrityJobExecutor extends AbstractTerminatableThread implements 
         DataSourceRouterManager.setCurrentDataSourceKey(job.getDataSourceId());
 
         try{
-            if(job.getJobType().equals("query")) {
+            if(job.getInnerJobType().equals("query")) {
                 SqlRowSet resRowset = jdbcTemplate.queryForRowSet(job.getSqlList().get(0));
                 String json = job.rowSetToJson(resRowset);
                 resRowset = jdbcTemplate.queryForRowSet(job.getSqlList().get(0));
