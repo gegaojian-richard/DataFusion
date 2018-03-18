@@ -29,6 +29,12 @@ public class RedisController {
         System.out.println("getPage");
         return new Result(1,null,wholeJsonObj.toString());
     }
+    @RequestMapping(path = "/tvs/redisLen",method = RequestMethod.POST)
+    @ResponseBody
+    public Result getLength(@RequestBody RedisConfiguration redisConfiguration){
+
+        return new Result(1,null,String.valueOf(redisService.getLlen(redisConfiguration.getKey())));
+    }
 
 
 
