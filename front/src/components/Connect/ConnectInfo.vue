@@ -17,7 +17,7 @@
             <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
             添加
           </button>
-          <ul class="dropdown-menu dropdown-menu-right" role="menu" id="datasource_menu" aria-labelledby="data-dropdrow" >
+          <ul class="dropdown-menu dropdown-menu-right" role="menu" id="datasource_menu" aria-labelledby="data-dropdrow" style="text-align: center; min-width: 120px;" >
             <li><a href="#"  role="button"  id="mysql-info" @click="addMySql=true">mysql</a></li>
             <li role="separator" class="divider"></li>
             <li><a href="#"  role="button"  id="oracle-info" @click="">oracle</a></li>
@@ -36,7 +36,7 @@
         </el-tree>
       </div>
     </div>
-    <div class="md-modal modal-msg md-modal-transition" style="width:400px"  v-bind:class="{'md-show':addMySql}">
+    <div class="md-modal modal-msg md-modal-transition" style="width:400px;"  v-bind:class="{'md-show':addMySql}">
       <div class="md-modal-inner">
         <div class="md-top">
           <div class="md-title">添加mysql连接</div>
@@ -78,6 +78,13 @@
   </div>
 </template>
 <style>
+  /*#datasource_menu{*/
+    /*z-index: 2000;*/
+    /*width:100px;*/
+  /*}*/
+  /*#datasource_menu li{*/
+    /*width:100px;*/
+  /*}*/
 .menu{
   height:100%;
   /*border-left:1px solid #1a1a1a;*/

@@ -6,8 +6,10 @@ import com.iip.datafusion.backend.common.TerminationToken;
 import com.iip.datafusion.backend.config.Capabilities;
 import com.iip.datafusion.backend.executor.NameRecognitionJobExcutor;
 import com.iip.datafusion.backend.executor.TextRankJobExcutor;
+import com.iip.datafusion.backend.job.JobType;
 import com.iip.datafusion.backend.job.algorithm.NameRecognitionJob;
 import com.iip.datafusion.backend.job.algorithm.TextRankJob;
+//import com.sun.codemodel.internal.JType;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;

@@ -5,6 +5,7 @@ import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.lookup.AbstractRoutingDataSource;
 import org.springframework.stereotype.Component;
 
@@ -46,6 +47,7 @@ public class DataSourceRouter extends AbstractRoutingDataSource {
 
         // 初始化DataSource计数
         DATASOURCE_COUNT.set(0);
+
     }
 
     // 添加数据源
@@ -75,6 +77,7 @@ public class DataSourceRouter extends AbstractRoutingDataSource {
 //            String dataSourceID = properties.getDisplayName();
             String dataSourceID = "db_" + DATASOURCE_COUNT.incrementAndGet();
             properties.setId(dataSourceID);
+            //TODO 这边有问题，应该先创建数据源再存储数据源信息。否则创建失败的数据源信息也会出现在customDataSourceProperties中
             customDataSourceProperties.put(dataSourceID, properties);
 
             // 2. 创建DataSource并添加至TargetDataSource
@@ -87,7 +90,6 @@ public class DataSourceRouter extends AbstractRoutingDataSource {
         }
 
         result.setStatus(1);
-        //TODO 成功无需返回数据
         result.setData("{\"dbid\":\"" + properties.getId() + "\"}");
 
         return result;
@@ -186,4 +188,5 @@ public class DataSourceRouter extends AbstractRoutingDataSource {
 
         return result;
     }
+
 }

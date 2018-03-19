@@ -4,6 +4,7 @@ import com.iip.datafusion.backend.job.algorithm.NameRecognitionJob;
 import com.iip.datafusion.nsps.model.NameRecognitionConfiguration;
 import com.iip.datafusion.nsps.service.NameRecognitionService;
 import com.iip.datafusion.util.jsonutil.Result;
+import com.iip.datafusion.util.userutil.UserManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,14 +21,15 @@ public class NameRecognitionController {
     @Autowired
     NameRecognitionService nameRecognitionService;
 
-
+    @Autowired
+    UserManager userManager;
 
     @RequestMapping(path = {"/nsps/NameRecognition"}, method = RequestMethod.POST)
     @ResponseBody
     public Result nameRecognition(@RequestBody NameRecognitionConfiguration configuration) {
 
         try{
-            NameRecognitionJob job = nameRecognitionService.commitJob(configuration);
+            NameRecognitionJob job = nameRecognitionService.commitJob(configuration,userManager.getUserId());
 //            System.out.println("Controller: " + job.getCorpusPath());
             while(job.getResult() == null){
                 Thread.sleep(1000);
