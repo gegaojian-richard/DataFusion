@@ -1,4 +1,4 @@
-package com.iip.datafusion.dgs.Consistency.model;
+package com.iip.datafusion.dgs.model.consistency;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -16,7 +16,7 @@ public class MapEntries {
     @JsonCreator
     public MapEntries(@JsonProperty("key") String key,
                       @JsonProperty("value") String value
-                       ) {
+    ) {
         this.key = key;
         this.value = value;
     }

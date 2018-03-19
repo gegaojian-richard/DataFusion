@@ -1,9 +1,8 @@
-package com.iip.datafusion.dgs.Consistency.controller;
+package com.iip.datafusion.dgs.controller.consistency;
 
-import com.iip.datafusion.dgs.Consistency.model.CheckConsistencyConfiguration;
-import com.iip.datafusion.dgs.Consistency.service.CheckConsistencyService;
+import com.iip.datafusion.dgs.model.consistency.ConsistencyConfiguration;
+import com.iip.datafusion.dgs.service.consistency.ConsistencyService;
 import com.iip.datafusion.util.jsonutil.Result;
-import com.iip.datafusion.util.userutil.UserManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,14 +15,12 @@ import java.util.Map;
 @Controller
 public class ConsistencyController {
     @Autowired
-    CheckConsistencyService checkConsistencyService;
-    @Autowired
-    UserManager userManager;
+    ConsistencyService ConsistencyService;
     @RequestMapping(path={"/if2"},method = RequestMethod.POST)
     @ResponseBody
-    public Result commitJob(@RequestBody CheckConsistencyConfiguration checkConsistencyConfiguration){
+    public Result commitJob(@RequestBody ConsistencyConfiguration ConsistencyConfiguration){
 
-        Map map = checkConsistencyService.commitJob(checkConsistencyConfiguration,userManager.getUserId());
+        Map map = ConsistencyService.commitJob(ConsistencyConfiguration);
         return new Result();
 //        return checkBasicConsistencyConfiguration.toString();
     }
