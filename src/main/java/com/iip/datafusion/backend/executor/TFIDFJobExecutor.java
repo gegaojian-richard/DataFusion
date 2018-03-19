@@ -51,7 +51,7 @@ public class TFIDFJobExecutor  extends AbstractTerminatableThread implements Job
 //        System.out.println("TFIDFExcutor path : " + job.getPath());
 //        System.out.println("TFIDFExcutor topK: " + job.getTopK());
         if(job.getCorpusPath() == null || job.getTopK() == 0 || job.getTableName() == null || job.getDataSourceId() == null){
-            job.setResult(new Result(-1, "error", "some parameters doesn't exist: " +
+            job.setResult(new Result(0, "error", "some parameters doesn't exist: " +
                     "'corpusPath', 'topK'(>0), 'tableName', 'dataSourceId'"));
         }
         else {
@@ -59,12 +59,12 @@ public class TFIDFJobExecutor  extends AbstractTerminatableThread implements Job
             // todo: 2. 根据文本关键词建立数据库表,并加入数据，每个文件对应的关键词
             int status = MySqlDAO.createWordsTable("keywords" , jdbcTemplate , job.getDataSourceId() , job.getTableName());
             if(status == -1){
-                job.setResult(new Result(-1, "error", "create table error"));
+                job.setResult(new Result(0, "error", "create table error"));
             }
             else{
                 status = MySqlDAO.insertWordsToTable("keywords" , jdbcTemplate , job.getDataSourceId() , job.getTableName() , keyWords);
-                if(status == -1) job.setResult(new Result(-1, "error", "create table error"));
-                else job.setResult(new Result(0, "right", JsonParse.getMapper().writeValueAsString(keyWords)));
+                if(status == -1) job.setResult(new Result(0, "error", "create table error"));
+                else job.setResult(new Result(1, "right", JsonParse.getMapper().writeValueAsString(keyWords)));
             }
         }
     }
