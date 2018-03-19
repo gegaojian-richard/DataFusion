@@ -1,15 +1,15 @@
 <template>
   <div>
-    <div>
-      <span style="font-size: 26px; font-weight: 400;color: #3333;margin: 20px auto 40px auto;text-align: center; font-weight: bold;">算法配置</span><br>
+    <div style="margin-top:40px ;">
+      <span style="font-size: 26px; font-weight: 400;color:#bfcbd9;text-align: center; font-weight: bold;">算法配置</span><br>
       <div style="text-align: left;margin-left: 100px;margin-top: 20px">
         <div>
           <span>文档路径</span>
-          <el-input v-model="position" style="width:200px"></el-input>
+          <el-input v-model="position" style="width:200px;margin-left: 20px;"></el-input>
         </div>
         <div style="margin-top: 20px">
           <span>算法选择</span>
-          <el-select v-model="algorithms"  >
+          <el-select v-model="algorithms" style="margin-left: 20px;width:200px;" >
             <el-option label="中文人名识别" value="0"></el-option>
             <el-option label="TextRank关键词抽取" value="1"></el-option>
             <el-option label="TFIDF关键词抽取" value="2"></el-option>
@@ -23,7 +23,7 @@
       <span style="font-size:20px">{{algorithmsList[algorithms]}}参数配置</span>
       <div style="margin-top: 20px">
         <span>目标数据库</span>
-        <el-select v-model="database" @change="chooseDatabase()">
+        <el-select v-model="database" @change="chooseDatabase()" style="margin-left: 15px;width:200px;">
           <el-option
             v-for="item in conns"
             :key="item.displayName"
@@ -33,7 +33,7 @@
         </el-select>
         <div style="margin-top: 20px">
           <span>目标表</span>
-          <el-select v-model="table" >
+          <el-select v-model="table" style="margin-left: 45px;width:200px;">
             <el-option
               v-for="item in tableForChoose"
               :key="item.tableName"
@@ -53,7 +53,7 @@
 </template>
 <style scoped>
 span{
-  color: #3333;
+  color:#bfcbd9;
   font-weight: bold;
   font-size: 16px;
 }
@@ -77,7 +77,7 @@ span{
           topicNum:"",
         }
       },
-    beforeMount(){
+    mounted(){
         this.$store.dispatch('GetConnect');
     },
     methods: {
@@ -90,8 +90,8 @@ span{
         }
       },
       submit(){
-        switch (this.algorithms) {
-          case 0:
+        switch (this. algorithms) {
+          case "0":
               var resultforNameRecognition={
                 "corpusPath":this.position,
                 "tableName":this.table,
@@ -104,7 +104,7 @@ span{
                   }
             })
                 break;
-          case 1:
+          case "1":
             var resultforTextRank={
               "corpusPath":this.position,
               "topK":this.topK,
@@ -118,7 +118,7 @@ span{
               }
             })
             break;
-          case 2:
+          case "2":
             var resultforTFIDF={
               "corpusPath":this.position,
               "topK":this.topK,
@@ -132,7 +132,7 @@ span{
               }
             })
             break;
-          case 3:
+          case "3":
             var resultforTopicModel={
               "corpusPath":this.position,
               "topicNum":this.topicNum,

@@ -4,7 +4,7 @@
 
       <el-table-column align="center" label="任务ID" width="80">
         <template slot-scope="scope">
-          <span>{{scope.row.dataSourceId}}</span>
+          <span>{{scope.row.jobID}}</span>
         </template>
       </el-table-column>
 
@@ -16,28 +16,81 @@
 
       <el-table-column class-name="status-col" label="任务状态" width="110">
         <template slot-scope="scope">
-          <el-tag :type="scope.row.status | statusFilter">{{scope.row.status}}</el-tag>
+          <el-tag :type="scope.row.status ">{{scope.row.status}}</el-tag>
         </template>
       </el-table-column>
 
       <el-table-column align="center" label="Actions" >
       <template slot-scope="scope">
-        <el-button type="primary" @click='view(scope.row.jobType)' size="small" icon="el-icon-edit">查看详情</el-button>
+        <el-button type="primary" @click='viewResult(scope.$index,scope.row)' size="small" icon="el-icon-edit">查看详情</el-button>
       </template>
     </el-table-column>
-
     </el-table>
+    <div class="md-modal modal-msg md-modal-transition" style="width:700px;margin-left: 50px;"  v-bind:class="{'md-show':showDetail}">
+      <div class="md-modal-inner">
+        <div class="md-top">
+          <div class="md-title">完整性检查结果</div>
+          <button class="md-close" @click="showDetail=false">Close</button>
+        </div>
+        <div class="md-content" >
+            <div style="margin-top:15px">
+              <div align="center">
+                <el-table
+                  :data="resultData"
+                  height="200"
+                  style="width:400px;margin:5px auto;">
+                  <el-table-column :label="key" v-for="(value,key) in resultData[0]"
+                                   width="120">
+                    <template slot-scope="scope">
+                      <span class="blockspan" v-if="editingRow!=scope.$index" @click="handleEdit(scope.$index)">{{resultData[scope.$index][key]}}</span>
+                      <el-input class="smallinput" v-if="editingRow==scope.$index" v-model="resultData[scope.$index][key]"></el-input>
+                    </template>
+                  </el-table-column>
+                </el-table>
+                <el-pagination
+                  @current-change="handleCurrentChange"
+                  :current-page="currentPage"
+                  :page-size="10"
+                  layout="total, sizes, prev, pager, next, jumper"
+                  :total="totalCount">
+                </el-pagination>
+              </div>
+             </div>
+          <el-Button @click="sendAllData" style="margin-top: 15px;margin-left: 400px;">确定</el-Button>
+        </div>
+        </div>
+      </div>
+    </div>
+   </div>
   </div>
 </template>
-
+<style >
+  .smallinput >.el-input__inner{
+    height:20px;
+  }
+  .edit-input {
+    padding-right: 100px;
+  }
+  .cancel-btn {
+    position: absolute;
+    right: 15px;
+    top: 10px;
+  }
+</style>
 <script>
   import axios from 'axios'
   export default {
     data() {
       return {
-        list:[]
-        ,
+        editingRow:null,
+        list:[],
+        showDetail:false,
         listLoading: true,
+        resultData:[],
+        currentPage:0,
+        totalCount:10,
+        nowEditJob:null,
+        userID:null,
       }
     },
    created(){
@@ -54,48 +107,39 @@
      })
    },
     methods: {
-//      getList() {
-//
-////        fetchList(this.listQuery).then(response => {
-////          const items = response.data.items
-////          this.list = items.map(v => {
-////            this.$set(v, 'edit', false) // https://vuejs.org/v2/guide/reactivity.html
-////
-////            v.originalTitle = v.title //  will be used when user click the cancel botton
-////
-////            return v
-////          })
-//
-////        })
-//      },
-//      cancelEdit(row) {
-//        row.title = row.originalTitle
-//        row.edit = false
-//        this.$message({
-//          message: 'The title has been restored to the original value',
-//          type: 'warning'
-//        })
-//      },
-//      confirmEdit(row) {
-//        row.edit = false
-//        row.originalTitle = row.title
-//        this.$message({
-//          message: 'The title has been edited',
-//          type: 'success'
-//        })
-//      }
+       handleEdit(index){
+           this.editingRow =index;
+       },
+       sendAllData(){
+
+       },
+      handleCurrentChange(val){
+        this.currentPage = val;
+        this.getData();
+      },
+      viewResult(index, row){
+        this.showDetail = true;
+        this.nowEditJob = row.jobID;
+        this.nowUserId=row.userID;
+        this.getData();
+      },
+      getData(){
+        var redisParam = {
+          "key": this.nowUserId+"-"+this.nowEditJob,
+          "start": this.currentPage,
+          "end": this.currentPage + 10
+        }
+        axios.post("/kjb/tvs/redisData", redisParam).then
+        ((response) => {
+          var res = response.data;
+          if (res.status == 1) {
+            this.resultData = JSON.parse(res.data).items;
+          }
+        })
+      }
     }
-  }
+    }
 </script>
 
-<style scoped>
-  .edit-input {
-    padding-right: 100px;
-  }
-  .cancel-btn {
-    position: absolute;
-    right: 15px;
-    top: 10px;
-  }
-</style>
+
 
