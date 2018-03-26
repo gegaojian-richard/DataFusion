@@ -25,7 +25,6 @@ public class IntegrityJob extends JobBase implements Job {
     private String dataSourceId;
     private String tableName;
     private List<String> sqlList;
-    private Result result;
     private String innerJobType;
 
     public String getInnerJobType() {
@@ -58,14 +57,6 @@ public class IntegrityJob extends JobBase implements Job {
 
     public void setSqlList(List<String> sqlList) {
         this.sqlList = sqlList;
-    }
-
-    public Result getResult() {
-        return result;
-    }
-
-    public void setResult(Result result) {
-        this.result = result;
     }
 
     public String rowSetToJson(SqlRowSet sqlRowSet) {
