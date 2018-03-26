@@ -41,7 +41,7 @@ public class JoinJob extends JobBase implements Job {
     public String getInsertSQL(){
         List<String> fields = new ArrayList<>();
         for (String field : s2tMap.values()
-             ) {
+                ) {
             fields.add(field);
         }
         StringBuilder result = new StringBuilder("INSERT INTO ");
@@ -80,7 +80,7 @@ public class JoinJob extends JobBase implements Job {
         while (!queue.isEmpty()){
             JoinUnit currentJoinUnit = queue.poll();
             for (JoinUnit joinUnit : currentJoinUnit.getJoinUnits()
-                 ) {
+                    ) {
                 queue.offer(joinUnit);
             }
             sqlTasks.add(currentJoinUnit.getSQLTask());

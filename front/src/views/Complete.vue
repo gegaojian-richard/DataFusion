@@ -177,25 +177,11 @@
         ((response)=>{
           var res=response.data;
           if(res.status==1){
-            alert("submit complete check success,jobId is "+res.msg);
-          }
-          this.jobId = res.msg
-        })
-
-
-        var redisParam = {
-          "key": this.jobId,
-          "start": 0,
-          "end": -1
-        }
-
-        axios.post("/kjb/tvs/redisData",redisParam).then
-        ((response)=>{
-          var res=response.data;
-          if(res.status==1){
-            alert("jobid: "+redisParam.key + " "+res.data);
+            this.$message("submit complete check success,jobId is "+res.msg);
+//            this.jobId = res.msg
           }
         })
+
 
       }
     } ,  ///  method

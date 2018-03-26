@@ -2,7 +2,7 @@
   <div class="entity-event">
     <div class="entity">
       <div class="entity-title">
-        <h2 class="entity-title-h2"><span>实体库</span></h2>
+        <h2 class="entity-title-h2" style="margin-top:10px;"><span>实体库</span></h2>
         <button type="button" class="btn btn-small" aria-label="Left Align" @click="getEntity" id="load">
           <span class="glyphicon glyphicon-repeat" aria-hidden="true">刷新</span>
         </button>
@@ -328,6 +328,7 @@
   .entity-item{
     display:table;
     width:100%;
+    color: #605F5F;
   }
   .entity-item-head{
     display:table-header-group;

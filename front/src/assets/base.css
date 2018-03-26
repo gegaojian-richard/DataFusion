@@ -115,7 +115,10 @@ progress {
   display: inline-block;
   vertical-align: baseline;
 }
-
+/*.el-table tr{*/
+  /*height:40px;*/
+  /*box-sizing: border-box;*/
+/*}*/
 button {
   background: none;
   border: 0;
