@@ -1,21 +1,18 @@
 <template>
   <div class="connect">
-    <connect-info  @previewtable="previewTable" class="sidecontainer" style="height:490px;float:left;width:180px"></connect-info>
-      <div class="show">
-        <div>
+    <connect-info  @previewtable="previewTable" class="sidecontainer" style="margin-top:-30px;height:490px;float:left;width:180px"></connect-info>
+      <div class="show" >
+        <div style="margin-top: 30px">
           <h2>数据源</h2>
-          <!--<button type="button" class="btn btn-small" aria-label="Left Align" @click="getConnect" id="load">-->
-            <!--<span class="glyphicon glyphicon-repeat" aria-hidden="true">刷新</span>-->
-          <!--</button>-->
         </div>
-        </div>
-        <div class="tablecontent" style="margin-left: 200px">
+      </div>
+        <div  style="margin-left: 200px;">
           <el-table
             :data="previewData"
-            height="450"
-            style="width:600px;margin:5px auto;">
+            height="400"
+            style="width:600px;margin:5px auto;background-color:#fff;border:1px solid #bfcbd9">
             <el-table-column :label="key" v-for="(value,key) in previewData[0]"
-                             width="120">
+                             width="120" style="background-color: #103251;">
               <template slot-scope="scope">
                 {{previewData[scope.$index][key]}}
               </template>
@@ -36,17 +33,21 @@
   }
 </style>
 <style>
-  #load{
-    float:right;
-    border: 1px solid #ccc;
-    color: #0c0709;
-    background-color: #ccc ;
-    font-size: 12px;
-    padding:0 5px;
-    height:30px;
-    line-height: 30px;
-    margin:5px 10px 5px 20px;
+  .sidecontainer{
+    overflow: auto;
+    border-right:2px solid #bfcbd9;
   }
+  /*#load{*/
+    /*float:right;*/
+    /*border: 1px solid #ccc;*/
+    /*color: #0c0709;*/
+    /*background-color: #ccc ;*/
+    /*font-size: 12px;*/
+    /*padding:0 5px;*/
+    /*height:30px;*/
+    /*line-height: 30px;*/
+    /*margin:5px 10px 5px 20px;*/
+  /*}*/
   .show{
     margin-left: 200px;
   }
@@ -128,6 +129,7 @@
 
       },
       previewTable(emitdata){
+        this.previewData=[];
         axios.get("/kjb/cms/preview",{
           params:{
             "display":emitdata.database,

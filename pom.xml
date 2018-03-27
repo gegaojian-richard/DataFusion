@@ -100,6 +100,20 @@
 			<scope>system</scope>
 			<systemPath>${project.basedir}/src/main/resources/lib/IKAnalyzer-2012.jar</systemPath>
 		</dependency>
+
+		<!-- redis cache related.....start -->
+		<dependency>
+			<groupId>org.springframework.data</groupId>
+			<artifactId>spring-data-redis</artifactId>
+			<version>1.7.0.RELEASE</version>
+		</dependency>
+		<dependency>
+			<groupId>redis.clients</groupId>
+			<artifactId>jedis</artifactId>
+			<version>2.7.3</version>
+		</dependency>
+		<!-- redis cache related.....end -->
+
 	</dependencies>
 
 	<build>

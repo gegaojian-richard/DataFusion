@@ -19,12 +19,20 @@ public class ConsistencyJob extends JobBase implements Job {
     private String followColumnName;
     private String primary_key2;
     private List<String> sqlList;
+    private String innerJobType;
 
 
     //    public ConsistencyJob(String mainDatasourceID, String mainTableName) {
 //        this.mainDatasourceID = mainDatasourceID;
 //        this.mainTableName = mainTableName;
 //    }
+    public String getInnerJobType() {
+        return innerJobType;
+    }
+
+    public void setInnerJobType(String innerJobType) {
+        this.innerJobType = innerJobType;
+    }
     public String getmainDataSourceID() {
         return mainDatasourceID;
     }
@@ -34,7 +42,7 @@ public class ConsistencyJob extends JobBase implements Job {
     public String getmainTableName() {
         return mainTableName;
     }
-    public void setmainTableName(String tableName) {
+    public void setmainTableName(String mainTableName) {
         this.mainTableName = mainTableName;
     }
     public String getmainColumnName() { return mainColumnName; }
@@ -58,7 +66,7 @@ public class ConsistencyJob extends JobBase implements Job {
     public String getfollowTableName() {
         return followTableName;
     }
-    public void setfollowTableName(String tableName) {
+    public void setfollowTableName(String followTableName) {
         this.followTableName = followTableName;
     }
 
@@ -73,5 +81,11 @@ public class ConsistencyJob extends JobBase implements Job {
     public void setSqlList(List<String> sqlList) {
         this.sqlList = sqlList;
     }
+//    public String getJobType() {
+//        return jobType;
+//    }
+//    public void setJobType(String jobType) {
+//        this.jobType = jobType;
+//    }
 }
 
