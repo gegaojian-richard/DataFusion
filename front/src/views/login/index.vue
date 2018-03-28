@@ -62,7 +62,7 @@
     -webkit-appearance: none;
     border-radius: 0px;
     padding: 12px 5px 12px 15px;
-    color:#eee;
+    color:#eee !important;
     height: 47px;
   }
   .el-input input :-webkit-autofill{

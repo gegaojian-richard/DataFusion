@@ -107,7 +107,6 @@
                 <div class="input-group">
                   <span style="margin-top:30px;" display="inline-block">具体信息</span><br>
                   <span  role="button" @click="addProperty" style="margin-left: 200px;border: 1px solid #b8b8b8;"> <i class="el-icon-circle-plus"style="color:#605F5F;">增加属性</i> </span>
-                  <div class="tablebody">
                     <el-table
                       :data="addOnepro"
                       border
@@ -158,7 +157,6 @@
                         </template>
                       </el-table-column>
                     </el-table>
-                  </div>
                 </div>
               </div>
               <div class="btn-wrap">
@@ -262,9 +260,6 @@
   .md-modal>.md-modal-inner{
     color: #605F5F;
   }
-  /*.md-modal  .el-table__row{*/
-    /*height:40px;*/
-  /*}*/
   .inputEntity{
     height:30px;
     margin-left:0px;
