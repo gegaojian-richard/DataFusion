@@ -1,8 +1,8 @@
 <template>
-<div style="height:100%;background-color: #103251">
+<div style="height:100%;background-color: #103251;color:#bfcbd9">
   <fusion-side  @selectentity="selectEntity" style="height:100%;width:180px;position:fixed;border-top:2px solid #bfcbd9;border-right:2px solid #bfcbd9"></fusion-side>
     <div style="margin-left: 200px;">
-      <el-tabs v-model="activeName2" type="card" @tab-click="handleClick">
+      <el-tabs v-model="activeName2" type="card" @tab-click="handleClick" style="border-right:2px solid #bfcbd9;">
         <el-tab-pane label="步骤一：数据源配置" name="first">
           <div>
             <h3 style="position:relative;left:-100px;margin-top: 20px;">步骤一：数据源配置</h3>
@@ -29,12 +29,11 @@
             <el-button style="margin-top:10px;position:relative;left:100px;" type="primary" plain @click="clearChoose">重置</el-button>
           </div>
           <div>
-            <h3 style="position:relative;left:-100px;margin-top:20px;">步骤二：映射关系配置 </h3>
-            <h3>{{selectEntityInfo.displayName}}</h3>
+            <h3 style="position:relative;left:-100px;margin-top:20px;">步骤二：{{selectEntityInfo.displayName}}映射关系配置 </h3>
             <div class="showpanel">
               <div>
                 <div  class='relation' @drop='drop($event,item.name)' @dragover='allowDrop($event)'  v-for="item in selectEntityInfo.properties" style="height:50px;border-bottom: 1px solid #b8b8b8">
-                  <span style="line-height: 50px; font-size: larger">{{item.name}}--{{item.type}}</span>
+                  <span style="line-height: 50px; font-size: larger;margin-right:10px">{{item.name}}--{{item.type}}</span>
                   <span v-if="item.prime==1">（主键）</span>
                 </div>
               </div>
@@ -172,9 +171,9 @@
     display:inline-block;
     /*width:70px;*/
     height:30px;
-    background: #2bc4e2;
-    border: 1px solid #c9d8ec;
-    color:#204d74;
+    background: #598dff;
+    border: 2px solid #c9d8ec;
+    color: #665f5f;
     margin-left: 10px;
     margin-top:10px;
     border-radius: 3px;
