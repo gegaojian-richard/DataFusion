@@ -1,62 +1,71 @@
 <template>
-<div style="height:100%">
-  <fusion-side  @selectentity="selectEntity" style="height:100%;width:180px;position:fixed"></fusion-side>
-    <div style="margin-left: 200px">
-      <h3 style="position:relative;left:-200px">数据源</h3>
-      <div class="showpanel">
-        <div v-for="conn in conRewrite">
-          <div class='tablecolumn' v-for="table in conn.tables" v-show="table.show" style="margin-top: 8px;">
-            <span style="line-height: 50px; font-size: larger">{{table.id}}--{{table.displayName}}</span>
-            <div style="display:inline" v-for="connect in selectTableProp">
-              <div style="display:inline" v-for="tab in connect.data" >
-                <div class="forselect"
-                    v-bind:title="''+table.id+':'+table.displayName"
-                  draggable="true"
-                  @dragstart='drag($event,connect.id,tab.tableName,column.name)'
-                v-show="connect.id==table.id && tab.tableName==table.displayName && table.show"
-                v-for=" column in tab.colmnuStructures">
-                {{column.name}}-{{column.type}}
+<div style="height:100%;background-color: #103251;color:#bfcbd9">
+  <fusion-side  @selectentity="selectEntity" style="height:100%;width:180px;position:fixed;border-top:2px solid #bfcbd9;border-right:2px solid #bfcbd9"></fusion-side>
+    <div style="margin-left: 200px;">
+      <el-tabs v-model="activeName2" type="card" @tab-click="handleClick" style="border-right:2px solid #bfcbd9;">
+        <el-tab-pane label="步骤一：数据源配置" name="first">
+          <div>
+            <h3 style="position:relative;left:-100px;margin-top: 20px;">步骤一：数据源配置</h3>
+            <div class="showpanel" style="overflow: auto">
+              <div v-for="conn in conRewrite">
+                <div class='tablecolumn' v-for="table in conn.tables" v-show="table.show" style="margin-top: 8px;">
+                  <span style="line-height: 50px; font-size: larger">{{table.id}}--{{table.displayName}}</span>
+                  <div style="display:inline" v-for="connect in selectTableProp">
+                    <div style="display:inline" v-for="tab in connect.data" >
+                      <div class="forselect"
+                           v-bind:title="''+table.id+':'+table.displayName"
+                           draggable="true"
+                           @dragstart='drag($event,connect.id,tab.tableName,column.name)'
+                           v-show="connect.id==table.id && tab.tableName==table.displayName && table.show"
+                           v-for=" column in tab.colmnuStructures">
+                        {{column.name}}-{{column.type}}
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
+            <el-button style="margin-top:10px;position:relative;left:100px;" type="primary" plain @click="addFusiondata">添加整合单元</el-button>
+            <el-button style="margin-top:10px;position:relative;left:100px;" type="primary" plain @click="clearChoose">重置</el-button>
           </div>
-        </div>
-      </div>
-      <el-button style="margin-top:10px;position:relative;left:100px;" type="primary" plain @click="addFusiondata">添加整合单元</el-button>
-      <el-button style="margin-top:10px;position:relative;left:100px;" type="primary" plain @click="clearChoose">重置</el-button>
-      <h3 style="position:relative;left:-200px">映射关系 </h3>
-      <h3>{{selectEntityInfo.displayName}}</h3>
-      <div class="showpanel">
-        <div>
-          <div  class='relation' @drop='drop($event,item.name)' @dragover='allowDrop($event)'  v-for="item in selectEntityInfo.properties" style="height:50px;border-bottom: 1px solid #b8b8b8">
-            <span style="line-height: 50px; font-size: larger">{{item.name}}--{{item.type}}</span>
-            <span v-if="item.prime==1">（主键）</span>
+          <div>
+            <h3 style="position:relative;left:-100px;margin-top:20px;">步骤二：{{selectEntityInfo.displayName}}映射关系配置 </h3>
+            <div class="showpanel">
+              <div>
+                <div  class='relation' @drop='drop($event,item.name)' @dragover='allowDrop($event)'  v-for="item in selectEntityInfo.properties" style="height:50px;border-bottom: 1px solid #b8b8b8">
+                  <span style="line-height: 50px; font-size: larger;margin-right:10px">{{item.name}}--{{item.type}}</span>
+                  <span v-if="item.prime==1">（主键）</span>
+                </div>
+              </div>
+            </div>
+            <el-button style="margin-top:10px;position:relative;left:100px;" type="primary" plain @click="removerelation1">重置</el-button>
           </div>
+        </el-tab-pane>
+        <el-tab-pane label="步骤二：相交关系" name="third">
+          <div>
+            <h3 style="position:relative;left:-100px">步骤三：相交关系 </h3>
+            <div class="showpanel">
+              <div v-for="n in (relations.length-1)">
+                <span>left</span>
+                <el-cascader
+                  :options="join_units"
+                  v-model="relations[n-1].left"
+                  @change="handleChange">
+                </el-cascader>
+                <span>join on </span>
+                <span>right</span>
+                <el-cascader
+                  :options="join_units"
+                  v-model="relations[n-1].right"
+                  @change="handleChange">
+                </el-cascader>
+              </div>
+            </div>
+            <el-button style="margin-top:10px;position:relative;left:100px;" type="primary" plain @click="removerelation2">重置</el-button>
+            <el-button style="margin-top:10px;position:relative;left:100px;" type="primary" plain @click="sendmessage">提交</el-button>
           </div>
-      </div>
-      <el-button style="margin-top:10px;position:relative;left:100px;" type="primary" plain @click="removerelation1">重置</el-button>
-      <h3 style="position:relative;left:-200px">相交关系 </h3>
-      <div class="showpanel">
-        <div v-for="n in (relations.length-1)">
-          <span>left</span>
-          <el-cascader
-            :options="join_units"
-            v-model="relations[n-1].left"
-            @change="handleChange">
-          </el-cascader>
-          <span>join on </span>
-          <span>right</span>
-          <el-cascader
-            :options="join_units"
-            v-model="relations[n-1].right"
-            @change="handleChange">
-          </el-cascader>
-        </div>
-      </div>
-      <el-button style="margin-top:10px;position:relative;left:100px;" type="primary" plain @click="removerelation2">重置</el-button>
-      <div>
-        <el-button style="margin-top:10px;position:relative;left:100px;" type="primary" plain @click="sendmessage">提交</el-button>
-      </div>
+        </el-tab-pane>
+      </el-tabs>
     </div>
     <div>
       <!--连接需要连接的实体-->
@@ -162,9 +171,9 @@
     display:inline-block;
     /*width:70px;*/
     height:30px;
-    background: #2bc4e2;
-    border: 1px solid #c9d8ec;
-    color:#204d74;
+    background: #598dff;
+    border: 2px solid #c9d8ec;
+    color: #665f5f;
     margin-left: 10px;
     margin-top:10px;
     border-radius: 3px;
@@ -190,6 +199,7 @@
   export default{
     data(){
       return {
+        activeName2: 'first',
           showtips:false,
         selectdata:false,
         defaultProps: {
@@ -254,6 +264,9 @@
 
     },
     methods: {
+      handleClick(tab, event) {
+        console.log(tab, event);
+      },
       addMysqlConnect(){
         if(!this.dataUrl||!this.dataUserName||!this.displayName){
           this.errorTip=true;
@@ -468,11 +481,9 @@
        // console.log(result)
         axios.post("/kjb/dfs/commitjob",result).then((response)=>{
           var res=response.data;
-//          if(res.status==1){
-//            var receive=JSON.parse(res.data);
-//            this.previewData=receive.items;
-//          }
-
+          if(res.status==1){
+            this.$message('任务提交成功，请在任务管理处查看进度');
+          }
         })
 
       }

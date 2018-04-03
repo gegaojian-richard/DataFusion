@@ -559,7 +559,7 @@
         ((response)=>{
           var res=response.data;
           if(res.status==1){
-            alert("submit complete check success");
+            this.$message('任务提交成功，请在任务管理处查看进度');
           }
         })
       }
