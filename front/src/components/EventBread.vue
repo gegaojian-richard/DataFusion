@@ -2,25 +2,22 @@
   <div class="entity-event" style="color:#605F5F">
     <div class="entity">
       <div class="entity-title">
-        <h2 class="entity-title-h2" style="margin-top:10px"><span>事件库</span></h2>
-        <button type="button" class="btn btn-small" aria-label="Left Align" @click="getEntity" id="load">
-          <span class="glyphicon glyphicon-repeat" aria-hidden="true">刷新</span>
-        </button>
-        <button type="button" class="btn btn-small" aria-label="Left Align" @click="showAdd" id="add">
-          <span class="glyphicon glyphicon-plus" aria-hidden="true">添加</span>
-        </button>
+        <p style="height: 50px;text-align: left;border-bottom: 1px solid #bfcbd9;line-height: 60px;color:#698EC3;font-size: 16px;">
+          <span style="display: inline-block;height:20px;width:5px;background: #698EC3;margin-bottom:-5px;margin-right: 5px;"></span>
+          <span>事件库</span>
+        </p>
       </div>
       <div class="entity-item">
         <div class="entity-item-head">
           <ul>
-            <li>事件名</li>
-            <li>数据库地址</li>
+            <li style="width:25%;">事件名</li>
+            <li style="width:35%;">数据库地址</li>
             <li>表名</li>
             <li>属性</li>
             <li>管理</li>
           </ul>
         </div>
-        <ul class="entity-item-list">
+        <ul class="entity-item-list" style="height: 678px;overflow-y: auto;">
           <li v-for="(item,index) in eventLi">
             <div class="entity-tab">
               {{item.displayName}}
@@ -40,6 +37,14 @@
             </div>
           </li>
         </ul>
+      </div>
+      <div style="height: 40px;margin-top:30px;">
+        <button style="background:#A5CE64;color:#fff;line-height: 23px;float:right;" type="button" class="btn btn-small" aria-label="Left Align" @click="getEntity" id="load">
+          <span class="glyphicon glyphicon-repeat" style="top:0px;" aria-hidden="true">刷新</span>
+        </button>
+        <button style="background: #82C4FB;color:#fff;line-height: 23px;float:right;" type="button" class="btn btn-small" aria-label="Left Align" @click="showAdd" id="add">
+          <span class="glyphicon glyphicon-plus" style="top:0px;" aria-hidden="true">添加</span>
+        </button>
       </div>
       <!--添加连接的遮罩层-->
       <div class="md-modal modal-msg md-modal-transition" style="width:400px;"  v-bind:class="{'md-show':addMySql}">
@@ -72,7 +77,6 @@
                   <i class="icon IconPwd"></i>
                   <input type="password" tabindex="4"  name="dataPassword" v-model="dataPassword" class="regi_login_input regi_login_input_left login-input-no input_text" placeholder="密码">
                 </li>
-
               </ul>
             </div>
             <div class="login-wrap">
@@ -96,7 +100,7 @@
                 </div>
                 <div class="input-group">
                   <span style="width:50px"> 数据库:</span>
-                  <el-select  v-model="addOne.dbPosition" style="height:8px;width:200px">
+                  <el-select  v-model="addOne.dbPosition" style="height:8px;width:380px">
                     <el-option v-for="item in conns" :key="item.displayName" :value="item.id" :label="item.displayName"></el-option>
                   </el-select>
                 </div>
@@ -105,13 +109,14 @@
                   <input v-model="addOne.tableName" type="text" class="inputEntity">
                 </div>
                 <div class="input-group">
-                  <span style="margin-top:30px;" display="inline-block">具体信息</span><br>
-                  <span  role="button" @click="addProperty" style="margin-left: 200px;border: 1px solid #b8b8b8;"> <i class="el-icon-circle-plus"style="color:#605F5F;">增加属性</i> </span>
+                  <div style="height: 40px;line-height: 40px;">
+                    <span style="height: 40px;line-height: 40px;display: inline-block" >具体信息</span>
+                    <span  role="button" @click="addProperty" style="padding: 0 5px;color:#fff;margin-left: 250px;display: inline-block;height: 40px;background: #7CC1FC;"> <i class="el-icon-circle-plus">增加属性</i> </span>
+                  </div>
                     <el-table
                       :data="addOnepro"
                       border
-                      height="200"
-                      style="width: 100%">
+                      style="margin-top:20px;width: 100%">
                       <el-table-column
                         align="center"
                         label="字段名"
@@ -182,7 +187,7 @@
                 </div>
                 <div class="input-group">
                   <span style="style:inline-block;width:55px"> 数据库:</span>
-                  <el-select  v-model="editArr.dbPosition"  style="width:200px;">
+                  <el-select  v-model="editArr.dbPosition"  style="width:380px;">
                     <el-option v-for="item in conns.displayName" :key="item" :value="item" :label="item"></el-option>
                   </el-select>
                 </div>
@@ -191,13 +196,14 @@
                   <input v-model="editArr.tableName" type="text" class="inputEntity">
                 </div>
                 <div class="input-group">
-                  <span style="margin-top:30px;" display="inline-block">具体信息</span><br>
-                  <span  role="button" @click="editAddProperty" style="margin-left: 200px;border: 1px solid #b8b8b8"> <i class="el-icon-circle-plus">增加属性</i> </span>
+                  <div style="height: 40px;line-height: 40px;">
+                    <span style="height: 40px;line-height: 40px;display: inline-block" >具体信息</span>
+                    <span  role="button" @click="addProperty" style="padding: 0 5px;color:#fff;margin-left: 250px;display: inline-block;height: 40px;background: #7CC1FC;"> <i class="el-icon-circle-plus">增加属性</i> </span>
+                  </div>
                   <el-table
                     :data="editArr.properties"
                     border
-                    height="200"
-                    style="width: 100%">
+                    style="width: 100%;margin-top:20px;">
                     <el-table-column
                       align="center"
                       label="字段名"
@@ -256,7 +262,12 @@
     </div>
   </div>
 </template>
-<style>
+<style rel="stylesheet/scss" lang="scss" scoped>
+  .entity-event {
+    height: 100%;
+    border:1px solid #bfcbd9;
+    padding: 0 20px;
+  }
   .md-modal>.md-modal-inner{
     color: #605F5F;
   }
@@ -265,6 +276,16 @@
     margin-left:0px;
     width:200px;
     margin-top: 10px;
+  }
+  .entity-item-list {
+    border: 1px solid #bfcbd9;
+    border-top: none;
+    li {
+      border: 1px dashed #bfcbd9;
+    }
+    li:nth-child(2n) {
+      background-color: #F2F7FD;
+    }
   }
   .entity-tab{
     /*width:100%;*/
@@ -307,6 +328,8 @@
     display:table;
     width:100%;
     color: #605F5F;
+    border: 1px solid #bfcbd9;
+    margin-top:20px;
   }
   .entity-item-head{
     display:table-header-group;
@@ -321,7 +344,7 @@
     display: table-cell;
     height: 40px;
     line-height: 40px;
-    background: #605F5F;
+    background: #6C89B1!important;
     color: #fff;
     text-align: center;
     text-transform: uppercase;
@@ -345,6 +368,57 @@
     vertical-align: top;
     border-bottom: 1px solid #e9e9e9;
     height: 100%; }
+  .md-modal {
+    overflow: hidden;
+    border-radius: 5px;
+  }
+  .md-modal .md-modal-inner .md-top{
+    width:100%;
+    height: 50px;
+    line-height: 50px;
+    background-color: #266CB4;
+    color: #fff;
+  .md-title {
+    position: absolute;
+    top: 0px;
+    left: 20px;
+    line-height: 50px;
+    padding: 0;
+    color: #333;
+    font-size: 18px;
+    font-weight: 400;
+    font-style: normal;
+    color: #Fff;
+  }
+  }
+  .md-modal .md-modal-inner {
+    padding: 0px;
+  }
+  .md-modal .md-modal-inner .md-content {
+    padding: 30px 30px 50px 30px;
+  .btn-login {
+    height: 50px;
+    line-height: 50px;
+    border: 2px solid  #5ACD70;
+    background: #5ACD70;
+  }
+  }
+  .inputEntity {
+    height: 40px;
+    margin-left: 0px;
+    width: 380px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    border-radius: 5px;
+  }
+  .input-group {
+    margin-bottom: 10px;
+    height: 40px;
+  }
+  .el-select>.el-input {
+    width: 380px!important;
+    margin-bottom: 10px;
+  }
 
 </style>
 <script>

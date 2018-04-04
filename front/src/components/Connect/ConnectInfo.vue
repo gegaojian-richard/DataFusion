@@ -1,20 +1,20 @@
 <template>
   <div>
     <div class="menu">
-      <span>连接信息</span>
-      <div>
+      <p class="title">连接信息</p>
+      <div style="background: #DFE2EB;">
         <div id="dropdelete" style="display:inline-block;position:relative;">
           <button type="button" class="data-dropdrow" data-toggle="dropdown"  >
-            <span class="glyphicon glyphicon-minus" aria-hidden="true"></span>
+            <img src="/static/home/subtraction.png">
             删除
           </button>
           <ul class="dropdown-menu dropdown-menu-right" role="menu" id="datasource" aria-labelledby="data-dropdrow" >
             <li v-for="(item,index) in conRewrite"><a href="#"  role="button"  @click="deleteConnect(item.id)">{{item.displayName}}</a></li>
           </ul>
         </div>
-        <div id="dropadd" style="display:inline-block;position:relative;">
+        <div id="dropadd" style="display:inline-block;position:relative;margin-left: 20px;">
           <button type="button" class="data-dropdrow " data-toggle="dropdown" >
-            <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
+            <img src="/static/home/add.png">
             添加
           </button>
           <ul class="dropdown-menu dropdown-menu-right" role="menu" id="datasource_menu" aria-labelledby="data-dropdrow" style="text-align: center; min-width: 120px;" >
@@ -31,7 +31,7 @@
           :props="defaultProps"
           default-expand-all
           @node-click="handleNodeClick"
-          style=" background-color: #103251;color:#bfcbd9;"
+          style="background-color:#1F5FA6;color:#fff;"
         >
         </el-tree>
       </div>
@@ -59,11 +59,12 @@
                 <input type="text" tabindex="2" name="dataUrl" v-model="dataUrl" class="regi_login_input regi_login_input_left" placeholder="数据库URL" data-type="loginname">
               </li>
               <li class="regi_form_input noMargin">
-                <i class="icon IconPeople"></i>
+                <!--<i class="icon IconPeople"></i>-->
+                <img src="/static/login/user.png" alt="">
                 <input type="text" tabindex="3"  name="dataUserName" v-model="dataUserName" class="regi_login_input regi_login_input_left login-input-no input_text" placeholder="用户名">
               </li>
               <li class="regi_form_input noMargin">
-                <i class="icon IconPwd"></i>
+                <img src="/static/login/lock.png" alt="">
                 <input type="password" tabindex="4"  name="dataPassword" v-model="dataPassword" class="regi_login_input regi_login_input_left login-input-no input_text" placeholder="密码">
               </li>
 
@@ -75,38 +76,93 @@
         </div>
       </div>
     </div>
+    <div class="md-overlay" v-if="addMySql" @click="addMySql=false"></div>
   </div>
 </template>
-<style>
-  /*#datasource_menu{*/
-    /*z-index: 2000;*/
-    /*width:100px;*/
-  /*}*/
-  /*#datasource_menu li{*/
-    /*width:100px;*/
-  /*}*/
+<style rel="stylesheet/scss" lang="scss">
+  @import "../../assets/scss/mixin";
 .menu{
   height:100%;
   /*border-left:1px solid #1a1a1a;*/
   /*background-color:#304156 ;*/
-  background-color: #103251;
+  background-color: #1F5FA6;
   color:#bfcbd9;
-  padding-top:5px;
   font-size: large;
+  .title{
+    height: 40px;
+    text-align: center;
+    line-height: 60px;
+    font-size: 18px;
+    color: #145398;
+    background: #DFE2EB;
+    font-weight:bold;
+  }
 }
+.regi_form_input img{
+  float: left;
+  width: 16px;
+  height: 18px;
+  margin: 12px 0 0 14px;
+}
+
 .data-dropdrow{
   border:transparent;
-  color:#bfcbd9;
-  font-size: 12px;
+  color: #1E73C5;
+  font-size: 14px;
   height:40px;
   line-height: 40px;
 }
   .showtree{
     clear: both;
   }
+.el-tree-node__content{
+  height: 56px;
+}
+.el-tree-node__content:hover {
+  background-color:#4686C4;
+}
+.el-tree-node:focus>.el-tree-node__content {
+  background-color:#4686C4;
+}
 .dropdown-menu{
   z-index: 1002;
 }
+  .md-modal {
+    overflow: hidden;
+    border-radius: 5px;
+  }
+  .md-modal .md-modal-inner .md-top{
+    width:100%;
+    height: 50px;
+    line-height: 50px;
+    background-color: #266CB4;
+    color: #fff;
+    .md-title {
+      position: absolute;
+      top: 0px;
+      left: 20px;
+      line-height: 50px;
+      padding: 0;
+      color: #333;
+      font-size: 18px;
+      font-weight: 400;
+      font-style: normal;
+      color: #Fff;
+    }
+  }
+  .md-modal .md-modal-inner {
+    padding: 0px;
+  }
+  .md-modal .md-modal-inner .md-content {
+    padding: 30px 30px 50px 30px;
+    .btn-login {
+      height: 50px;
+      line-height: 50px;
+      border: 2px solid  #5ACD70;
+      background: #5ACD70;
+    }
+  }
+
 </style>
 <script>
   import {mapGetters} from 'vuex'

@@ -1,14 +1,18 @@
 <template>
-<div style="height:100%;background-color: #103251;color:#bfcbd9">
-  <fusion-side  @selectentity="selectEntity" style="height:100%;width:180px;position:fixed;border-top:2px solid #bfcbd9;border-right:2px solid #bfcbd9"></fusion-side>
-    <div style="margin-left: 200px;">
-      <el-tabs v-model="activeName2" type="card" @tab-click="handleClick" style="border-right:2px solid #bfcbd9;">
+<div style="height:100%;">
+  <fusion-side  @selectentity="selectEntity" style="height:100%;width:180px;position:fixed;"></fusion-side>
+  <div style="height: 100%;padding: 20px;margin-left:180px;">
+    <div style="border:1px solid #ccc;padding: 0 20px 50px 20px;">
+      <el-tabs v-model="activeName2" type="card" @tab-click="handleClick" style="margin-top:20px;">
         <el-tab-pane label="步骤一：数据源配置" name="first">
           <div>
-            <h3 style="position:relative;left:-100px;margin-top: 20px;">步骤一：数据源配置</h3>
+            <p style="height: 50px;text-align: left;border-bottom: 1px solid #bfcbd9;line-height: 60px;color:#698EC3;font-size: 16px;">
+              <span style="display: inline-block;height:20px;width:5px;background: #698EC3;margin-bottom:-5px;margin-right: 5px;"></span>
+              <span>步骤一：数据源配置</span>
+            </p>
             <div class="showpanel" style="overflow: auto">
-              <div v-for="conn in conRewrite">
-                <div class='tablecolumn' v-for="table in conn.tables" v-show="table.show" style="margin-top: 8px;">
+              <div v-for="conn in conRewrite" class="relation">
+                <div class='tablecolumn' v-for="table in conn.tables" v-show="table.show">
                   <span style="line-height: 50px; font-size: larger">{{table.id}}--{{table.displayName}}</span>
                   <div style="display:inline" v-for="connect in selectTableProp">
                     <div style="display:inline" v-for="tab in connect.data" >
@@ -25,35 +29,41 @@
                 </div>
               </div>
             </div>
-            <el-button style="margin-top:10px;position:relative;left:100px;" type="primary" plain @click="addFusiondata">添加整合单元</el-button>
-            <el-button style="margin-top:10px;position:relative;left:100px;" type="primary" plain @click="clearChoose">重置</el-button>
+            <el-button style="margin-top:10px;position:relative;background: #A6CF65;color:#fff;float:right;" type="primary" plain @click="clearChoose">重置</el-button>
+            <el-button style="margin-top:10px;position:relative;background-color: #7BC2F8;color:#fff;float:right;margin-right: 20px;" type="primary" plain @click="addFusiondata">添加整合单元</el-button>
           </div>
-          <div>
-            <h3 style="position:relative;left:-100px;margin-top:20px;">步骤二：{{selectEntityInfo.displayName}}映射关系配置 </h3>
+          <div style="margin-top:50px;">
+            <p style="height: 50px;text-align: left;border-bottom: 1px solid #bfcbd9;line-height: 60px;color:#698EC3;font-size: 16px;">
+              <span style="display: inline-block;height:20px;width:5px;background: #698EC3;margin-bottom:-5px;margin-right: 5px;"></span>
+              <span>步骤二：{{selectEntityInfo.displayName}}映射关系配置</span>
+            </p>
             <div class="showpanel">
               <div>
-                <div  class='relation' @drop='drop($event,item.name)' @dragover='allowDrop($event)'  v-for="item in selectEntityInfo.properties" style="height:50px;border-bottom: 1px solid #b8b8b8">
+                <div  class='relation' @drop='drop($event,item.name)' @dragover='allowDrop($event)'  v-for="item in selectEntityInfo.properties" style="height:50px;border-bottom: 1px dashed #b8b8b8">
                   <span style="line-height: 50px; font-size: larger;margin-right:10px">{{item.name}}--{{item.type}}</span>
                   <span v-if="item.prime==1">（主键）</span>
                 </div>
               </div>
             </div>
-            <el-button style="margin-top:10px;position:relative;left:100px;" type="primary" plain @click="removerelation1">重置</el-button>
+            <el-button style="margin-top:10px;position:relative;background: #A6CF65;color:#fff;float:right;" type="primary" plain @click="removerelation1">重置</el-button>
           </div>
         </el-tab-pane>
         <el-tab-pane label="步骤二：相交关系" name="third">
           <div>
-            <h3 style="position:relative;left:-100px">步骤三：相交关系 </h3>
+            <p style="height: 50px;text-align: left;border-bottom: 1px solid #bfcbd9;line-height: 60px;color:#698EC3;font-size: 16px;">
+              <span style="display: inline-block;height:20px;width:5px;background: #698EC3;margin-bottom:-5px;margin-right: 5px;"></span>
+              <span>步骤三：相交关系</span>
+            </p>
             <div class="showpanel">
-              <div v-for="n in (relations.length-1)">
-                <span>left</span>
+              <div v-for="n in (relations.length-1)" class="xiangjiao">
+                <span style="width:100px;">left</span>
                 <el-cascader
                   :options="join_units"
                   v-model="relations[n-1].left"
-                  @change="handleChange">
+                  @change="handleChange" style="left:0px;">
                 </el-cascader>
-                <span>join on </span>
-                <span>right</span>
+                <span style="width:100px;">join on </span>
+                <span style="width:100px;">right</span>
                 <el-cascader
                   :options="join_units"
                   v-model="relations[n-1].right"
@@ -61,11 +71,12 @@
                 </el-cascader>
               </div>
             </div>
-            <el-button style="margin-top:10px;position:relative;left:100px;" type="primary" plain @click="removerelation2">重置</el-button>
-            <el-button style="margin-top:10px;position:relative;left:100px;" type="primary" plain @click="sendmessage">提交</el-button>
+            <el-button style="margin-top:10px;position:relative;background-color:#7BC2F8;color:#fff;float: right;" type="primary" plain @click="sendmessage">提交</el-button>
+            <el-button style="margin-top:10px;position:relative;background: #A6CF65;color:#fff;float: right;margin-right: 20px;" type="primary" plain @click="removerelation2">重置</el-button>
           </div>
         </el-tab-pane>
       </el-tabs>
+    </div>
     </div>
     <div>
       <!--连接需要连接的实体-->
@@ -112,14 +123,15 @@
     <div class="md-modal modal-msg md-modal-transition" style="width:550px" v-bind:class="{'md-show':selectdata}">
       <div class="md-modal-inner">
         <div class="md-top">
+          <div class="md-title">数据源配置</div>
           <button class="md-close" @click="clearChoose">Close</button>
         </div>
         <div class="md-content">
-          <div>
+          <div style="margin-bottom: 40px;">
             <el-row>
-              <el-col :span="8">
+              <el-col :span="8" >
                 <el-tree
-                  class="filter-tree"
+                  class="filter-tree tree2"
                   :data="conRewrite"
                   :props="defaultProps"
                   default-expand-all
@@ -128,7 +140,7 @@
                 </el-tree>
               </el-col>
               <el-col :span="16">
-                <div style=" width:300px;height:200px;border-left:1px solid #b8b8b8">
+                <div style="width:300px;border-left:1px solid #b8b8b8;margin-left: 20px;height: 300px;">
                   <div v-for="(tag,index) in conRewrite">
                     <el-tag
                       :key="item.displayName"
@@ -136,7 +148,7 @@
                       closable
                       v-show="item.show"
                       :disable-transitions="false"
-                      @close="handleClose(item)">
+                      @close="handleClose(item)" style="float: left;">
                       {{item.id}}-{{item.displayName}}
                     </el-tag>
                   </div>
@@ -148,24 +160,35 @@
         </div>
       </div>
     </div>
-    <div class="md-overlay" v-if="selectdata" @click="selectdata=false"></div>
+    <div class="md-overlay" v-if="selectdata || addMySql" @click="selectdata=false"></div>
     </div>
 </div>
 </template>
-<style>
+<style rel="stylesheet/scss" lang="scss">
   .showpanel {
-    width: 800px;
     height: 200px;
-    border: 2px solid #b8b8b8;
+    border: 1px solid #ccc;
     border-radius: 2px;
     margin-top:10px;
     overflow-x:auto;
     overflow-y:auto;
     text-align: left;
+    .relation {
+      padding-left: 20px;
+      color: #333;
+      font-size: 14px;
+      .tablecolumn{border-bottom: 1px dashed #ccc!important;}
+    }
+    .relation:nth-child(2n+1) {
+      background-color: #F2F7FC;
+    }
   }
   .el-tag {
     margin-left: 10px;
     margin-top:10px;
+  }
+  .el-button{
+    padding: 7px 20px;
   }
   .forselect{
     display:inline-block;
@@ -190,6 +213,75 @@
     /*left: -30px;*/
     /*z-index:1000;*/
   /*}*/
+  .md-modal {
+    overflow: hidden;
+    border-radius: 5px;
+  }
+  .md-modal .md-modal-inner .md-top{
+    width:100%;
+    height: 50px;
+    line-height: 50px;
+    background-color: #266CB4;
+    color: #fff;
+  .md-title {
+    position: absolute;
+    top: 0px;
+    left: 20px;
+    line-height: 50px;
+    padding: 0;
+    color: #333;
+    font-size: 18px;
+    font-weight: 400;
+    font-style: normal;
+    color: #Fff;
+  }
+  }
+  .md-modal .md-modal-inner {
+    padding: 0px;
+  }
+  .md-modal .md-modal-inner .md-content {
+    padding: 30px 30px 50px 30px;
+  .btn-login {
+    height: 50px;
+    line-height: 50px;
+    border: 2px solid  #5ACD70;
+    background: #5ACD70;
+  }
+  }
+  .tree2 .el-tree-node__content {
+    height: 30px!important;
+    line-height: 30px;
+  }
+  .tree2 .el-tree-node__content:hover {
+    background-color:#fff!important;
+    color: #4686C4!important;
+  }
+  .tree2 .el-tree-node:focus>.el-tree-node__content {
+    background-color:#fff!important;
+    color: #4686C4!important;
+  }
+  .forselect {
+    line-height: 30px;
+    background: #E9F3FE;
+    border:1px solid #598dff;
+    color: #598dff;
+    padding: 0 5px;
+  }
+  .showpanel .xiangjiao{
+    height:50px;
+    padding: 5px 0px;
+    &:nth-child(2n+1){
+      background:  #F2F7FC;
+    }
+    span {
+      display: inline-block;
+      text-align: center;
+      color: #333;
+    }
+  }
+  .el-cascader__label {
+    left:0px;
+  }
 </style>
 
 <script>

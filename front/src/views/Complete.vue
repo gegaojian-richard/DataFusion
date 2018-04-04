@@ -1,35 +1,41 @@
 <template>
   <div>
-    <connect-info  @previewtable="previewTable" style="height:490px;float:left;width:180px"></connect-info>
-    <div style="margin-left: 250px">
-      <h3 style="margin-top:20px;text-align: center;margin-bottom: 30px; ">完整性检查</h3>
-      <div  class = "quarter-div" style="width:600px">   <!--  显示当前显示字段-->
-        <span  style="font-size:20px;color:#2bc4e2;float:left;margin-top:12px;">选取属性：</span>
-        <el-tag
-          v-for="(item,index) in res_all"
-          :key="item"
-          closable
-          :disable-transitions="false"
-          @close="delete_click(index)">
-          {{item}}
-        </el-tag>
-        <el-button type="primary" plain style="float:right;margin-top: 30px;" @click="submit()">确认提交</el-button>
-      </div>
-      <!--table class = "table_class_arru " style="float:top;text-align:center;width=90%; border=1 ;class=t1"  id=mytab;-->
-      <!-- 用来显示表格 -->
-      <div class="showtable" style="margin-left: 40px;">
-        <table class="imagetable quarter-div_table">
-          <thead>
-          <tr>
-            <th  style=" text-algin:center" v-for="(key,item) in previewData[0]" v-on:click="sha(item)">{{item}}</th>
-          </tr>
-          </thead>
-          <tbody>
-          <tr v-for = "item in previewData">
-            <td v-for ="it in  item">{{it}}</td>
-          </tr>
-          </tbody>
-        </table>
+    <connect-info  @previewtable="previewTable" style="height:100%;float:left;width:180px"></connect-info>
+    <div style="margin-left: 180px;padding: 20px;height: 100%;">
+      <div style="height: 100%;;border:1px solid #bfcbd9;padding: 0px 20px;">
+        <p style="height: 50px;text-align: left;border-bottom: 1px solid #bfcbd9;line-height: 60px;color:#698EC3;font-size: 16px;">
+          <span style="display: inline-block;height:20px;width:5px;background: #698EC3;margin-bottom:-5px;margin-right: 5px;"></span>
+          <span>完整性检测</span>
+        </p>
+        <div  class = "quarter-div">   <!--  显示当前显示字段-->
+          <span  style="font-size:18px;color:#000;float:left;margin-top:12px;">选取属性：</span>
+          <el-tag
+            v-for="(item,index) in res_all"
+            :key="item"
+            closable
+            :disable-transitions="false"
+            @close="delete_click(index)" style="float: left;">
+            {{item}}
+          </el-tag>
+
+        </div>
+        <!--table class = "table_class_arru " style="float:top;text-align:center;width=90%; border=1 ;class=t1"  id=mytab;-->
+        <!-- 用来显示表格 -->
+        <div class="showtable" style="width:100%;margin-top: 50px;border: 1px solid #ccc;color: #333;overflow:auto;height:650px;">
+          <table class="imagetable quarter-div_table">
+            <thead>
+            <tr>
+              <th  style=" text-algin:center;color:#fff;" v-for="(key,item) in previewData[0]" v-on:click="sha(item)">{{item}}</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr v-for = "item in previewData">
+              <td v-for ="it in  item">{{it}}</td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+        <el-button type="primary" plain style="float:right;margin-top: 30px;position:relative;background-color: #82B7E3;color:#fff;" @click="submit()">确认提交</el-button>
       </div>
     </div>  <!-- 显示字段那列结束 -->
     <div >  <!-- 弹出确认加入 -->
@@ -43,27 +49,26 @@
           </div>
         </div>
       </div>
+      <div class="md-overlay" v-if="show" @click="show=false"></div>
     </div>   <!-- 弹出窗口来选择检查类型 -->
-
-    <br>
   </div>
 </template>
-<style>
+<style rel="stylesheet/scss" lang="scss" scoped>
   .showtable{
-    height:300px;
-    width:600px;
     margin-top: 40px;
-    overflow-x: auto;
-    overflow-y: auto;
     position:relative;
     overflow: auto;
     background-color: #ffffff;
+    tbody {
+      height: 600px;
+      overflow-x: auto;
+      overflow-y: auto;
+    }
   }
 
   .imagetable {
     width:100%;
-    margin:15px 0;
-    border:0;
+    border:none;
     font-size:1.2em;
     text-align:center;
     padding:4px;
@@ -77,19 +82,64 @@
     text-align:center;
     padding:4px;
     border-collapse:collapse;
-    border: 1px solid #ffffff;
-    border-width:1px
+    border:none;
   }
   .imagetable td {
     font-size:0.95em;
     text-align:center;
     padding:4px;
     border-collapse:collapse;
-    border: 1px solid #ffffff;
-    border-width:1px
   }
-  .imagetable tr {
-    border-bottom: 1px solid #103251;
+  .imagetable thead {
+    background-color: #6787B0;
+  }
+  .imagetable tbody tr {
+    border-bottom: 1px dashed #ccc;
+    height: 50px;
+    &:nth-child(2n) {
+      background-color: #F2F7FD;
+    }
+  }
+  .el-button {
+    padding: 7px 20px;
+  }
+  .el-tree__empty-text{
+    color: #fff!important;
+  }
+  .md-modal {
+    overflow: hidden;
+    border-radius: 5px;
+  }
+  .md-modal .md-modal-inner .md-top{
+    width:100%;
+    height: 50px;
+    line-height: 50px;
+    background-color: #266CB4;
+    color: #fff;
+  .md-title {
+    position: absolute;
+    top: 0px;
+    left: 20px;
+    line-height: 50px;
+    padding: 0;
+    color: #333;
+    font-size: 18px;
+    font-weight: 400;
+    font-style: normal;
+    color: #Fff;
+  }
+  }
+  .md-modal .md-modal-inner {
+    padding: 0px;
+  }
+  .md-modal .md-modal-inner .md-content {
+    padding: 30px 30px 50px 30px;
+  .btn-login {
+    height: 50px;
+    line-height: 50px;
+    border: 2px solid  #5ACD70;
+    background: #5ACD70;
+  }
   }
 </style>
 <script>
