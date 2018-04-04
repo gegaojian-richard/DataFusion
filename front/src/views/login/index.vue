@@ -2,31 +2,33 @@
   <div class="login-container">
     <el-form class="login-form" autoComplete="on" :model="loginForm" :rules="loginRules" ref="loginForm" label-position="left">
       <div class="title-container">
-        <h3 class="title">登录</h3>
+        <h3 class="title">数据融合工具</h3>
       </div>
-      <el-form-item prop="username">
-        <span class="svg-container svg-container_login">
-          <svg-icon icon-class="user" />
-        </span>
-        <el-input style=" background: transparent;" name="username" type="text" v-model="loginForm.username" autoComplete="on" placeholder="username" />
-      </el-form-item>
+      <div class="form-window">
+        <el-form-item prop="username">
+          <!--<span class="svg-container svg-container_login">-->
+            <!--<svg-icon icon-class="user" />-->
+          <!--</span>-->
+          <img class="svg-container svg-container_login" src="/static/login/user.png" alt="">
+          <el-input style=" background: transparent;" name="username" type="text" v-model="loginForm.username" autoComplete="on" placeholder="username" />
+        </el-form-item>
 
-      <el-form-item prop="password">
-        <span class="svg-container">
-          <svg-icon icon-class="password" />
-        </span>
-        <el-input  style=" background: transparent;" name="password" :type="passwordType" @keyup.enter.native="handleLogin" v-model="loginForm.password" autoComplete="on" placeholder="password" />
-        <span class="show-pwd" @click="showPwd">
-          <svg-icon icon-class="eye" />
-        </span>
-      </el-form-item>
-      <el-button type="primary" style="width:100%;margin-bottom:30px;" :loading="loading" @click.native.prevent="handleLogin">确认</el-button>
+        <el-form-item prop="password">
+          <img class="svg-container svg-container_login" src="/static/login/lock.png" alt="">
+          <el-input  style=" background: transparent;" name="password" :type="passwordType" @keyup.enter.native="handleLogin" v-model="loginForm.password" autoComplete="on" placeholder="password" />
+          <span class="show-pwd" @click="showPwd">
+            <svg-icon icon-class="eye" />
+          </span>
+        </el-form-item>
+        <el-button type="primary" style="width:45%;margin-bottom:10px;margin-top: 14px;height:50px;background-color: #5ACD70;" :loading="loading" @click.native.prevent="handleLogin">登录</el-button>
+        <el-button class="thirdparty-button" type="primary"  @click="registerFlag=true">注册</el-button>
+      </div>
     </el-form>
-    <el-button class="thirdparty-button" type="primary"  @click="registerFlag=true">注册</el-button>
+
     <div class="md-modal modal-msg md-modal-transition" v-bind:class="{'md-show':registerFlag}">
       <div class="md-modal-inner">
         <div class="md-top">
-          <div class="md-title">注册</div>
+          <span class="md-title">注册</span>
           <button class="md-close" @click="registerFlag=false">Close</button>
         </div>
         <div class="md-content">
@@ -35,13 +37,13 @@
               <span class="error error-show" v-show="regErrorTip">密码错误</span>
             </div>
             <ul>
-              <li class="regi_form_input">
+              <li class="regi_form_input" style="background: url('/static/login/user.png') 10px center no-repeat;background-size: 18px 20px;">
                 <input type="text" tabindex="1" name="loginname" v-model="regName" class="regi_login_input regi_login_input_left" placeholder="用户名" data-type="loginname">
               </li>
-              <li class="regi_form_input noMargin">
+              <li class="regi_form_input noMargin" style="background: url('/static/login/lock.png') 10px center no-repeat;background-size: 18px 20px;">
                 <input type="password" tabindex="2"  name="password" v-model="regPwd1" class="regi_login_input regi_login_input_left login-input-no input_text" placeholder="密码（不小于5位）" >
               </li>
-              <li class="regi_form_input noMargin">
+              <li class="regi_form_input noMargin" style="background: url('/static/login/lock.png') 10px center no-repeat;background-size: 18px 20px;">
                 <input type="password" tabindex="3"  name="password" v-model="regPwd2" class="regi_login_input regi_login_input_left login-input-no input_text" placeholder="确认密码" >
               </li>
             </ul>
@@ -62,7 +64,7 @@
     -webkit-appearance: none;
     border-radius: 0px;
     padding: 12px 5px 12px 15px;
-    color:#eee !important;
+    color:#bcbcbc;
     height: 47px;
   }
   .el-input input :-webkit-autofill{
@@ -96,9 +98,10 @@
     }
     .el-form-item {
       border: 1px solid rgba(255, 255, 255, 0.1);
-      background: rgba(0, 0, 0, 0.1);
+      background: #fff;
       border-radius: 5px;
       color: #454545;
+      margin-bottom: 30px;
     }
   }
 </style>
@@ -113,13 +116,21 @@
     top:0;
     height: 100vh;
     background-color: $bg;
+    background: url('/static/login/loginbg.png') no-repeat;
+    background-size: 100% 100%;
     .login-form {
       position: absolute;
-      left: 0;
+      left: 50%;
       right: 0;
-      width: 520px;
-      padding: 35px 35px 15px 35px;
-      margin: 120px auto;
+      top: 50%;
+      width: 450px;
+      margin-top: -175px;
+      margin-left: -225px;
+      .form-window {
+        padding: 35px;
+        background-color: #34B2ED;
+        border-radius: 3px;
+      }
     }
     .tips {
       font-size: 14px;
@@ -132,14 +143,10 @@
       }
     }
     .svg-container {
-      padding: 6px 5px 6px 15px;
-      color: $dark_gray;
       vertical-align: middle;
-      width: 30px;
+      width: 18px;
+      height: 20px;
       display: inline-block;
-      &_login {
-        font-size: 20px;
-      }
     }
     .title-container {
       position: relative;
@@ -147,7 +154,7 @@
         font-size: 26px;
         font-weight: 400;
         color: $light_gray;
-        margin: 0px auto 40px auto;
+        margin: 0px auto 20px auto;
         text-align: center;
         font-weight: bold;
       }
@@ -168,9 +175,46 @@
       user-select: none;
     }
     .thirdparty-button {
-      position: absolute;
-      right: 35px;
-      bottom: 28px;
+      width: 45%;
+      margin-left: 20px;
+      height: 50px;
+      background-color: #417AED;
+    }
+    .md-modal {
+      overflow: hidden;
+      border-radius: 5px;
+      width:425px;
+    }
+    .md-modal .md-modal-inner .md-top{
+      width:100%;
+      height: 50px;
+      line-height: 50px;
+      background-color: #266CB4;
+      color: #fff;
+      .md-title {
+        position: absolute;
+        top: 0px;
+        left: 20px;
+        line-height: 50px;
+        padding: 0;
+        color: #333;
+        font-size: 18px;
+        font-weight: 400;
+        font-style: normal;
+        color: #Fff;
+      }
+    }
+    .md-modal .md-modal-inner {
+      padding: 0px;
+    }
+    .md-modal .md-modal-inner .md-content {
+      padding: 30px 30px 50px 30px;
+      .btn-login {
+        height: 50px;
+        line-height: 50px;
+        border: 2px solid  #5ACD70;
+        background: #5ACD70;
+      }
     }
   }
 </style>

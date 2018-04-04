@@ -1,24 +1,24 @@
 <template>
   <div class="connect">
-    <connect-info  @previewtable="previewTable" class="sidecontainer" style="margin-top:-30px;height:490px;float:left;width:180px"></connect-info>
-      <div class="show" >
-        <div style="margin-top: 30px">
-          <h2>数据源</h2>
-        </div>
-      </div>
-        <div  style="margin-left: 200px;">
-          <el-table
-            :data="previewData"
-            height="400"
-            style="width:600px;margin:5px auto;background-color:#fff;border:1px solid #bfcbd9">
-            <el-table-column :label="key" v-for="(value,key) in previewData[0]"
-                             width="120" style="background-color: #103251;">
-              <template slot-scope="scope">
-                {{previewData[scope.$index][key]}}
-              </template>
-            </el-table-column>
-          </el-table>
-        </div>
+    <connect-info  @previewtable="previewTable" class="sidecontainer" style="height:100%;float:left;width:180px"></connect-info>
+    <div  style="margin-left: 180px;padding: 20px;height: 100%;">
+      <div style="height: 100%;;border:1px solid #bfcbd9;padding: 0px 20px;">
+        <p style="height: 50px;text-align: left;border-bottom: 1px solid #bfcbd9;line-height: 60px;color:#698EC3;font-size: 16px;">
+          <span style="display: inline-block;height:20px;width:5px;background: #698EC3;margin-bottom:-5px;margin-right: 5px;"></span>
+          <span>数据源</span>
+        </p>
+        <el-table
+          :data="previewData"
+          height="calc(100% - 100px)"
+          style="margin:5px auto;background-color:#fff">
+
+          <el-table-column :label="key" v-for="(value,key) in previewData[0]"
+                           width="120" style="background-color: #103251;">
+            <template slot-scope="scope">
+              {{previewData[scope.$index][key]}}
+            </template>
+          </el-table-column>
+        </el-table>
       </div>
     </div>
   </div>
@@ -31,25 +31,11 @@
     height: 100%;
     width: 100%;
   }
+
 </style>
 <style>
   .sidecontainer{
     overflow: auto;
-    border-right:2px solid #bfcbd9;
-  }
-  /*#load{*/
-    /*float:right;*/
-    /*border: 1px solid #ccc;*/
-    /*color: #0c0709;*/
-    /*background-color: #ccc ;*/
-    /*font-size: 12px;*/
-    /*padding:0 5px;*/
-    /*height:30px;*/
-    /*line-height: 30px;*/
-    /*margin:5px 10px 5px 20px;*/
-  /*}*/
-  .show{
-    margin-left: 200px;
   }
 </style>
 <script>

@@ -1,8 +1,13 @@
 <template>
   <div>
-    <connect-info  @previewtable="previewTable" style="height:490px;float:left;width:180px"></connect-info>
-    <div style="float:right;width:400px;clearfix:none;">
-      <table class="imagetable">
+    <connect-info  @previewtable="previewTable" style="height:100%;float:left;width:180px"></connect-info>
+    <div style="margin-left: 180px;padding: 20px;height: 100%;">
+      <div style="height: 100%;;border:1px solid #bfcbd9;padding: 0px 20px;">
+        <p style="height: 50px;text-align: left;border-bottom: 1px solid #bfcbd9;line-height: 60px;color:#698EC3;font-size: 16px;">
+          <span style="display: inline-block;height:20px;width:5px;background: #698EC3;margin-bottom:-5px;margin-right: 5px;"></span>
+          <span>一致性检测</span>
+        </p>
+        <table class="imagetable">
         <thead>
         <tr>
           <th > 主表中要检查的字段</th>
@@ -47,70 +52,121 @@
             </el-cascader>
           </td>
           <td>
-            <el-button  type="primary" plain @click="delete_map(index)">删除</el-button>
+            <el-button  type="primary" style="background-color: #FF8383;color:#fff;border:none" plain @click="delete_map(index)">删除</el-button>
           </td>
         </tr>
         </tbody>
       </table>
-      <el-button type="primary" plain @click="add_map">添加</el-button>
-      <el-button type="primary" plain @click="add_ok">确认提交</el-button>
-    </div>
-    <div class="showtable" style="margin-left: 200px;width:400px;height:490px;background-color: #ffff;position:relative">
-    <table class="imagetable">
-      <thead>
-      <tr>
-        <th  class="removep" v-for="(key,item) in previewData[0]" v-on:contextmenu.prevent="sha(item)">{{item}}</th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr v-for = "item in previewData">
-        <td v-for ="it in  item">{{it}}</td>
-      </tr>
-      </tbody>
-    </table>
-    </div>
-    <div>
-      {{  res_all }}
+        <el-button type="primary" plain @click="add_ok" style="float:right;position:relative;background-color: #82B7E3;color:#fff;margin-top: 20px;">确认提交</el-button>
+        <el-button type="primary" plain @click="add_map" style="float:right;position:relative;background-color: #A6CF65;color:#fff;margin-right: 30px;margin-top: 20px;">添加</el-button>
+        <div class="showtable" style="width:100%;background-color: #ffff;position:relative;margin-top: 80px;height: 430px;overflow: auto;border: 1px solid #ccc;">
+          <table class="imagetable">
+            <thead>
+            <tr>
+              <th  class="removep" v-for="(key,item) in previewData[0]" v-on:contextmenu.prevent="sha(item)">{{item}}</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr v-for = "item in previewData">
+              <td v-for ="it in  item" style="color:#333;">{{it}}</td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+        <div>
+          {{  res_all }}
+        </div>
+      </div>
     </div>
   </div>
 
 </template>
 
-<style>
- .showtable{
-   overflow-x: auto;
-   overflow-y: auto;
+<style rel="stylesheet/scss" lang="scss" scoped>
+  .showtable{
+    margin-top: 40px;
+    position:relative;
+    overflow: auto;
+    background-color: #ffffff;
+    tbody {
+      height:490px;
+      overflow-x: auto;
+      overflow-y: auto;
+    }
+  }
+
+  .imagetable {
+    width:100%;
+    border:none;
+    font-size:1.2em;
+    text-align:center;
+    padding:4px;
+    border-collapse:collapse;
+  }
+  .imagetable th {
+    font-weight:bold;
+    /*background-color: #103251;*/
+    color:#fff;
+    font-size:0.95em;
+    text-align:center;
+    padding:4px;
+    border-collapse:collapse;
+    border:none;
+  }
+  .imagetable td {
+    font-size:0.95em;
+    text-align:center;
+    padding:4px;
+    border-collapse:collapse;
+  }
+  .imagetable thead {
+    background-color: #6787B0;
+  }
+  .imagetable tbody tr {
+    border-bottom: 1px dashed #ccc;
+    height: 50px;
+    &:nth-child(2n) {
+      background-color: #F2F7FD;
+    }
+  }
+ .el-input input{
+   border: 1px solid #ccc!important;
+   border-radius: 3px!important;
  }
- .imagetable {
+ .md-modal {
+   overflow: hidden;
+   border-radius: 5px;
+ }
+ .md-modal .md-modal-inner .md-top{
    width:100%;
-   margin:15px 0;
-   border:0;
-   font-size:1.2em;
-   text-align:center;
-   padding:4px;
-   border-collapse:collapse;
+   height: 50px;
+   line-height: 50px;
+   background-color: #266CB4;
+   color: #fff;
+ .md-title {
+   position: absolute;
+   top: 0px;
+   left: 20px;
+   line-height: 50px;
+   padding: 0;
+   color: #333;
+   font-size: 18px;
+   font-weight: 400;
+   font-style: normal;
+   color: #Fff;
  }
- .imagetable th {
-   font-weight:bold;
-   /*background-color: #103251;*/
-   color:#bfcbd9;
-   font-size:0.95em;
-   text-align:center;
-   padding:4px;
-   border-collapse:collapse;
-   border: 1px solid #ffffff;
-   border-width:1px
  }
- .imagetable td {
-   font-size:0.95em;
-   text-align:center;
-   padding:4px;
-   border-collapse:collapse;
-   border: 1px solid #ffffff;
-   border-width:1px
+ .md-modal .md-modal-inner {
+   padding: 0px;
  }
- .imagetable tr {
-   border-bottom: 1px solid #103251;
+ .md-modal .md-modal-inner .md-content {
+   padding: 30px 30px 50px 30px;
+ .btn-login {
+   height: 50px;
+   line-height: 50px;
+   border: 2px solid  #5ACD70;
+   background: #5ACD70;
+ }
  }
 </style>
 <script>

@@ -19,6 +19,8 @@ import './assets/base.css'
 import '@/assets/login.css'
 import 'element-ui/lib/theme-chalk/index.css'
 import './icons'
+import '@/assets/tabel.css'
+
 Vue.prototype.GLOBAL = global_;
 axios.defaults.baseURL=global_.BASE_URL;
 Vue.prototype.$ajax = axios;

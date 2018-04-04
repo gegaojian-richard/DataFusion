@@ -25,10 +25,28 @@
   .sidebar{
     height:100%;
     /*border-left:2px solid #bfcbd9;*/
-    background-color: #103251;
-    color:#bfcbd9;
-    padding-top:5px;
+    background-color: #1F5FA6;
+    color:#fff;
     font-size: large;
+  }
+  .entityinfo dd {
+    height: 50px;
+    line-height: 50px;
+  }
+  .entityinfo dd:hover {
+    background: #4686C4;
+  }
+  .entityinfo dd a:hover {
+    color:inherit;
+  }
+  .entityinfo dl dt, .eventinfo dl dt {
+    height: 60px;
+    text-align: center;
+    font-size: 18px;
+    color: #145398;
+    line-height: 60px;
+    background: #DFE2EB;
+    font-weight: bold;
   }
 </style>
 <script>

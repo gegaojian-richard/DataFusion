@@ -1,32 +1,37 @@
 <template>
   <div>
-    <connect-info  @previewtable="previewTable" style="height:490px;float:left;width:180px"></connect-info>
-    <div>
-
-      <!--table class = "table_class_arru " style="float:top;text-align:center;width=90%; border=1 ;class=t1"  id=mytab;-->
-      <!-- 用来显示字段那列 -->
-      <div class="showtable" style="margin-left: 200px;width:800px;height:300px;background-color: #ffff;position:relative">
-        <table class="imagetable">
-          <thead>
-          <tr>
-            <th  class="removep" v-for="(key,item) in previewData[0]" v-on:click="sha(item)">{{item}}</th>
-          </tr>
-          </thead>
-          <tbody>
-          <tr v-for = "item in previewData">
-            <td v-for ="it in  item">{{it}}</td>
-          </tr>
-          </tbody>
-        </table>
+    <connect-info  @previewtable="previewTable" style="height:100%;float:left;width:180px"></connect-info>
+    <div style="margin-left: 180px;padding: 20px;height: 100%;">
+      <div style="height: 100%;;border:1px solid #bfcbd9;padding: 0px 20px;">
+        <p style="height: 50px;text-align: left;border-bottom: 1px solid #bfcbd9;line-height: 60px;color:#698EC3;font-size: 16px;">
+          <span style="display: inline-block;height:20px;width:5px;background: #698EC3;margin-bottom:-5px;margin-right: 5px;"></span>
+          <span>准确性检测</span>
+        </p>
+        <div class="showtable" style="width:100%;background-color: #ffff;position:relative;height: 600px;overflow: auto;">
+          <table class="imagetable">
+            <thead>
+            <tr>
+              <th  class="removep" v-for="(key,item) in previewData[0]" v-on:click="sha(item)">{{item}}</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr v-for = "item in previewData">
+              <td v-for ="it in  item" style="color: #333;">{{it}}</td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+        <el-button type = "primary" plain @click="submit()" style="float:right;margin-top: 30px;position:relative;background-color: #82B7E3;color:#fff;">提交</el-button>
       </div>
+
     </div>  <!-- 显示字段那列结束 -->
     <div >  <!-- 弹出选择类型 -->
-      <div id = 'jump' class="md-modal modal-msg md-modal-transition" style="width:170px;border:1px solid #3333;border-radius: 2px" v-bind:class="{'md-show':show}">
-        <div class="md-modal-inner" >
-          <div class="md-top" style="height:10px">
-            <button class="md-close" @click="show=false">Close</button>
+      <div id = 'jump' class="md-modal modal-msg md-modal-transition" style="width:170px;border:1px solid #3333;border-radius: 2px;top:358px!important;" v-bind:class="{'md-show':show}">
+        <div class="md-modal-inner" style="border: 1px solid #ccc;">
+          <div class="md-top" style="height:25px">
+            <button class="md-close" @click="show=false" style="top:0px;width:20px;height: 20px;right: 15px;">Close</button>
           </div>
-          <div class="md-content" style="position: relative" >
+          <div class="md-content" style="position: relative;padding: 0px;color:#333;" >
             <ol >
               <li>
                 <a href="javascript:void(0)" @click="click_type1"> 公式检查</a>
@@ -55,37 +60,39 @@
 
     <div >  <!-- 弹出类型1输入 -->
       <div  class="md-modal modal-msg md-modal-transition"  v-bind:class="{'md-show':click_flag1}">
-        <div class="md-modal-inner" style="overflow:scroll;height:500px;">
+        <div class="md-modal-inner" style="overflow:auto;padding-bottom: 30px;">
           <div class="md-top">
+            <div class="md-title">公式检查</div>
             <button class="md-close " @click="flag1_close">Close</button>
           </div>
-          <div>
-            <h4>公式检查</h4>
-            <span>当前的属性是:{{save_item}}</span>
-            <div style="margin:25px 20px;text-align: left">
+          <div style="color:#333;">
+            <span style="display: inline-block;width: 100%;padding: 10px 20px;text-align: left;">当前的属性是:{{save_item}}</span>
+            <div style="margin:15px 20px;text-align: left">
             <span style="margin-right: 15px">公式：{{save_item}} = </span>
-            <input v-model="type1_formu" type="text" class="edit">
-              <el-button type="primary" plain @click="type1_ok">确定</el-button>
+              <input v-model="type1_formu" type="text" class="edit">
+              <el-button type="primary" plain @click="type1_ok" style="position: relative;right:80px;height:35px;color:#fff;background:#51BA65;">确定</el-button>
             </div>
-            <button type="button" class="  button" aria-label="Left Align" @click="type1_add_newcolumn">
-              <span class="glyphicon glyphicon-plus" >添加新的字段</span>
+            <button type="button" class="  button" style="width: 100%;background: url('/static/home/add.png') 15px center no-repeat;padding-left: 20px;" aria-label="Left Align" @click="type1_add_newcolumn">
+              <span style="display: inline-block;width: 100%;padding: 10px 20px;text-align: left;">添加新的字段</span>
             </button>
             <br><br>
-            <dl v-for = "(change_for_add,index) in all_for_change" class = "imagetable">
-            <span>公式中非数值字段</span>
-            <input v-model="newclos[index].save"type="text" class="edit">
-              <br><br>
-            <button type="button" class="  button" aria-label="Left Align" @click="type1_add(index)">
-              <span class="glyphicon glyphicon-plus" >添加对应关系</span>
-            </button>
-            <table>
+            <dl v-for = "(change_for_add,index) in all_for_change" class = "imagetable1">
+
+              <div style="margin:15px 20px;text-align: left">
+                <span style="margin-right: 15px;font-size: 14px;">公式中非数值字段</span>
+                <input v-model="newclos[index].save"type="text" class="edit">
+              </div>
+              <button type="button" class="  button" style="width: 100%;background: url('/static/home/add.png') 15px center no-repeat;padding-left: 20px;" aria-label="Left Align" click="type1_add(index)">
+                <span style="display: inline-block;width: 100%;padding: 10px 20px;text-align: left;font-size: 14px;">添加对应关系</span>
+              </button>
+            <table style="margin-left: 50px;">
               <thead>
-              <tr>
+              <tr class="ziduan">
                 <th >字段值</th>
                 <th >对应的数</th>
               </tr>
               </thead>
-              <tbody>
+              <tbody style="height: 600px;overflow-y: auto;">
               <tr v-for = "item in change_for_add" >
                 <td >
                   <input v-model="item.mean" type="text" class="edit">
@@ -103,27 +110,27 @@
       <div class="md-overlay" v-if="click_flag1" @click="click_flag1=false"></div>
     </div>   <!-- 类型1弹窗 -->
     <div >  <!-- 弹出类型2输入 -->
-      <div  class="md-modal modal-msg md-modal-transition" style="width:40%" v-bind:class="{'md-show':click_flag2}">
-        <div class="md-modal-inner">
+      <div  class="md-modal modal-msg md-modal-transition" style="width:500px;" v-bind:class="{'md-show':click_flag2}">
+        <div class="md-modal-inner" style="padding-bottom: 30px;">
           <div class="md-top">
+            <div class="md-title">条件检查</div>
             <button class="md-close" @click="flag2_close">Close</button>
           </div>
-          <div>
-            当前的属性是:{{save_item}}
-            <br><br>
-            <button type="button" class = "button" @click = "type2_ok">
+          <div style="color:#333;padding-left: 30px;">
+            <span style="display: inline-block;width: 100%;padding: 10px 0px;text-align: left;">当前的属性是:{{save_item}}</span>
+            <button type="button" class = "button" @click = "type2_ok" style="padding:0 90px;height:35px;color:#fff;background:#51BA65;float: left;">
               <span>确定</span>
             </button>
-            <button type="button" class = "button" @click="flag2_close">
+            <button type="button" class = "button" @click="flag2_close" style="padding:0 90px;height:35px;color:#fff;background:#51BA65;float: left;margin-left:20px;">
               <span>取消</span>
             </button>
             <br><br>
-            <button type="button" class = "button" @click ="flag2_add">
-              <span>添加对应对</span>
+            <button type="button" class="  button" style="width: 100%;background: url('/static/home/add.png') 0px center no-repeat;" aria-label="Left Align" click="type1_add(index)">
+              <span style="display: inline-block;width: 100%;padding: 10px 20px;text-align: left;font-size: 14px;">添加对应关系</span>
             </button>
-            <table class = "imagetable">
+            <table class = "imagetable1" style="margin-left: 10px;">
               <thead>
-              <tr>
+              <tr class="ziduan">
                 <th >字段值</th>
                 <th >条件</th>
               </tr>
@@ -145,61 +152,110 @@
       <div class="md-overlay" v-if="click_flag2" @click="click_flag2=false"></div>
     </div>   <!-- 类型2弹窗 -->
     <div >  <!-- 弹出类型3输入   位数检查-->
-      <div  class="md-modal modal-msg md-modal-transition" style="width:40%" v-bind:class="{'md-show':click_flag3}">
-        <div class="md-modal-inner">
+      <div  class="md-modal modal-msg md-modal-transition" style="width:500px;" v-bind:class="{'md-show':click_flag3}">
+        <div class="md-modal-inner" style="height: 220px;">
           <div class="md-top">
+            <div class="md-title">位数检查</div>
             <button class="md-close" @click="flag3_close">Close</button>
           </div>
-          <div>
-            当前的属性是:{{save_item}}
-            <br>
-             <span>位数</span>&nbsp &nbsp
-             <input v-model="type3_value" type="text" class="edit">
+          <div style="color:#333;padding-left: 30px;">
+            <span style="display: inline-block;width: 100%;padding: 10px 0px;text-align: left;">当前的属性是:{{save_item}}</span>
+            <div style="margin:15px 0px;text-align: left">
+              <span>位数</span>&nbsp &nbsp
+              <input v-model="type3_value" type="text" class="edit">
+            </div>
           </div>
-          <button class = "button" type = "button" @click = "clcik_flag3_button_ok">
-            <span>确定</span>
-          </button>
-          <button class = "button" type = "button" @click = 'flag3_close'>
-            <span>取消</span>
-          </button>
+          <div style="padding-left: 30px;">
+            <button type="button" class = "button" @click = "clcik_flag3_button_ok" style="padding:0 90px;height:35px;color:#fff;background:#51BA65;float: left;">
+              <span>确定</span>
+            </button>
+            <button type="button" class = "button" @click="flag3_close" style="padding:0 90px;height:35px;color:#fff;background:#51BA65;float: left;margin-left:20px;">
+              <span>取消</span>
+            </button>
+          </div>
+
         </div>
       </div>
       <div class="md-overlay" v-if="click_flag3" @click="click_flag3=false"></div>
     </div>   <!-- 类型3弹窗 -->
     <div >  <!-- 弹出类型4输入 -->
-      <div id = 'jump' class="md-modal modal-msg md-modal-transition" style="width:40%" v-bind:class="{'md-show':click_flag4}">
-        <div class="md-modal-inner">
+      <div id = 'jump' class="md-modal modal-msg md-modal-transition" style="width:500px;" v-bind:class="{'md-show':click_flag4}">
+        <div class="md-modal-inner" style="height: 300px;">
           <div class="md-top">
+            <div class="md-title">范围检查</div>
             <button class="md-close" @click="flag4_close">Close</button>
           </div>
           <div>
-             当前的属性是:{{save_item}}
-              <br><br>
-              <span> 上限</span>
-              <input v-model="type4_max" type="text" class="edit">
-              <br><br>
-              <span >下限</span>
-              <input v-model="type4_min" type="text" class="edit">
-              <br>
-             <button type = "button " class = "button" @click = "clcik_flag4_button_ok">
-               <span>确定</span>
-             </button>
-            <button type = "button " class = "button" @click = "flag4_close">
-              <span>取消</span>
-            </button>
+            <div style="color:#333;padding-left: 30px;">
+              <span style="display: inline-block;width: 100%;padding: 10px 0px;text-align: left;">当前的属性是:{{save_item}}</span>
+              <div style="margin:15px 0px;text-align: left">
+                <span> 上限</span>
+                <input v-model="type4_max" type="text" class="edit">
+              </div>
+              <div style="margin:15px 0px;text-align: left">
+                <span >下限</span>
+                <input v-model="type4_min" type="text" class="edit">
+              </div>
+            </div>
+            <div style="padding-left: 30px;">
+              <button type="button" class = "button" @click = "clcik_flag4_button_ok" style="padding:0 90px;height:35px;color:#fff;background:#51BA65;float: left;">
+                <span>确定</span>
+              </button>
+              <button type="button" class = "button" @click = "flag4_close" style="padding:0 90px;height:35px;color:#fff;background:#51BA65;float: left;margin-left:20px;">
+                <span>取消</span>
+              </button>
+            </div>
           </div>
         </div>
       </div>
       <div class="md-overlay" v-if="click_flag4" @click="click_flag4=false"></div>
     </div>   <!-- 类型4弹窗 -->
-    <el-button type = "primary" plain @click="submit()">提交</el-button>
   </div>
 </template>
 
 
-<style>
+<style rel="stylesheet/scss" lang="scss" scoped>
   .edit{
-    height:20px;
+    height:40px;
+    width: 270px;
+  }
+  .imagetable {
+    border:none;
+    margin-top: 0px;
+    font-size:1.2em;
+    text-align:center;
+    padding:4px;
+    border-collapse:collapse;
+    width: 100%;
+  }
+  .imagetable th {
+    font-weight:bold;
+    /*background-color: #103251;*/
+    color:#fff;
+    font-size:0.95em;
+    text-align:center;
+    padding:4px;
+    border-collapse:collapse;
+    border:none;
+  }
+  .imagetable td {
+    font-size:0.95em;
+    text-align:center;
+    padding:4px;
+    border-collapse:collapse;
+    border-bottom: 1px dashed #ccc;
+  }
+  .imagetable thead {
+    background-color: #6787B0;
+  }
+  .imagetable tbody tr {
+    height: 50px;
+    &:nth-child(2n) {
+      background-color: #F2F7FD;
+    }
+  }
+  .el-tree__empty-text{
+    color: #fff!important;
   }
   .md-modal .md-modal-inner{
     padding:30px 0px 0px 0px ;
@@ -208,14 +264,15 @@
     width:100%
   }
   .showtable{
-    height:300px;
     width:600px;
     margin-top: 40px;
-    overflow-x: auto;
-    overflow-y: auto;
     position:relative;
     overflow: auto;
     background-color: #ffffff;
+    border: 1px solid #ccc;
+  }
+  .el-button {
+    padding: 7px 20px;
   }
   .md-content ol{
     width:100%;
@@ -226,38 +283,61 @@
     height:30px;
     line-height: 30px;
   }
-
-  /* 修饰表格  */
-  .imagetable {
+  .md-modal {
+    overflow: hidden;
+    border-radius: 5px;
+  }
+  .md-modal .md-modal-inner .md-top{
     width:100%;
-    margin:15px 0;
-    border:0;
-    font-size:1.2em;
-    text-align:center;
-    padding:4px;
-    border-collapse:collapse;
+    height: 50px;
+    line-height: 50px;
+    background-color: #266CB4;
+    color: #fff;
+    .md-title {
+      position: absolute;
+      top: 0px;
+      left: 20px;
+      line-height: 50px;
+      padding: 0;
+      color: #333;
+      font-size: 18px;
+      font-weight: 400;
+      font-style: normal;
+      color: #Fff;
+    }
   }
-  .imagetable th {
-    font-weight:bold;
-    /*background-color: #103251;*/
-    color:#bfcbd9;
-    font-size:0.95em;
-    text-align:center;
-    padding:4px;
-    border-collapse:collapse;
-    border: 1px solid #ffffff;
-    border-width:1px
+  .md-modal .md-modal-inner {
+    padding: 0px;
   }
-  .imagetable td {
-    font-size:0.95em;
-    text-align:center;
-    padding:4px;
-    border-collapse:collapse;
-    border: 1px solid #ffffff;
-    border-width:1px
+  .md-modal .md-modal-inner .md-content {
+    padding: 30px 30px 50px 30px;
+    color:#333;
+    .btn-login {
+      height: 50px;
+      line-height: 50px;
+      border: 2px solid  #5ACD70;
+      background: #5ACD70;
+    }
   }
-  .imagetable tr {
-    border: 1px solid #ffffff;
+  .ziduan th{
+    background: #fff;
+    color:#333;
+    text-align: center;
+  }
+  .ziduan tr {
+    margin-bottom: 20px;
+    th {
+      border: none;
+    }
+  }
+  .imagetable1 .edit {
+    width: 200px;
+  }
+  .imagetable1 tbody tr td input{
+    margin-top: 20px;
+  }
+  .imagetable1 tbody tr td:nth-child(2n) input {
+    margin-left: 20px;
   }
 </style>
 <script>
@@ -335,7 +415,7 @@
         $("#jump").css("display", "block");
         $("#jump").css("position", "absolute");
         $("#jump").css("left", pageX);
-        $("#jump").css("top", pageY + 130);
+        $("#jump").css("top", pageY + 120);
       },
       ///  以下为选择后将对应的类型输入窗口弹出
       click_type1() {
