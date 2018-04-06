@@ -34,4 +34,7 @@ public class CommonService {
         return commonDao.doReplace(dataSourceId,tableName,columnClause,valueClause);
     }
 
+    public void doExecute(String dataSourceId,String sql)throws Exception{
+        commonDao.doExecute(dataSourceId,sql);
+    }
 }

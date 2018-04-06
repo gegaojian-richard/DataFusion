@@ -24,10 +24,8 @@ public class IntegrityController {
         System.out.println("Get checkIntegrity message");
         try{
             IntegrityJob integrityJob = integrityService.commitJob(integrityConfiguration,userManager.getUserId());
-            while (integrityJob.getResult()==null){
 
-            }
-            Result res = integrityJob.getResult();
+            Result res = new Result(1,"Task Submitted successfully",null);;
             //res.setMsg(integrityJob.getJobId());
             return res;
         }catch (Exception e){
@@ -35,19 +33,7 @@ public class IntegrityController {
         }
         //return new Result();
     }
-    /*
-    @RequestMapping(path = {"/dgs/updateIntegrity"}, method = RequestMethod.POST)
-    @ResponseBody
-    public Result updateIntegrity(@RequestBody UpdateIntegrityConfiguration updateIntegrityConfiguration) {
-        try{
-            IntegrityJob integrityJob = UpdateIntegrityParser.parse(updateIntegrityConfiguration);
-            return integrityJob.run();
-        }catch (Exception e){
-            return new Result(0,e.getMessage(),null);
-        }
-        //return new Result();
-    }
-    */
+
 
 
 }

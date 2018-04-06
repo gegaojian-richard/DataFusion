@@ -1,19 +1,23 @@
 package com.iip.datafusion.dgs.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.iip.datafusion.backend.configuration.Configuration;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class UpdateParam {
+/**
+ * @author zengc
+ * @date 2018/1/19 15:31
+ */
+public class UpdateConfiguration implements Configuration {
 
     @JsonProperty("dataSourceId")
     private String dataSourceId;
     @JsonProperty("tableName")
     private String tableName;
-    @JsonProperty("newValues")
-    private ArrayList<Map<String,String>> newValues;
+    @JsonProperty("instanceValues")
+    private List<Map<String,String>> intanceValues;
 
     public String getDataSourceId() {
         return dataSourceId;
@@ -31,11 +35,11 @@ public class UpdateParam {
         this.tableName = tableName;
     }
 
-    public ArrayList<Map<String, String>> getNewValues() {
-        return newValues;
+    public List<Map<String, String>> getIntanceValues() {
+        return intanceValues;
     }
 
-    public void setNewValues(ArrayList<Map<String, String>> newValues) {
-        this.newValues = newValues;
+    public void setIntanceValues(List<Map<String, String>> intanceValues) {
+        this.intanceValues = intanceValues;
     }
 }
