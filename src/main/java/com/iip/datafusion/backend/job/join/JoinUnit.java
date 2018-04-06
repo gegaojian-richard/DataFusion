@@ -78,6 +78,7 @@ public class JoinUnit {
     public SQLTask getSQLTask(){
         SQLTask sqlTask = new SQLTask();
         sqlTask.setSql(getSQLStatement());
+        sqlTask.setSelectedFields((ArrayList<String>) fields2Select);
         sqlTask.setDatasourceID(databaseID);
         sqlTask.whereFieldName = parentJoinField;
         if (parentJoinUnit != null)
