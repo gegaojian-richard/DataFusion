@@ -1,5 +1,6 @@
 package com.iip.datafusion.backend.job.integrity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.iip.datafusion.backend.job.Job;
 import com.iip.datafusion.backend.job.JobBase;
 import com.iip.datafusion.util.dbutil.DataSourceRouterManager;
@@ -27,6 +28,7 @@ public class IntegrityJob extends JobBase implements Job {
     private List<String> sqlList;
     private String innerJobType;
 
+    @JsonIgnore
     public String getInnerJobType() {
         return innerJobType;
     }
@@ -35,6 +37,7 @@ public class IntegrityJob extends JobBase implements Job {
         this.innerJobType = innerJobType;
     }
 
+    @JsonIgnore
     public String getDataSourceId() {
         return dataSourceId;
     }
@@ -43,6 +46,7 @@ public class IntegrityJob extends JobBase implements Job {
         this.dataSourceId = dataSourceId;
     }
 
+    @JsonIgnore
     public String getTableName() {
         return tableName;
     }
@@ -51,6 +55,7 @@ public class IntegrityJob extends JobBase implements Job {
         this.tableName = tableName;
     }
 
+    @JsonIgnore
     public List<String> getSqlList() {
         return sqlList;
     }
@@ -97,6 +102,6 @@ public class IntegrityJob extends JobBase implements Job {
 
     @Override
     public String getDescription() {
-        return "this is a Integrity_job :"+ this.getJobID();
+        return ""+dataSourceId+"."+tableName;
     }
 }

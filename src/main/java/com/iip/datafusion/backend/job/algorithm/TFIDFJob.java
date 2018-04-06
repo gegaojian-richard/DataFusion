@@ -1,5 +1,6 @@
 package com.iip.datafusion.backend.job.algorithm;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.iip.datafusion.backend.job.Job;
 import com.iip.datafusion.backend.job.JobBase;
 import com.iip.datafusion.util.jsonutil.Result;
@@ -26,7 +27,7 @@ public class TFIDFJob extends JobBase implements Job{
         this.corpusPath = corpusPath;
         this.topK = topK;
     }
-
+    @JsonIgnore
     public String getCorpusPath() {
         return corpusPath;
     }
@@ -34,7 +35,7 @@ public class TFIDFJob extends JobBase implements Job{
     public void setCorpusPath(String corpusPath) {
         this.corpusPath = corpusPath;
     }
-
+    @JsonIgnore
     public int getTopK(){
         return topK;
     }
@@ -42,11 +43,11 @@ public class TFIDFJob extends JobBase implements Job{
     public void setTopK(int topK){
         this.topK = topK;
     }
-
+    @JsonIgnore
     public String getTableName(){return tableName;}
 
     public void setTableName(String tableName) {this.tableName = tableName;}
-
+    @JsonIgnore
     public Result getResult() {
         return result;
     }
@@ -54,7 +55,7 @@ public class TFIDFJob extends JobBase implements Job{
     public void setResult(Result result) {
         this.result = result;
     }
-
+    @JsonIgnore
     public String getDataSourceId() {
         return dataSourceId;
     }
@@ -64,6 +65,6 @@ public class TFIDFJob extends JobBase implements Job{
     }
 
     public String getDescription() {
-        return "TFIDFJob: "+ this.getJobID();
+        return ""+dataSourceId+"."+tableName+": "+corpusPath;
     }
 }
