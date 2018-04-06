@@ -1,7 +1,7 @@
 <template>
   <div class="app-wrapper" :class="{hideSidebar:!sidebar.opened}">
     <sidebar class="sidebar-container" ></sidebar>
-    <div class="main-container"style="border-left:2px solid #bfcbd9;">
+    <div class="main-container">
       <navbar></navbar>
       <tags-view></tags-view>
       <app-main></app-main>
@@ -15,6 +15,10 @@
     position: relative;
     height: 100%;
     width: 100%;
+    .sidebar-container {
+      background-color: #1E73C4;
+      z-index: 199!important;
+    }
   }
   </style>
 <script>

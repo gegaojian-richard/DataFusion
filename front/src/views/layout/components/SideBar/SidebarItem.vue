@@ -1,17 +1,19 @@
 <template>
   <div class="menu-wrapper">
-    <template v-for="item in routes" v-if="!item.hidden&&item.children">
+    <template v-for="(item, index) in routes" v-if="!item.hidden&&item.children">
 
       <router-link v-if="item.children.length===1 && !item.children[0].children" :to="item.path+'/'+item.children[0].path" :key="item.children[0].name">
         <el-menu-item  style="text-align:left;" :index="item.path+'/'+item.children[0].path" :class="{'submenu-title-noDropdown':!isNest}">
-          <svg-icon v-if="item.children[0].meta&&item.children[0].meta.icon" :icon-class="item.children[0].meta.icon"></svg-icon>
+          <!--<svg-icon v-if="item.children[0].meta&&item.children[0].meta.icon" :icon-class="item.children[0].meta.icon"></svg-icon>-->
+          <img :src="'/static/home/' + (index - 2) + '.png'" alt="">
           <span v-if="item.children[0].meta&&item.children[0].meta.title">{{item.children[0].meta.title}}</span>
         </el-menu-item>
       </router-link>
 
       <el-submenu style="text-align:left;" v-else :index="item.name||item.path" :key="item.name">
         <template slot="title">
-          <svg-icon  v-if="item.meta&&item.meta.icon" :icon-class="item.meta.icon"></svg-icon>
+          <!--<svg-icon  v-if="item.meta&&item.meta.icon" :icon-class="item.meta.icon"></svg-icon>-->
+          <img src="/static/home/8.png" alt="">
           <span v-if="item.meta&&item.meta.title">{{item.meta.title}}</span>
         </template>
 
@@ -30,6 +32,11 @@
     </template>
   </div>
 </template>
+<style>
+  .el-submenu__title i {
+    color: #fff;
+  }
+</style>
 
 
 <script>

@@ -2528,3 +2528,45 @@ html {
   fill: #fff;
   stroke: #fff;
 }
+.imagetable .el-input {
+  width: 80%;
+}
+.imagetable .el-input__inner {
+  height: 30px;
+}
+.md-modal {
+  overflow: hidden;
+  border-radius: 5px;
+}
+.md-modal .md-modal-inner .md-top{
+  width:100%;
+  height: 50px;
+  line-height: 50px;
+  background-color: #266CB4;
+  color: #fff;
+
+}
+.md-modal .md-modal-inner .md-top .md-title {
+  position: absolute;
+  top: 0px;
+  left: 20px;
+  line-height: 50px;
+  padding: 0;
+  color: #333;
+  font-size: 18px;
+  font-weight: 400;
+  font-style: normal;
+  color: #Fff;
+}
+.md-modal .md-modal-inner {
+  padding: 0px;
+}
+.md-modal .md-modal-inner .md-content {
+  padding: 30px 30px 50px 30px;
+}
+.md-modal .md-modal-inner .md-content .btn-login {
+  height: 50px;
+  line-height: 50px;
+  border: 2px solid  #5ACD70;
+  background: #5ACD70;
+}

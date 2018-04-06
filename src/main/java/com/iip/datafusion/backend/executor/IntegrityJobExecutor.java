@@ -72,7 +72,6 @@ public class IntegrityJobExecutor extends AbstractTerminatableThread implements 
                 resRowset = jdbcTemplate.queryForRowSet(job.getSqlList().get(0));
 
                 String key = job.getUserID() + "-" + job.getJobID();
-                job.setResult(new Result(1,key,json));
 
                 //rowsetToRedis(resRowset,job.getJobId());
 
@@ -83,7 +82,6 @@ public class IntegrityJobExecutor extends AbstractTerminatableThread implements 
 
         }catch (Exception e){
                 e.printStackTrace();
-                job.setResult(new Result(0,"出现内部错误",null));
         }
 
 

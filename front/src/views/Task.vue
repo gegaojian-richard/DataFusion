@@ -1,32 +1,38 @@
 <template>
   <div class="app-container calendar-list-container" >
-    <el-table :data="list" v-loading.body="listLoading" border fit highlight-current-row style="width:500px">
+    <!--<connect-info  @previewtable="previewTable" class="sidecontainer" style="height:100%;float:left;width:180px"></connect-info>-->
+    <div style="height: 100%;;border:1px solid #bfcbd9;padding: 0px 20px;">
+      <p style="height: 50px;text-align: left;border-bottom: 1px solid #bfcbd9;line-height: 60px;color:#698EC3;font-size: 16px;">
+        <span style="display: inline-block;height:20px;width:5px;background: #698EC3;margin-bottom:-5px;margin-right: 5px;"></span>
+        <span>任务管理</span>
+      </p>
+      <el-table :data="list" v-loading.body="listLoading" border fit highlight-current-row style="margin-top:20px;border-collapse:collapse;">
+        <el-table-column align="center" label="任务ID" width="80">
+          <template slot-scope="scope">
+            <span>{{scope.row.jobID}}</span>
+          </template>
+        </el-table-column>
 
-      <el-table-column align="center" label="任务ID" width="80">
+        <el-table-column width="180px" align="center" label="任务类型">
+          <template slot-scope="scope">
+            <span>{{scope.row.jobType}}</span>
+          </template>
+        </el-table-column>
+
+        <el-table-column class-name="status-col" label="任务状态" width="110">
+          <template slot-scope="scope">
+            <el-tag :type="scope.row.status ">{{scope.row.status}}</el-tag>
+          </template>
+        </el-table-column>
+
+        <el-table-column align="center" label="Actions" >
         <template slot-scope="scope">
-          <span>{{scope.row.jobID}}</span>
+          <el-button type="primary" @click='viewResult(scope.$index,scope.row)' size="small" icon="el-icon-edit">查看详情</el-button>
         </template>
       </el-table-column>
-
-      <el-table-column width="180px" align="center" label="任务类型">
-        <template slot-scope="scope">
-          <span>{{scope.row.jobType}}</span>
-        </template>
-      </el-table-column>
-
-      <el-table-column class-name="status-col" label="任务状态" width="110">
-        <template slot-scope="scope">
-          <el-tag :type="scope.row.status ">{{scope.row.status}}</el-tag>
-        </template>
-      </el-table-column>
-
-      <el-table-column align="center" label="Actions" >
-      <template slot-scope="scope">
-        <el-button type="primary" @click='viewResult(scope.$index,scope.row)' size="small" icon="el-icon-edit">查看详情</el-button>
-      </template>
-    </el-table-column>
-    </el-table>
-    <div class="md-modal modal-msg md-modal-transition" style="width:700px;margin-left: 50px;"  v-bind:class="{'md-show':showDetail}">
+      </el-table>
+    </div>
+    <div class="md-modal modal-msg md-modal-transition"  v-bind:class="{'md-show':showDetail}">
       <div class="md-modal-inner">
         <div class="md-top">
           <div class="md-title">完整性检查结果</div>
@@ -38,7 +44,7 @@
                 <el-table
                   :data="resultData"
                   height="200"
-                  style="width:400px;margin:5px auto;">
+                  style="margin:5px auto;">
                   <el-table-column :label="key" v-for="(value,key) in resultData[0]"
                                    width="120">
                     <template slot-scope="scope">
@@ -56,15 +62,15 @@
                 </el-pagination>
               </div>
              </div>
-          <el-Button @click="sendAllData" style="margin-top: 15px;margin-left: 400px;">确定</el-Button>
+          <a href="javascript:;" class="btn-login" @click="sendAllData">确定</a>
+          <!--<el-Button @click="sendAllData" style="margin-top: 15px;margin-left: 400px;">确定</el-Button>-->
         </div>
         </div>
       </div>
-    </div>
-   </div>
+      <div class="md-overlay" v-if="showDetail" @click="showDetail=false"></div>
   </div>
 </template>
-<style >
+<style rel="stylesheet/scss" lang="scss" scoped>
   .smallinput >.el-input__inner{
     height:20px;
   }
@@ -76,9 +82,53 @@
     right: 15px;
     top: 10px;
   }
+  .el-table td, .el-table th.is-leaf {
+    background: #6C89B1;
+    color: #fff;
+  }
+  .md-modal {
+    overflow: hidden;
+    border-radius: 5px;
+  }
+  .md-modal .md-modal-inner .md-top{
+    width:100%;
+    height: 50px;
+    line-height: 50px;
+    background-color: #266CB4;
+    color: #fff;
+  .md-title {
+    position: absolute;
+    top: 0px;
+    left: 20px;
+    line-height: 50px;
+    padding: 0;
+    color: #333;
+    font-size: 18px;
+    font-weight: 400;
+    font-style: normal;
+    color: #Fff;
+  }
+  }
+  .md-modal .md-modal-inner {
+    padding: 0px;
+  }
+  .md-modal .md-modal-inner .md-content {
+    padding: 30px 30px 50px 30px;
+  .btn-login {
+    height: 50px;
+    line-height: 50px;
+    border: 2px solid  #5ACD70;
+    background: #5ACD70;
+  }
+  }
+  .el-pagination {
+    margin-bottom: 20px;
+    margin-top: 20px;
+  }
 </style>
 <script>
   import axios from 'axios'
+//  import connectInfo from '@/components/Connect/ConnectInfo.vue'
   export default {
     data() {
       return {
