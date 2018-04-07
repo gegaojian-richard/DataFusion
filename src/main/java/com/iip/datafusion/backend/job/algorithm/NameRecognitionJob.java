@@ -1,5 +1,6 @@
 package com.iip.datafusion.backend.job.algorithm;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.iip.datafusion.backend.job.JobBase;
 import com.iip.datafusion.util.jsonutil.Result;
 
@@ -20,7 +21,7 @@ public class NameRecognitionJob extends JobBase {
     public NameRecognitionJob(String corpusPath){
         this.corpusPath = corpusPath;
     }
-
+    @JsonIgnore
     public String getCorpusPath() {
         return corpusPath;
     }
@@ -28,7 +29,7 @@ public class NameRecognitionJob extends JobBase {
     public void setCorpusPath(String corpusPath) {
         this.corpusPath = corpusPath;
     }
-
+    @JsonIgnore
     public String getTableName() {
         return tableName;
     }
@@ -37,6 +38,7 @@ public class NameRecognitionJob extends JobBase {
         this.tableName = tableName;
     }
 
+    @JsonIgnore
     public Result getResult() {
         return result;
     }
@@ -44,7 +46,7 @@ public class NameRecognitionJob extends JobBase {
     public void setResult(Result result) {
         this.result = result;
     }
-
+    @JsonIgnore
     public String getDataSourceId() {
         return dataSourceId;
     }
@@ -54,6 +56,6 @@ public class NameRecognitionJob extends JobBase {
     }
 
     public String getDescription() {
-        return "NameRecognitionJob: "+ this.getJobID();
+        return ""+dataSourceId+"."+tableName+": "+corpusPath;
     }
 }

@@ -1,5 +1,6 @@
 package com.iip.datafusion.backend.job.algorithm;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.iip.datafusion.backend.job.Job;
 import com.iip.datafusion.backend.job.JobBase;
 import com.iip.datafusion.util.jsonutil.Result;
@@ -16,7 +17,7 @@ public class TopicModelJob extends JobBase implements Job{
     String tableName;
     String dataSourceId;
     Result result;
-
+    @JsonIgnore
     public String getCorpusPath() {
         return corpusPath;
     }
@@ -24,7 +25,7 @@ public class TopicModelJob extends JobBase implements Job{
     public void setCorpusPath(String corpusPath) {
         this.corpusPath = corpusPath;
     }
-
+    @JsonIgnore
     public int getTopicNum() {
         return topicNum;
     }
@@ -32,7 +33,7 @@ public class TopicModelJob extends JobBase implements Job{
     public void setTopicNum(int topicNum) {
         this.topicNum = topicNum;
     }
-
+    @JsonIgnore
     public String getTableName() {
         return tableName;
     }
@@ -40,7 +41,7 @@ public class TopicModelJob extends JobBase implements Job{
     public void setTableName(String tableName) {
         this.tableName = tableName;
     }
-
+    @JsonIgnore
     public String getDataSourceId() {
         return dataSourceId;
     }
@@ -48,7 +49,7 @@ public class TopicModelJob extends JobBase implements Job{
     public void setDataSourceId(String dataSourceId) {
         this.dataSourceId = dataSourceId;
     }
-
+    @JsonIgnore
     public Result getResult() {
         return result;
     }
@@ -58,6 +59,6 @@ public class TopicModelJob extends JobBase implements Job{
     }
 
     public String getDescription() {
-        return "TopicModelJob: "+ this.getJobID();
+        return ""+dataSourceId+"."+tableName+": "+corpusPath;
     }
 }

@@ -1,5 +1,6 @@
 package com.iip.datafusion.backend.job.join;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.iip.datafusion.backend.job.Job;
 import com.iip.datafusion.backend.job.JobBase;
 import com.iip.datafusion.util.dbutil.DataSourceRouterManager;
@@ -38,6 +39,7 @@ public class JoinJob extends JobBase implements Job {
         return joinUnits;
     }
 
+    @JsonIgnore
     public String getInsertSQL(){
         List<String> fields = new ArrayList<>();
         for (String field : s2tMap.values()
@@ -57,10 +59,11 @@ public class JoinJob extends JobBase implements Job {
         return result.toString();
     }
 
+    @JsonIgnore
     public List<String> getTargetFields(){
         return (ArrayList<String>)s2tMap.values();
     }
-
+    @JsonIgnore
     public Map<String, String> getS2tMap() {
         return s2tMap;
     }
@@ -68,11 +71,11 @@ public class JoinJob extends JobBase implements Job {
     public void setPrimaryJoinUnitKey(String primaryJoinUnitKey) {
         this.primaryJoinUnitKey = primaryJoinUnitKey;
     }
-
+    @JsonIgnore
     public JoinUnit getPrimaryJoinUnit(){
         return joinUnits.get(primaryJoinUnitKey);
     }
-
+    @JsonIgnore
     public List<SQLTask> getSQLTasks(){
         Queue<JoinUnit> queue = new LinkedList<>();
         queue.offer(getPrimaryJoinUnit());
@@ -88,13 +91,13 @@ public class JoinJob extends JobBase implements Job {
 
         return sqlTasks;
     }
-
+    @JsonIgnore
     public String getTargetDatasourceID() {
         return targetDatasourceID;
     }
 
     @Override
     public String getDescription() {
-        return "this is join job: "+this.getJobID();
+        return "to: "+targetDatasourceID+"."+targetTableName;
     }
 }

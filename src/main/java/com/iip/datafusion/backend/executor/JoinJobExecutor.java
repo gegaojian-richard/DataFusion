@@ -10,6 +10,7 @@ import com.iip.datafusion.backend.job.join.JoinJob;
 import com.iip.datafusion.backend.job.join.SQLTask;
 import com.iip.datafusion.util.dbutil.DataSourceRouterManager;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
@@ -68,14 +69,22 @@ public class JoinJobExecutor extends AbstractTerminatableThread implements JobEx
                 if (i == 1){
                     value = String.valueOf(instance.get(sqlTasks.get(i).getWhereFieldName()));
                 }else{
-                    value = String.valueOf(instance.get(sqlTasks.get(i).getParentJoinUnit()+":"+sqlTasks.get(i).getWhereFieldName()));
+                    if(instance.get(sqlTasks.get(i).getParentJoinUnit()+":"+sqlTasks.get(i).getWhereFieldName()) == null){
+                        value = String.valueOf(instance.get(sqlTasks.get(i).getWhereFieldName()));
+                    }else
+                        value = String.valueOf(instance.get(sqlTasks.get(i).getParentJoinUnit()+":"+sqlTasks.get(i).getWhereFieldName()));
                 }
-                tempResult = jdbcTemplate.queryForMap(sqlTasks.get(i).getSql(), value);
-
-                for (String key : tempResult.keySet()
-                     ) {
-                    // todo:将key加上joinunit标识
-                    instance.put(sqlTasks.get(i).getCurrentJoinUnit() + ":" + key, tempResult.get(key));
+                try { // 有左值 无右值
+                    tempResult = jdbcTemplate.queryForMap(sqlTasks.get(i).getSql(), value);
+                    for (String key : tempResult.keySet()
+                            ) {
+                        // todo:将key加上joinunit标识
+                        instance.put(sqlTasks.get(i).getCurrentJoinUnit() + ":" + key, tempResult.get(key));
+                    }
+                }catch (EmptyResultDataAccessException e){
+                     for(String key : sqlTasks.get(i).getSelectedFields()){
+                         instance.put(sqlTasks.get(i).getCurrentJoinUnit() + ":" + key, "");
+                     }
                 }
             }
         }

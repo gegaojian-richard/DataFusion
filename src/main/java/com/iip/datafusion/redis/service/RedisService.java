@@ -113,4 +113,8 @@ public class RedisService {
         return (List<String>)redisTemplate.opsForList().range(key,start,end);
     }
 
+    public long getLlen(String key){
+        return redisTemplate.opsForList().size(key);
+    }
+
 }
