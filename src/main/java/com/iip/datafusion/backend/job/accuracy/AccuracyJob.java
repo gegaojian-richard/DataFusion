@@ -1,5 +1,6 @@
 package com.iip.datafusion.backend.job.accuracy;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.iip.datafusion.backend.job.Job;
 import com.iip.datafusion.backend.job.JobBase;
 import com.iip.datafusion.dgs.model.accuracy.Param;
@@ -16,7 +17,7 @@ public class AccuracyJob extends JobBase implements Job {
         this.dataSourceId = dataSourceId;
         this.tableName = tableName;
     }
-
+    @JsonIgnore
     public String getDataSourceId() {
         return dataSourceId;
     }
@@ -24,7 +25,7 @@ public class AccuracyJob extends JobBase implements Job {
     public void setDataSourceId(String dataSourceId) {
         this.dataSourceId = dataSourceId;
     }
-
+    @JsonIgnore
     public String getTableName() {
         return tableName;
     }
@@ -32,7 +33,7 @@ public class AccuracyJob extends JobBase implements Job {
     public void setTableName(String tableName) {
         this.tableName = tableName;
     }
-
+    @JsonIgnore
     public List<Param> getParamList() {
         return paramList;
     }
@@ -43,6 +44,6 @@ public class AccuracyJob extends JobBase implements Job {
 
     @Override
     public String getDescription() {
-        return "this is a AccuracyJob: "+this.getJobID();
+        return ""+dataSourceId+"."+tableName+": "+paramList;
     }
 }
