@@ -569,7 +569,7 @@
             result.relations.push(temp)
           }
         }
-        result.join_units.push(this.relations[this.relations.length - 1].right[0]);
+        result.join_units.push(this.relations[this.relations.length - 2].right[0]);
 
         result.target_table_name = this.target_table_name;
         result.target_datasource_id = this.target_datasource_id;
