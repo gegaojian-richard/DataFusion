@@ -3,8 +3,8 @@
     <div class="entityinfo">
       <dl>
         <dt><span style="width:100px;display:inline-block">实体库</span></dt>
-        <dd v-for="(value,index) in entityLi">
-         <a  v-bind:class="{blue:value.dbID}"  @click="emitChoose(value)">{{value.displayName}}</a>
+        <dd v-for="(value,index) in entityLi" @click="emitChoose(value)">
+         <a  v-bind:class="{blue:value.dbID}" >{{value.displayName}}</a>
         </dd>
       </dl>
     </div>
@@ -28,6 +28,7 @@
     background-color: #1F5FA6;
     color:#fff;
     font-size: large;
+    overflow: auto;
   }
   .entityinfo dd {
     height: 50px;

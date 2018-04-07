@@ -48,7 +48,7 @@
           </el-select>
         </div>
       </div>
-      <div style="margin-top: 20px">
+      <div style="margin-top: 20px;text-align: left;margin-left: 40px;">
         <span v-if="algorithms==1||algorithms==2">TOP-K:</span><el-input  v-model="topK" v-if="algorithms==1||algorithms==2" style="width:200px"></el-input>
         <span v-if="algorithms==3">主题数:</span><el-input v-model="topicNum" v-if="algorithms==3" style="width:200px"></el-input>
       </div>

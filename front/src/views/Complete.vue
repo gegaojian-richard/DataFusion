@@ -1,6 +1,6 @@
 <template>
   <div>
-    <connect-info  @previewtable="previewTable" style="height:100%;float:left;width:180px"></connect-info>
+    <connect-info  @previewtable="previewTable" style="height:500px;float:left;width:180px;overflow: auto;"></connect-info>
     <div style="margin-left: 180px;padding: 20px;height: 100%;">
       <div style="height: 100%;;border:1px solid #bfcbd9;padding: 0px 20px;">
         <p style="height: 50px;text-align: left;border-bottom: 1px solid #bfcbd9;line-height: 60px;color:#698EC3;font-size: 16px;">
@@ -17,11 +17,11 @@
             @close="delete_click(index)" style="float: left;">
             {{item}}
           </el-tag>
-
+          <el-button type="primary" plain style="float:right;margin-top: 30px;position:relative;background-color: #82B7E3;color:#fff;" @click="submit()">确认提交</el-button>
         </div>
         <!--table class = "table_class_arru " style="float:top;text-align:center;width=90%; border=1 ;class=t1"  id=mytab;-->
         <!-- 用来显示表格 -->
-        <div class="showtable" style="width:100%;margin-top: 50px;border: 1px solid #ccc;color: #333;overflow:auto;height:650px;">
+        <div class="showtable" style="width:100%;margin-top: 50px;border: 1px solid #ccc;color: #333;overflow:auto;height:350px;">
           <table class="imagetable quarter-div_table">
             <thead>
             <tr>
@@ -35,21 +35,9 @@
             </tbody>
           </table>
         </div>
-        <el-button type="primary" plain style="float:right;margin-top: 30px;position:relative;background-color: #82B7E3;color:#fff;" @click="submit()">确认提交</el-button>
       </div>
     </div>  <!-- 显示字段那列结束 -->
     <div >  <!-- 弹出确认加入 -->
-      <div id = 'jump' class="md-modal modal-msg md-modal-transition" style="width:170px;height:500px;overflow-y: auto" v-bind:class="{'md-show':show}">
-        <div class="md-modal-inner">
-          <div class="md-top">
-            <button class="md-close" @click="show=false">Close</button>
-          </div>
-          <div class="md-content" >
-                <a href="javascript:void(0)" @click="click_type1"> 进行准确性检查</a>
-          </div>
-        </div>
-      </div>
-      <div class="md-overlay" v-if="show" @click="show=false"></div>
     </div>   <!-- 弹出窗口来选择检查类型 -->
   </div>
 </template>
@@ -106,41 +94,6 @@
   .el-tree__empty-text{
     color: #fff!important;
   }
-  .md-modal {
-    overflow: hidden;
-    border-radius: 5px;
-  }
-  .md-modal .md-modal-inner .md-top{
-    width:100%;
-    height: 50px;
-    line-height: 50px;
-    background-color: #266CB4;
-    color: #fff;
-  .md-title {
-    position: absolute;
-    top: 0px;
-    left: 20px;
-    line-height: 50px;
-    padding: 0;
-    color: #333;
-    font-size: 18px;
-    font-weight: 400;
-    font-style: normal;
-    color: #Fff;
-  }
-  }
-  .md-modal .md-modal-inner {
-    padding: 0px;
-  }
-  .md-modal .md-modal-inner .md-content {
-    padding: 30px 30px 50px 30px;
-  .btn-login {
-    height: 50px;
-    line-height: 50px;
-    border: 2px solid  #5ACD70;
-    background: #5ACD70;
-  }
-  }
 </style>
 <script>
   import axios from 'axios'
@@ -183,17 +136,9 @@
         this.dataSourceId = emitdata.database
         this.tableName = emitdata.table
       },
-      // 鼠标右键的点击事件
+      // 鼠标的点击事件
       sha(item) {
-        //alert(item);
-//        var pageX = event.pageX;
-//        var pageY = event.pageY;
-//        this.show = true;
         this.save_item = item;
-//        $("#jump").css("display", "block");
-//        $("#jump").css("position", "absolute");
-//        $("#jump").css("left", pageX);
-//        $("#jump").css("top", pageY + 80);
         this.click_type1();
       },
       /// 添加操作
@@ -204,7 +149,11 @@
           if(this.res_all[i] == this.save_item)
           {
             this.show = false;
-            alert('已经选中了');
+            const h = this.$createElement;
+            this.$notify({
+              title: '提示',
+              message: h('i', { style: 'color: teal'}, '不能重复选取')
+            });
             return;
           }
 
@@ -227,14 +176,29 @@
         ((response)=>{
           var res=response.data;
           if(res.status==1){
-            this.$message("submit complete check success,jobId is "+res.msg);
-//            this.jobId = res.msg
+            const h = this.$createElement;
+            this.$notify({
+              title: '提交成功',
+              message: h('i', { style: 'color: teal'}, '完整性检测任务提交成功，任务号为'+res.msg)
+            });
+          }else{
+            const h = this.$createElement;
+            this.$notify({
+              title: '提交失败',
+              message: h('i', { style: 'color: teal'}, '完整性检测任务提交失败，请重新提交')
+            });
           }
-        })
+        }).catch((e)=>{
+          const h = this.$createElement;
+        this.$notify({
+          title: '提交失败',
+          message: h('i', { style: 'color: teal'}, '完整性检测任务提交失败，请重新提交')
+      });
+      })
 
 
       }
-    } ,  ///  method
+    }  ///  method
 
   }
 </script>

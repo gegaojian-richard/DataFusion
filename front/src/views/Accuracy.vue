@@ -1,13 +1,13 @@
 <template>
   <div>
-    <connect-info  @previewtable="previewTable" style="height:100%;float:left;width:180px"></connect-info>
-    <div style="margin-left: 180px;padding: 20px;height: 100%;">
+    <connect-info  @previewtable="previewTable" style="height:500px;float:left;width:180px;overflow: auto;"></connect-info>
+    <div style="margin-left: 180px;padding: 20px;">
       <div style="height: 100%;;border:1px solid #bfcbd9;padding: 0px 20px;">
         <p style="height: 50px;text-align: left;border-bottom: 1px solid #bfcbd9;line-height: 60px;color:#698EC3;font-size: 16px;">
           <span style="display: inline-block;height:20px;width:5px;background: #698EC3;margin-bottom:-5px;margin-right: 5px;"></span>
           <span>准确性检测</span>
         </p>
-        <div class="showtable" style="width:100%;background-color: #ffff;position:relative;height: 600px;overflow: auto;">
+        <div class="showtable" style="width:100%;background-color: #ffff;position:relative;height:400px;overflow: auto;top:-20px;">
           <table class="imagetable">
             <thead>
             <tr>
@@ -21,7 +21,7 @@
             </tbody>
           </table>
         </div>
-        <el-button type = "primary" plain @click="submit()" style="float:right;margin-top: 30px;position:relative;background-color: #82B7E3;color:#fff;">提交</el-button>
+        <el-button type = "primary" plain @click="submit()" style="width:100px;float:right;margin-top: 30px;position:relative;background-color: #82B7E3;color:#fff;">提交</el-button>
       </div>
 
     </div>  <!-- 显示字段那列结束 -->

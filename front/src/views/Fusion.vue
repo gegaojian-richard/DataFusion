@@ -1,8 +1,8 @@
 <template>
 <div style="height:100%;">
   <fusion-side  @selectentity="selectEntity" style="height:100%;width:180px;position:fixed;"></fusion-side>
-  <div style="height: 100%;padding: 20px;margin-left:180px;">
-    <div style="border:1px solid #ccc;padding: 0 20px 50px 20px;">
+  <div style="padding: 20px;margin-left:180px;overflow: visible;">
+    <div style="border:1px solid #ccc;padding: 0 20px 50px 20px;background-color:#fff;">
       <el-tabs v-model="activeName2" type="card" @tab-click="handleClick" style="margin-top:20px;">
         <el-tab-pane label="步骤一：数据源配置" name="first">
           <div>
@@ -11,7 +11,7 @@
               <span>步骤一：数据源配置</span>
             </p>
             <div class="showpanel" style="overflow: auto">
-              <div v-for="conn in conRewrite" class="relation">
+              <div v-for="conn in conRewrite" class="relations">
                 <div class='tablecolumn' v-for="table in conn.tables" v-show="table.show">
                   <span style="line-height: 50px; font-size: larger">{{table.id}}--{{table.displayName}}</span>
                   <div style="display:inline" v-for="connect in selectTableProp">
@@ -80,7 +80,7 @@
     </div>
     <div>
       <!--连接需要连接的实体-->
-      <div class="md-modal modal-msg md-modal-transition" style="width:400px"  v-bind:class="{'md-show':addMySql}">
+      <div class="md-modal modal-msg md-modal-transition" style="width:400px;"  v-bind:class="{'md-show':addMySql}">
         <div class="md-modal-inner">
           <div class="md-top">
             <div class="md-title">添加mysql连接</div>
@@ -110,7 +110,6 @@
                   <i class="icon IconPwd"></i>
                   <input type="password" tabindex="4"  name="dataPassword" v-model="dataPassword" class="regi_login_input regi_login_input_left login-input-no input_text" placeholder="密码">
                 </li>
-
               </ul>
             </div>
             <div class="login-wrap">
@@ -120,11 +119,11 @@
         </div>
       </div>
       <!--选择需要的实体-->
-    <div class="md-modal modal-msg md-modal-transition" style="width:550px" v-bind:class="{'md-show':selectdata}">
+    <div class="md-modal modal-msg md-modal-transition" style="width:550px;height:500px;overflow: auto;" v-bind:class="{'md-show':selectdata}">
       <div class="md-modal-inner">
         <div class="md-top">
           <div class="md-title">数据源配置</div>
-          <button class="md-close" @click="clearChoose">Close</button>
+          <button class="md-close" @click="selectdata=false">Close</button>
         </div>
         <div class="md-content">
           <div style="margin-bottom: 40px;">
@@ -292,26 +291,26 @@
     data(){
       return {
         activeName2: 'first',
-          showtips:false,
+        showtips:false,
         selectdata:false,
         defaultProps: {
           children: 'tables',
           label: 'displayName'
         },
         displayDB:{
-            id:null,
-            table:"",
+          id:null,
+          table:"",
         },
         selectTableProp:[],      //选中的数据库表格信息
         selectEntityInfo:{
-            displayName:"",
+          displayName:"",
           properties:[]
         }, //选中的目标数据结构
-    //   selectTableNum:0,
+        //   selectTableNum:0,
         relations:[{left:[],right:[]}],
         dom:null,      //选中的tag
         dragitem:{
-            connectid:null,
+          connectid:null,
           tablename:null,
           column:null
         },
@@ -397,47 +396,49 @@
         event.preventDefault();
 //        console.log(event.target.lastChild.nodeName)
         if(event.target.lastChild.nodeName=="DIV"){
-           return;
+          return;
         }
         event.target.appendChild(this.dom);
         var  pieces2t={
-            tfn:null,
+          tfn:null,
           sfn:null
         }
         pieces2t.tfn=entitycolumn
         pieces2t.sfn=this.dragitem.connectid+":"+this.dragitem.tablename+":"+ this.dragitem.column;
-       this.s2t.push(pieces2t);
+        this.s2t.push(pieces2t);
       },
       allowDrop:function(event){
         event.preventDefault();
       },
       addFusiondata(){
-          this.selectdata=true;
-         $(".tablecolumn").each(function(){
-        $(this).children("div:last-child").remove();
-      });
+        this.selectdata=true;
+        $(".tablecolumn").each(function(){
+          $(this).children("div:last-child").remove();
+        });
       },
-        getConnect(){
-          this.$store.dispatch('GetConnect')
-          this.$store.dispatch('GetEntity')
-        },
-        handleNodeClick(data){
-          if(!data.tables){
-           data.show =!data.show;   //传递给父组件选中的表格
+      getConnect(){
+        this.$store.dispatch('GetConnect')
+        this.$store.dispatch('GetEntity')
+      },
+      handleNodeClick(data){
+        if(!data.tables){
+          data.show =!data.show;   //传递给父组件选中的表格
 
-          }
-        },
-        handleClose(tag){
-            tag.show=false;
-        },
+        }
+      },
+      handleClose(tag){
+        tag.show=false;
+      },
       clearChoose(){
-            for(let i=0;i<this.conRewrite.length;i++){
-                for(let j=0;j<this.conRewrite[i].tables.length;j++){
-                    this.conRewrite[i].tables[j].show=false;
-                }
-            }
+        for(let i=0;i<this.conRewrite.length;i++){
+          for(let j=0;j<this.conRewrite[i].tables.length;j++){
+            this.conRewrite[i].tables[j].show=false;
+          }
+        }
         this.selectdata=false;
         this.s2t=[];
+        this.relations=[{left:[],right:[]}];
+        this.join_units=[];
         $(".relation").each(function(){
           $(this).children("div:last-child").remove();
         });
@@ -453,26 +454,26 @@
         for(let i=0;i<this.conRewrite.length;i++){
           for(let j=0;j<this.conRewrite[i].tables.length;j++){
             if(this.conRewrite[i].tables[j].show==true){
-       //         this.selectTableNum+=1;
-                this.relations.push({left:[],right:[]});
+              //         this.selectTableNum+=1;
+              this.relations.push({left:[],right:[]});
 //              console.log( this.conRewrite[i].tables[j].id+"+"+this.conRewrite[i].tables[j].displayName)
-                this.join_units.push(
-                  {
-                    value:this.conRewrite[i].tables[j].id+":"+this.conRewrite[i].tables[j].displayName,
-                    label:this.conRewrite[i].tables[j].id+":"+this.conRewrite[i].tables[j].displayName,
-                    children:[],
-                  }
-                );
-
-                if(selectDB.indexOf(this.conRewrite[i].tables[j].id)<0){
-                    selectDB.push(this.conRewrite[i].tables[j].id);
-                   // 拿到所有需要的数据库连接信息
+              this.join_units.push(
+                {
+                  value:this.conRewrite[i].tables[j].id+":"+this.conRewrite[i].tables[j].displayName,
+                  label:this.conRewrite[i].tables[j].id+":"+this.conRewrite[i].tables[j].displayName,
+                  children:[],
                 }
+              );
+
+              if(selectDB.indexOf(this.conRewrite[i].tables[j].id)<0){
+                selectDB.push(this.conRewrite[i].tables[j].id);
+                // 拿到所有需要的数据库连接信息
+              }
             }
           }
         }
         for(let t=0;t<selectDB.length;t++){
-           this.descriptDataBase(selectDB[t]);
+          this.descriptDataBase(selectDB[t]);
 
         }
         this.selectdata=false;
@@ -489,32 +490,32 @@
           if(res.status==1){
             var jsondata=JSON.parse(res.data);
             var conn={
-                id:param,
-                data:jsondata.tableStructures
+              id:param,
+              data:jsondata.tableStructures
             }
             this.selectTableProp.push(conn)
             for(let i=0;i<this.join_units.length;i++){
-                if(this.join_units[i].label.split(":")[0]==param){
+              if(this.join_units[i].label.split(":")[0]==param){
 //                    console.log(this.join_units[i].label.split("+")[0])
-                    for( let j=0;j<jsondata.tableStructures.length;j++){
-                        if( jsondata.tableStructures[j].tableName==this.join_units[i].label.split(":")[1]){
-                        //    console.log(this.join_units[i].label.split("+")[1])
-                            for(let t=0;t< jsondata.tableStructures[j].colmnuStructures.length;t++){
-                              this.join_units[i].children.push(
-                                  {
-                                    value:jsondata.tableStructures[j].colmnuStructures[t].name,
-                                    label:jsondata.tableStructures[j].colmnuStructures[t].name
-                                  })
-                            }
-                        }
+                for( let j=0;j<jsondata.tableStructures.length;j++){
+                  if( jsondata.tableStructures[j].tableName==this.join_units[i].label.split(":")[1]){
+                    //    console.log(this.join_units[i].label.split("+")[1])
+                    for(let t=0;t< jsondata.tableStructures[j].colmnuStructures.length;t++){
+                      this.join_units[i].children.push(
+                        {
+                          value:jsondata.tableStructures[j].colmnuStructures[t].name,
+                          label:jsondata.tableStructures[j].colmnuStructures[t].name
+                        })
                     }
+                  }
                 }
+              }
             }
           }
         })
       },
       selectEntity(value){
-         console.log(value);
+        console.log(value);
         if(value.dbID){
           this.s2t=[];
           this.selectEntityInfo.displayName=value.displayName;
@@ -522,19 +523,19 @@
           this.target_table_name=value.tableName;
           this.target_datasource_id=value.dbID;
         }else{
-            this.addMySql=true;
-            this.dataUrl=value.dbPosition.split("//")[1];
+          this.addMySql=true;
+          this.dataUrl=value.dbPosition.split("//")[1];
         }
 
       },
 
       removerelation1(){
-         $(".relation").each(function(){
-             $(this).children("div:last-child").remove();
-         });
-         $(".tablecolumn").each(function(){
-           $(this).children("div:last-child").remove();
-         });
+        $(".relation").each(function(){
+          $(this).children("div:last-child").remove();
+        });
+        $(".tablecolumn").each(function(){
+          $(this).children("div:last-child").remove();
+        });
         this.emitSelect();
         this.s2t=[];
       },
@@ -550,35 +551,54 @@
           join_units: [],
           relations: [],
           target_table_name: "",
-          target_datasource_id:""
+          target_datasource_id: ""
         }
         result.s2t = this.s2t;
-        for (let i = 0; i < this.join_units.length; i++) {
-                result.join_units.push(this.join_units[i].label);
-        }
-        for(let j=0;j<this.relations.length;j++){
-            if(this.relations[j].left[0]){
-                var templeft=this.relations[j].left.join(":");
-                var tempright=this.relations[j].right.join(":");
-                var temp={
-                    left:templeft,
-                    right:tempright
-                }
-                result.relations.push(temp)
+//        for (let i = 0; i < this.join_units.length; i++) {
+//          result.join_units.push(this.join_units[i].label);
+//        }
+        for (let j = 0; j < this.relations.length; j++) {
+          if (this.relations[j].left[0]) {
+            var templeft = this.relations[j].left.join(":");
+            var tempright = this.relations[j].right.join(":");
+            result.join_units.push(this.relations[j].left[0]);  //按照join的顺序添加表
+            var temp = {
+              left: templeft,
+              right: tempright
             }
-        }
-
-        result.target_table_name=this.target_table_name;
-        result.target_datasource_id=this.target_datasource_id;
-       // console.log(result)
-        axios.post("/kjb/dfs/commitjob",result).then((response)=>{
-          var res=response.data;
-          if(res.status==1){
-            this.$message('任务提交成功，请在任务管理处查看进度');
+            result.relations.push(temp)
           }
-        })
+        }
+        result.join_units.push(this.relations[this.relations.length - 1].right[0]);
 
+        result.target_table_name = this.target_table_name;
+        result.target_datasource_id = this.target_datasource_id;
+        // console.log(result)
+        axios.post("/kjb/dfs/commitjob", result).then((response) => {
+          var res = response.data;
+          if (res.status == 1) {
+            const h = this.$createElement;
+            this.clearChoose();
+            this.$notify({
+              title: '提示',
+              message: h('i', {style: 'color: teal'}, '任务提交成功，请在任务管理处查看进度')
+            });
+          } else {
+            const h = this.$createElement;
+            this.$notify({
+              title: '提示',
+              message: h('i', {style: 'color: teal'}, '任务提交失败')
+            });
+          }
+        }).catch((e) => {
+          const h = this.$createElement;
+          this.$notify({
+            title: '提示',
+            message: h('i', {style: 'color: teal'}, '任务提交失败')
+          })
+        })
       }
     }
   }
 </script>
+

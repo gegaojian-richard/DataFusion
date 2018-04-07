@@ -34,7 +34,7 @@
         <div class="md-content">
           <div class="confirm-tips">
             <div class="error-wrap">
-              <span class="error error-show" v-show="regErrorTip">密码错误</span>
+              <span class="error error-show" v-show="regErrorTip">{{regErrorTip}}</span>
             </div>
             <ul>
               <li class="regi_form_input" style="background: url('/static/login/user.png') 10px center no-repeat;background-size: 18px 20px;">
@@ -250,10 +250,10 @@ export default {
       loading: false,
       showDialog: false,
       registerFlag: false,
-      regErrorTip:false,
-      regName: 'admin',
-      regPwd1: '123456',
-      regPwd2: '123456',
+      regErrorTip:null,
+      regName: null,
+      regPwd1: null,
+      regPwd2:null,
     }
   },
   methods: {
@@ -282,8 +282,10 @@ export default {
     },
     register(){
       if(!this.regName || !this.regPwd1 ||!this.regPwd2||this.regPwd1!=this.regPwd2){
-        this.regErrorTip=true;
+        this.regErrorTip="填写不规范";
         return;
+      }else if(this.regPwd1.length<5||this.regPwd1.length>10){
+          this.regErrorTip="密码长度不在5位至10位之间，请重新填写";
       }
       let param=new URLSearchParams();
       param.append("username",this.regName);
@@ -291,13 +293,13 @@ export default {
       axios.post("/kjb/ums/register",param).then((response)=>{
         let res=response.data;
         if(res.status==1){
-          this.regErrorTip=false;
+          this.regErrorTip=null;
           this.registerFlag=false;
           this.regSuc=true;
         }else{
           this.regErrorTip=true;
         }
-      })
+      }).catch((e)=>{this.regErrorTip="该账号已被申请，请重新设置";})
 
     }
   }

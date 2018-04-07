@@ -1,6 +1,6 @@
 <template>
   <div class="connect">
-    <connect-info  @previewtable="previewTable" class="sidecontainer" style="height:100%;float:left;width:180px"></connect-info>
+    <connect-info  @previewtable="previewTable" class="sidecontainer" style="height:500px;float:left;width:180px"></connect-info>
     <div  style="margin-left: 180px;padding: 20px;height: 100%;">
       <div style="height: 100%;;border:1px solid #bfcbd9;padding: 0px 20px;">
         <p style="height: 50px;text-align: left;border-bottom: 1px solid #bfcbd9;line-height: 60px;color:#698EC3;font-size: 16px;">
