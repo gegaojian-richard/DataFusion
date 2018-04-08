@@ -1,15 +1,15 @@
 <template>
   <div class="connect">
     <connect-info  @previewtable="previewTable" class="sidecontainer" style="height:500px;float:left;width:180px"></connect-info>
-    <div  style="margin-left: 180px;padding: 20px;height: 100%;">
-      <div style="height: 100%;;border:1px solid #bfcbd9;padding: 0px 20px;">
+    <div  style="margin-left: 180px;padding: 20px;">
+      <div style="border:1px solid #bfcbd9;padding: 0px 20px;">
         <p style="height: 50px;text-align: left;border-bottom: 1px solid #bfcbd9;line-height: 60px;color:#698EC3;font-size: 16px;">
           <span style="display: inline-block;height:20px;width:5px;background: #698EC3;margin-bottom:-5px;margin-right: 5px;"></span>
           <span>数据源</span>
         </p>
         <el-table
           :data="previewData"
-          height="calc(100% - 100px)"
+          height="calc(100% - 300px)"
           style="margin:5px auto;background-color:#fff">
 
           <el-table-column :label="key" v-for="(value,key) in previewData[0]"

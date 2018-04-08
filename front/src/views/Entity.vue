@@ -16,8 +16,8 @@
   }
 </style>
 <script>
-  import MyHeader from '../../resource/MyHeader'
-  import  NavBar from '../../resource/NavBar'
+//  import MyHeader from '../../resource/MyHeader'
+//  import  NavBar from '../../resource/NavBar'
   import  EntityBread from './../components/EntityBread'
   import  EventBread from './../components/EventBread'
   import axios from 'axios'
@@ -29,8 +29,8 @@
     },
 
     components: {
-      MyHeader,
-      NavBar,
+//      MyHeader,
+//      NavBar,
       EntityBread,
       EventBread
     },
