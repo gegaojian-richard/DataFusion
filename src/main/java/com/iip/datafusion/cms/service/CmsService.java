@@ -95,6 +95,7 @@ public class CmsService {
 
         List<DBTable> dbTableList = new ArrayList<>();
         for(DataSourceProperties item:properties){
+            if(item.getId().equals("primary")) continue; //隐藏主数据库
             DBTable dbTable = new DBTable();
             dbTable.setId(item.getId());
             dbTable.setDisplayName(item.getDisplayName());
