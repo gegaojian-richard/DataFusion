@@ -26,7 +26,7 @@ public class RedisController {
     public Result getPage(@RequestBody RedisConfiguration redisConfiguration){
         JSONObject wholeJsonObj = new JSONObject();
         wholeJsonObj.put("items",redisService.getLrange(redisConfiguration.getKey(),redisConfiguration.getStart(),redisConfiguration.getEnd()).toString());
-        System.out.println("getPage");
+        //System.out.println("getPage");
         return new Result(1,null,wholeJsonObj.toString());
     }
     @RequestMapping(path = "/tvs/redisLen",method = RequestMethod.POST)

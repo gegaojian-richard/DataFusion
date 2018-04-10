@@ -31,7 +31,7 @@ public class IntegrityParser implements Parser{
         for (String columnName : inputColumnNames) {
 
             if (columnName!=null) {
-                whereClause += String.format(" ISNULL(%s) or", columnName);
+                whereClause += String.format(" ISNULL(%s) or %s=\"\" or ", columnName,columnName);
             } else {
                 throw new Exception("传入参数属性值不能为空");
                 //return null;

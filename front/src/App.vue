@@ -20,5 +20,6 @@ export default {
   color:#bfcbd9;
   background-color:#fff;
   margin-top: 0px;
+
 }
 </style>

@@ -22,7 +22,7 @@ public class JvsController {
     @ResponseBody
     public Result allTasks(){ return tvsService.allTasks(); }
 
-    @RequestMapping(path={"/tvs/privateTasks"},method = RequestMethod.GET)
+    @RequestMapping(path={"/tvs/privateTasks"},method = RequestMethod.POST)
     @ResponseBody
     public Result privateTasks(){ return tvsService.privateTasks(userManager.getUserId()); }
 }

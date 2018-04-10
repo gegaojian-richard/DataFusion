@@ -64,6 +64,9 @@ public class IntegrityJobExecutor extends AbstractTerminatableThread implements 
         //job.setResult(new Result(0,"wawawawawa",null));
 
         DataSourceRouterManager.setCurrentDataSourceKey(job.getDataSourceId());
+        //System.out.println(job.getDataSourceId());
+        //System.out.println(job.getTableName());
+        //System.out.println(job.getSqlList());
 
         try{
             if(job.getInnerJobType().equals("query")) {

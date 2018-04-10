@@ -19,9 +19,14 @@ public class ConsistencyController {
     @RequestMapping(path={"/if2"},method = RequestMethod.POST)
     @ResponseBody
     public Result commitJob(@RequestBody ConsistencyConfiguration ConsistencyConfiguration){
-
+   try{
         Map map = ConsistencyService.commitJob(ConsistencyConfiguration);
-        return new Result();
+        Result res = new Result(1,"Task Submitted successfully",null);;
+        //res.setMsg(integrityJob.getJobId());
+        return res;
+    }catch (Exception e){
+        return new Result(0,e.getMessage(),null);
+    }
 //        return checkBasicConsistencyConfiguration.toString();
     }
 }
