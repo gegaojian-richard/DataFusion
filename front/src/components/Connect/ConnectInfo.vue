@@ -8,7 +8,7 @@
             <img src="/static/home/subtraction.png">
             删除
           </button>
-          <ul class="dropdown-menu dropdown-menu-right" role="menu" id="datasource" aria-labelledby="data-dropdrow" >
+          <ul class="dropdown-menu " role="menu" id="datasource" aria-labelledby="data-dropdrow" >
             <li v-for="(item,index) in conRewrite"><a href="#"  role="button"  @click="deleteConnect(item.id)">{{item.displayName}}</a></li>
           </ul>
         </div>
@@ -17,7 +17,7 @@
             <img src="/static/home/add.png">
             添加
           </button>
-          <ul class="dropdown-menu dropdown-menu-right" role="menu" id="datasource_menu" aria-labelledby="data-dropdrow" style="text-align: center; min-width: 120px;" >
+          <ul class="dropdown-menu dropdown-menu-right" role="menu" id="datasource_menu" aria-labelledby="data-dropdrow" >
             <li><a href="#"  role="button"  id="mysql-info" @click="addMySql=true">mysql</a></li>
             <li role="separator" class="divider"></li>
             <li><a href="#"  role="button"  id="oracle-info" @click="">oracle</a></li>
@@ -81,6 +81,10 @@
 </template>
 <style rel="stylesheet/scss" lang="scss">
   @import "../../assets/scss/mixin";
+  .dropdown-menu {
+    text-align: center;
+    min-width: 120px;
+  }
 .menu{
   height:100%;
   /*border-left:1px solid #1a1a1a;*/
@@ -240,7 +244,7 @@
             this.createError = true;
 
           }
-        })
+        }).catch((e)=>{this.createError=true;})
       },
       deleteConnect(name){
         let param=new URLSearchParams();
