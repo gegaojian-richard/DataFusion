@@ -98,7 +98,7 @@ public class DataSourceRouter extends AbstractRoutingDataSource {
     // 创建Hikari数据源
     private DataSource createDataSource(DataSourceProperties properties){
         HikariConfig config = new HikariConfig();
-        config.setJdbcUrl(properties.getUrl());
+        config.setJdbcUrl(properties.getUrl() + "?useUnicode=true&characterEncoding=UTF-8"); // 添加对中文的支持
         config.setUsername(properties.getUsername());
         config.setPassword(properties.getPassword());
         config.setDriverClassName(properties.getDriverClassName());

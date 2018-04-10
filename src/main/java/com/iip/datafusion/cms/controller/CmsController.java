@@ -35,7 +35,7 @@ public class CmsController {
     @RequestMapping(path={"/cms/creationDataBase"},method = RequestMethod.POST)
     @ResponseBody
     public Result setCon(@RequestBody DataSourceProperties c){
-        c.setUrl(c.getUrl()+"?useUnicode=true&characterEncoding=UTF-8"); //添加对于中文数据库支持
+        c.setUrl(c.getUrl());
         return service.creCon(c);
     }
 
