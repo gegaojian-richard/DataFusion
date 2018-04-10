@@ -1,7 +1,10 @@
 package com.iip.datafusion.backend.parser;
 
+import com.iip.datafusion.backend.job.JobType;
+import com.iip.datafusion.backend.JobRegistry;
 import com.iip.datafusion.backend.job.integrity.IntegrityJob;
 import com.iip.datafusion.dgs.model.integrity.IntegrityConfiguration;
+import com.iip.datafusion.redis.model.JobRandom;
 
 import java.util.ArrayList;
 
@@ -28,7 +31,7 @@ public class IntegrityParser implements Parser{
         for (String columnName : inputColumnNames) {
 
             if (columnName!=null) {
-                whereClause += String.format(" ISNULL(%s) or", columnName);
+                whereClause += String.format(" ISNULL(%s) or %s=\"\" or ", columnName,columnName);
             } else {
                 throw new Exception("传入参数属性值不能为空");
                 //return null;
@@ -47,8 +50,10 @@ public class IntegrityParser implements Parser{
         ArrayList<String> sqlList = new ArrayList<>();
         sqlList.add(sql);
         integrityJob.setSqlList(sqlList);
-        integrityJob.setJobType("query");
+        integrityJob.setJobType(JobType.INTEGRITY);
 
+        integrityJob.setInnerJobType("query");
+        //JobRegistry.getInstance().regist(integrityJob);
         return integrityJob;
 
     }

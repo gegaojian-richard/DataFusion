@@ -1,6 +1,8 @@
 package com.iip.datafusion.backend.job.integrity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.iip.datafusion.backend.job.Job;
+import com.iip.datafusion.backend.job.JobBase;
 import com.iip.datafusion.util.dbutil.DataSourceRouterManager;
 import com.iip.datafusion.util.jsonutil.Result;
 import net.sf.json.JSONArray;
@@ -19,23 +21,23 @@ import java.util.List;
  * Created by GeGaojian on 2018/01/18.
  */
 
-public class IntegrityJob implements Job {
+public class IntegrityJob extends JobBase implements Job {
 
     private String dataSourceId;
     private String tableName;
     private List<String> sqlList;
-    private String jobType;
-    private Result result;
+    private String innerJobType;
 
-
-    public String getJobType() {
-        return jobType;
+    @JsonIgnore
+    public String getInnerJobType() {
+        return innerJobType;
     }
 
-    public void setJobType(String jobType) {
-        this.jobType = jobType;
+    public void setInnerJobType(String innerJobType) {
+        this.innerJobType = innerJobType;
     }
 
+    @JsonIgnore
     public String getDataSourceId() {
         return dataSourceId;
     }
@@ -44,6 +46,7 @@ public class IntegrityJob implements Job {
         this.dataSourceId = dataSourceId;
     }
 
+    @JsonIgnore
     public String getTableName() {
         return tableName;
     }
@@ -52,20 +55,13 @@ public class IntegrityJob implements Job {
         this.tableName = tableName;
     }
 
+    @JsonIgnore
     public List<String> getSqlList() {
         return sqlList;
     }
 
     public void setSqlList(List<String> sqlList) {
         this.sqlList = sqlList;
-    }
-
-    public Result getResult() {
-        return result;
-    }
-
-    public void setResult(Result result) {
-        this.result = result;
     }
 
     public String rowSetToJson(SqlRowSet sqlRowSet) {
@@ -77,7 +73,7 @@ public class IntegrityJob implements Job {
             trueColumnNames.add(sqlRsmd.getColumnName(i));
 
         }
-
+        JSONObject wholeJsonObj = new JSONObject();
         JSONArray array = new JSONArray();
 
 
@@ -97,10 +93,15 @@ public class IntegrityJob implements Job {
             }
             array.add(jsonObj);
         }
+        wholeJsonObj.put("items",array);
         //System.out.println(array.toString());
-        return array.toString();
+        return wholeJsonObj.toString();
 
 
     }
 
+    @Override
+    public String getDescription() {
+        return ""+dataSourceId+"."+tableName;
+    }
 }

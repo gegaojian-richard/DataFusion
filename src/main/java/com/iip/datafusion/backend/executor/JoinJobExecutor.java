@@ -1,13 +1,16 @@
 package com.iip.datafusion.backend.executor;
 
+import com.iip.datafusion.backend.JobRegistry;
 import com.iip.datafusion.backend.channel.ChannelManager;
 import com.iip.datafusion.backend.common.AbstractTerminatableThread;
 import com.iip.datafusion.backend.common.TerminationToken;
 import com.iip.datafusion.backend.jdbchelper.JDBCHelper;
+import com.iip.datafusion.backend.job.JobStatusType;
 import com.iip.datafusion.backend.job.join.JoinJob;
 import com.iip.datafusion.backend.job.join.SQLTask;
 import com.iip.datafusion.util.dbutil.DataSourceRouterManager;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
@@ -33,11 +36,14 @@ public class JoinJobExecutor extends AbstractTerminatableThread implements JobEx
     @Override
     protected void doRun() throws Exception {
         JoinJob joinJob = ChannelManager.getInstance().getJoinChannel().take(workQueue);
+        JobRegistry.getInstance().update(joinJob, JobStatusType.EXECUTING);
 
         try{
             doJob(joinJob);
+            JobRegistry.getInstance().update(joinJob, JobStatusType.SUCCESS);
         } catch (Exception e){
             e.printStackTrace();
+            JobRegistry.getInstance().update(joinJob, JobStatusType.ERROR);
         } finally {
             terminationToken.reservations.decrementAndGet();
         }
@@ -58,12 +64,27 @@ public class JoinJobExecutor extends AbstractTerminatableThread implements JobEx
             for (int i = 1; i < sqlTasks.size(); i++) {
                 Map<String, Object> tempResult;
                 DataSourceRouterManager.setCurrentDataSourceKey(sqlTasks.get(i).getDatasourceID());
-                String value = (String)instance.get(sqlTasks.get(i).getWhereFieldName());
-                tempResult = jdbcTemplate.queryForMap(sqlTasks.get(i).getSql(), value);
-
-                for (String key : tempResult.keySet()
-                     ) {
-                    instance.put(key, tempResult.get(key));
+                // todo:int转string有问题
+                String value;
+                if (i == 1){
+                    value = String.valueOf(instance.get(sqlTasks.get(i).getWhereFieldName()));
+                }else{
+                    if(instance.get(sqlTasks.get(i).getParentJoinUnit()+":"+sqlTasks.get(i).getWhereFieldName()) == null){
+                        value = String.valueOf(instance.get(sqlTasks.get(i).getWhereFieldName()));
+                    }else
+                        value = String.valueOf(instance.get(sqlTasks.get(i).getParentJoinUnit()+":"+sqlTasks.get(i).getWhereFieldName()));
+                }
+                try { // 有左值 无右值
+                    tempResult = jdbcTemplate.queryForMap(sqlTasks.get(i).getSql(), value);
+                    for (String key : tempResult.keySet()
+                            ) {
+                        // todo:将key加上joinunit标识
+                        instance.put(sqlTasks.get(i).getCurrentJoinUnit() + ":" + key, tempResult.get(key));
+                    }
+                }catch (EmptyResultDataAccessException e){
+                     for(String key : sqlTasks.get(i).getSelectedFields()){
+                         instance.put(sqlTasks.get(i).getCurrentJoinUnit() + ":" + key, "");
+                     }
                 }
             }
         }
@@ -78,7 +99,14 @@ public class JoinJobExecutor extends AbstractTerminatableThread implements JobEx
                 int j = 1;
                 for (String key : sourceFields
                      ) {
-                    preparedStatement.setString(j,(String) resultSet.get(i).get(key));
+                    String value;
+                    if (resultSet.get(i).get(key)!=null)
+                        value = String.valueOf(resultSet.get(i).get(key));
+                    else {
+                        value = String.valueOf(resultSet.get(i).get(key.split(":")[2]));
+                    }
+                    preparedStatement.setString(j,value);
+                    j++;
                 }
             }
 

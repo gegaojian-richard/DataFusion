@@ -1,7 +1,9 @@
 package com.iip.datafusion.nsps.service;
 
+import com.iip.datafusion.backend.JobRegistry;
 import com.iip.datafusion.backend.TFIDFManager;
 import com.iip.datafusion.backend.TopicModelManager;
+import com.iip.datafusion.backend.job.JobType;
 import com.iip.datafusion.backend.job.algorithm.TFIDFJob;
 import com.iip.datafusion.backend.job.algorithm.TopicModelJob;
 import com.iip.datafusion.backend.parser.TFIDFParser;
@@ -16,8 +18,11 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class TopicModelService {
-    public TopicModelJob commitJob(TopicModelConfiguration configuration)throws Exception{
+    public TopicModelJob commitJob(TopicModelConfiguration configuration,int userID)throws Exception{
         TopicModelJob job = TopicModelParser.parse(configuration);
+        job.setJobType(JobType.TOPIC_MODEL);
+        job.setUserID(userID);
+        JobRegistry.getInstance().regist(job);
         TopicModelManager.getInstance().commitJob(job);
 
         return job;

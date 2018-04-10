@@ -1,9 +1,9 @@
 <template>
   <div class="tags-view-container" >
-    <scroll-pane class='tags-view-wrapper' ref='scrollPane' style="background-color: #304156;color:#bfcbd9">
+    <scroll-pane class='tags-view-wrapper' ref='scrollPane' style="background-color: #fff;color:#bfcbd9">
       <router-link ref='tag' class="tags-view-item" :class="isActive(tag)?'active':''" v-for="tag in Array.from(visitedViews)" :to="tag.path" :key="tag.path" @contextmenu.prevent.native="openMenu(tag,$event)">
         {{tag.title}}
-        <span class='el-icon-close' @click.prevent.stop='closeSelectedTag(tag)'></span>
+        <img src="/static/home/delete.png" @click.prevent.stop='closeSelectedTag(tag)'>
       </router-link>
     </scroll-pane>
     <ul class='contextmenu' v-show="visible" :style="{left:left+'px',top:top+'px'}">
@@ -121,32 +121,22 @@ export default {
     .tags-view-item {
       display: inline-block;
       position: relative;
-      height: 26px;
-      line-height: 26px;
-      border: 1px solid #d8dce5;
+      height: 34px;
+      line-height: 34px;
+      border-right: 1px solid #d8dce5;
       color: #495060;
       background: #fff;
-      padding: 0 8px;
-      font-size: 12px;
-      margin-left: 5px;
-      margin-top: 4px;
-      &:first-of-type {
-        margin-left: 15px;
-      }
+      text-align: center;
+      width:100px;
+      font-size: 14px;
+      margin-top: -1px;
+      padding-right: 4px;
       &.active {
-        background-color: #42b983;
-        color: #fff;
-        border-color: #42b983;
-        &::before {
-          content: '';
-          background: #fff;
-          display: inline-block;
-          width: 8px;
-          height: 8px;
-          border-radius: 50%;
-          position: relative;
-          margin-right: 2px;
-        }
+        color: #819EC6;
+      }
+      img {
+        margin-top: 4px;
+        float: right;
       }
     }
   }
@@ -168,32 +158,6 @@ export default {
       cursor: pointer;
       &:hover {
         background: #eee;
-      }
-    }
-  }
-}
-</style>
-
-<style rel="stylesheet/scss" lang="scss">
-//reset element css of el-icon-close
-.tags-view-wrapper {
-  .tags-view-item {
-    .el-icon-close {
-      width: 16px;
-      height: 16px;
-      vertical-align: 2px;
-      border-radius: 50%;
-      text-align: center;
-      transition: all .3s cubic-bezier(.645, .045, .355, 1);
-      transform-origin: 100% 50%;
-      &:before {
-        transform: scale(.6);
-        display: inline-block;
-        vertical-align: -3px;
-      }
-      &:hover {
-        background-color: #b4bccc;
-        color: #fff;
       }
     }
   }

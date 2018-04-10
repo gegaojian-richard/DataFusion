@@ -17,7 +17,7 @@ export const constantRouterMap=[
       path:'home',
       component:Home,
       name:Home,
-      meta:{title:'home',icon:'dashboard',noCache:true}
+      meta:{title:'主页',icon:'dashboard',noCache:true}
     }]
   },
   {
@@ -27,7 +27,7 @@ export const constantRouterMap=[
     children:[{
       path:'index',
       component:_import('Documentation'),
-      meta:{title:'documentation',icon:'documentation',noCache:true}
+      meta:{title:'文档',icon:'documentation',noCache:true}
     }]
   },
   {
@@ -38,7 +38,7 @@ export const constantRouterMap=[
       path:'index',
       component:_import('Connect'),
       name:'Connect',
-      meta:{title:'connect',icon:'icon',noCache:true}
+      meta:{title:'连接管理',icon:'icon',noCache:true}
     }]
   },
   {
@@ -49,7 +49,7 @@ export const constantRouterMap=[
       path:'index',
       component:_import('Entity'),
       name:'Entity',
-      meta:{title:'entity',icon:'chart',noCache:true}
+      meta:{title:'实体管理',icon:'chart',noCache:true}
     }]
   },
   {
@@ -60,7 +60,29 @@ export const constantRouterMap=[
       path:'index',
       component:_import('Fusion'),
       name:'Fusion',
-      meta:{title:'fusion',icon:'excel',noCache:true}
+      meta:{title:'数据融合',icon:'excel',noCache:true}
+    }]
+  },
+  {
+    path:'/task',
+    component:Layout,
+    redirect:'/task/index',
+    children:[{
+      path:'index',
+      component:_import('Task'),
+      name:'Task',
+      meta:{title:'任务管理',icon:'dashboard',noCache:true}
+    }]
+  },
+  {
+    path:'/algorithm',
+    component:Layout,
+    redirect:'/algorithm/index',
+    children:[{
+      path:'index',
+      component:_import('Algorithm'),
+      name:'Algorithm',
+      meta:{title:'算法',icon:'clipboard',noCache:true}
     }]
   },
   {
@@ -69,13 +91,13 @@ export const constantRouterMap=[
     redirect: 'noredirect',
     name: 'Check',
     meta: {
-      title: 'check',
+      title: '数据治理',
       icon: 'component'
     },
     children: [
-      { path: 'complete', component:_import('Complete'), name: 'Complete', meta: { title: 'complete', icon: 'table' }},
-      { path: 'insist', component:_import('Insist'), name: 'Insist', meta: { title: 'insist', icon: 'example' }},
-      { path: 'accuracy', component:_import('Accuracy') , name: 'Accuracy', meta: { title: 'accuracy', icon: 'form' }}
+      { path: 'complete', component:_import('Complete'), name: 'Complete', meta: { title: '完整性检测', icon: 'table' }},
+      { path: 'insist', component:_import('Insist'), name: 'Insist', meta: { title: '一致性检测', icon: 'example' }},
+      { path: 'accuracy', component:_import('Accuracy') , name: 'Accuracy', meta: { title: '准确性检测', icon: 'form' }}
     ]
   },
 ]

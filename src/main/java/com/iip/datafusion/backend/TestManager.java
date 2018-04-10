@@ -6,6 +6,7 @@ import com.iip.datafusion.backend.common.TerminationToken;
 import com.iip.datafusion.backend.config.Capabilities;
 import com.iip.datafusion.backend.executor.IntegrityJobExecutor;
 import com.iip.datafusion.backend.executor.TestJobExecutor;
+import com.iip.datafusion.backend.job.JobType;
 import com.iip.datafusion.backend.job.integrity.IntegrityJob;
 import com.iip.datafusion.backend.job.test.TestJob;
 import org.apache.catalina.Manager;

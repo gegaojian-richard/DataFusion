@@ -1,18 +1,26 @@
 package com.iip.datafusion.backend.job.join;
 
+import java.util.ArrayList;
+
 public class SQLTask {
     String sql;
     String whereFieldName;
+    String parentJoinUnit;
+    String currentJoinUnit;
     String datasourceID;
+    ArrayList<String> selectedFields;
     boolean async;
 
     public SQLTask(){
     }
 
-    public SQLTask(String sql, String whereFieldName, String datasourceID, boolean async) {
+    public SQLTask(String sql, String whereFieldName, String parentJoinUnit, String currentJoinUnit, String datasourceID, ArrayList<String> selectedFields, boolean async) {
         this.sql = sql;
         this.whereFieldName = whereFieldName;
+        this.parentJoinUnit = parentJoinUnit;
+        this.currentJoinUnit = currentJoinUnit;
         this.datasourceID = datasourceID;
+        this.selectedFields = selectedFields;
         this.async = async;
     }
 
@@ -32,12 +40,36 @@ public class SQLTask {
         this.whereFieldName = whereFieldName;
     }
 
+    public String getParentJoinUnit() {
+        return parentJoinUnit;
+    }
+
+    public void setParentJoinUnit(String parentJoinUnit) {
+        this.parentJoinUnit = parentJoinUnit;
+    }
+
+    public String getCurrentJoinUnit() {
+        return currentJoinUnit;
+    }
+
+    public void setCurrentJoinUnit(String currentJoinUnit) {
+        this.currentJoinUnit = currentJoinUnit;
+    }
+
     public String getDatasourceID() {
         return datasourceID;
     }
 
     public void setDatasourceID(String datasourceID) {
         this.datasourceID = datasourceID;
+    }
+
+    public ArrayList<String> getSelectedFields() {
+        return selectedFields;
+    }
+
+    public void setSelectedFields(ArrayList<String> selectedFields) {
+        this.selectedFields = selectedFields;
     }
 
     public boolean isAsync() {

@@ -1,13 +1,15 @@
 package com.iip.datafusion.backend.job.algorithm;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.iip.datafusion.backend.job.Job;
+import com.iip.datafusion.backend.job.JobBase;
 import com.iip.datafusion.util.jsonutil.Result;
 
 /**
  * @Author Junnor.G
  * @Date 2018/1/31 下午3:16
  */
-public class TextRankJob implements Job{
+public class TextRankJob extends JobBase implements Job{
     private String corpusPath;
     private int topK;
     private String tableName;
@@ -23,7 +25,7 @@ public class TextRankJob implements Job{
         this.corpusPath = corpusPath;
         this.topK = topK;
     }
-
+    @JsonIgnore
     public String getCorpusPath() {
         return corpusPath;
     }
@@ -31,7 +33,7 @@ public class TextRankJob implements Job{
     public void setCorpusPath(String corpusPath) {
         this.corpusPath = corpusPath;
     }
-
+    @JsonIgnore
     public int getTopK(){
         return topK;
     }
@@ -39,11 +41,11 @@ public class TextRankJob implements Job{
     public void setTopK(int topK){
         this.topK = topK;
     }
-
+    @JsonIgnore
     public String getTableName(){return tableName;}
 
     public void setTableName(String tableName) {this.tableName = tableName;}
-
+    @JsonIgnore
     public Result getResult() {
         return result;
     }
@@ -51,12 +53,17 @@ public class TextRankJob implements Job{
     public void setResult(Result result) {
         this.result = result;
     }
-
+    @JsonIgnore
     public String getDataSourceId() {
         return dataSourceId;
     }
 
     public void setDataSourceId(String dataSourceId) {
         this.dataSourceId = dataSourceId;
+    }
+
+    @Override
+    public String getDescription() {
+        return ""+dataSourceId+"."+tableName+": "+corpusPath;
     }
 }

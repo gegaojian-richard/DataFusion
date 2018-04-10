@@ -6,6 +6,7 @@ import com.iip.datafusion.backend.common.TerminationToken;
 import com.iip.datafusion.backend.config.Capabilities;
 import com.iip.datafusion.backend.executor.TestJobExecutor;
 import com.iip.datafusion.backend.executor.TextRankJobExcutor;
+import com.iip.datafusion.backend.job.JobType;
 import com.iip.datafusion.backend.job.algorithm.TextRankJob;
 import com.iip.datafusion.backend.job.algorithm.TextRankJob;
 

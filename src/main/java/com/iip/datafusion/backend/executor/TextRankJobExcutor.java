@@ -1,9 +1,11 @@
 package com.iip.datafusion.backend.executor;
 
+import com.iip.datafusion.backend.JobRegistry;
 import com.iip.datafusion.backend.channel.ChannelManager;
 import com.iip.datafusion.backend.common.AbstractTerminatableThread;
 import com.iip.datafusion.backend.common.TerminationToken;
 import com.iip.datafusion.backend.jdbchelper.JDBCHelper;
+import com.iip.datafusion.backend.job.JobStatusType;
 import com.iip.datafusion.backend.job.algorithm.TextRankJob;
 import com.iip.datafusion.backend.textprocess.cheonhye.TF_IDF;
 import com.iip.datafusion.backend.textprocess.textrank.TextRank;
@@ -42,11 +44,14 @@ public class TextRankJobExcutor extends AbstractTerminatableThread implements Jo
     @Override
     protected void doRun() throws Exception {
         TextRankJob textRankJob = ChannelManager.getInstance().getTextRankChannel().take(workQueue);
+        JobRegistry.getInstance().update(textRankJob, JobStatusType.EXECUTING);
 
         try {
             doJob(textRankJob);
+            JobRegistry.getInstance().update(textRankJob, JobStatusType.SUCCESS);
         } catch (Exception e) {
             e.printStackTrace();
+            JobRegistry.getInstance().update(textRankJob, JobStatusType.ERROR);
         } finally {
             terminationToken.reservations.decrementAndGet();
         }

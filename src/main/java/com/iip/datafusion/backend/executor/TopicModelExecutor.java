@@ -1,9 +1,11 @@
 package com.iip.datafusion.backend.executor;
 
+import com.iip.datafusion.backend.JobRegistry;
 import com.iip.datafusion.backend.channel.ChannelManager;
 import com.iip.datafusion.backend.common.AbstractTerminatableThread;
 import com.iip.datafusion.backend.common.TerminationToken;
 import com.iip.datafusion.backend.jdbchelper.JDBCHelper;
+import com.iip.datafusion.backend.job.JobStatusType;
 import com.iip.datafusion.backend.job.algorithm.TopicModelJob;
 import com.iip.datafusion.backend.textprocess.cheonhye.BTM;
 import com.iip.datafusion.nsps.dao.MySqlDAO;
@@ -34,11 +36,14 @@ public class TopicModelExecutor  extends AbstractTerminatableThread implements J
     @Override
     protected void doRun() throws Exception {
         TopicModelJob job = ChannelManager.getInstance().getTopicModeChannel().take(workQueue);
+        JobRegistry.getInstance().update(job, JobStatusType.EXECUTING);
 
         try {
             doJob(job);
+            JobRegistry.getInstance().update(job, JobStatusType.SUCCESS);
         } catch (Exception e) {
             e.printStackTrace();
+            JobRegistry.getInstance().update(job, JobStatusType.ERROR);
         } finally {
             terminationToken.reservations.decrementAndGet();
         }

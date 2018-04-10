@@ -5,6 +5,7 @@ import com.iip.datafusion.eems.model.Entity;
 import com.iip.datafusion.util.dbutil.DataSourceProperties;
 import com.iip.datafusion.util.dbutil.DataSourceRouter;
 import com.iip.datafusion.util.dbutil.DataSourceRouterManager;
+import com.iip.datafusion.util.dbutil.DataType;
 import com.iip.datafusion.util.jsonutil.JsonParse;
 import com.iip.datafusion.util.jsonutil.Result;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -116,7 +117,7 @@ public class CmsDao {
             list.pretreatment();
 
             for(ColumnStructure item:list.getList()){
-                stringBuilder.append(item.getColumnName()+" "+item.getColumnType()+",");
+                stringBuilder.append(item.getColumnName()+" "+DataType.values()[Integer.parseInt(item.getColumnType())].toString()+",");
                 stringBuilder.append(item.getIsPrime()==1 ? "PRIMARY KEY ("+item.getColumnName()+")," : "");
             }
 
@@ -134,5 +135,10 @@ public class CmsDao {
         }catch (Exception e1){
             return new Result(0,"SQL语句执行错误@createTable",null);
         }
+    }
+
+    public void deleteTable(String dbID, String tableName) {
+        dataSourceRouterManager.setCurrentDataSourceKey(dbID);
+        jdbcTemplate.execute("DROP TABLE IF EXISTS "+tableName);
     }
 }

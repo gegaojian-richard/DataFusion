@@ -5,6 +5,7 @@ import com.iip.datafusion.dfs.model.JoinConfiguration;
 import com.iip.datafusion.dfs.service.DataFusionService;
 import com.iip.datafusion.util.dbutil.DataSourceRouterManager;
 import com.iip.datafusion.util.jsonutil.Result;
+import com.iip.datafusion.util.userutil.UserManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
@@ -29,16 +30,24 @@ public class DfsController {
     private JdbcTemplate jdbcTemplate;
     @Autowired
     DataFusionService dataFusionService;
+    @Autowired
+    UserManager userManager;
 
     @RequestMapping(path={"/commitjob"},method = RequestMethod.POST)
     @ResponseBody
     public Result commitJob(@RequestBody JoinConfiguration joinConfiguration){
 
         //        todo: 测试
-        JoinManager.getInstance().init();
-        Map map = dataFusionService.commitJob(joinConfiguration);
-
-        return new Result();
+        try{
+//        JoinManager.getInstance().init();
+        Map map = dataFusionService.commitJob(joinConfiguration,userManager.getUserId());
+        Result res = new Result(1,"Task Submitted successfully",null);;
+        //res.setMsg(integrityJob.getJobId());
+        return res;
+    }catch (Exception e){
+        return new Result(0,e.getMessage(),null);
+    }
+//        return new Result();
 //        return joinConfiguration.toString();
     }
 

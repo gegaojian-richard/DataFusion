@@ -1,0 +1,123 @@
+.el-table .el-table__header th, .el-table .el-table__header tr {
+  background-color: #6787B0;
+  color: #fff;
+}
+.el-table{
+  border:1px solid #ccc;
+  width:100%;
+}
+.el-table th>.cell {
+  text-align: center;
+}
+.el-table__header{
+  width: 100%!important;
+}
+.el-table__header colgroup{
+  display: none;
+}
+.el-table__body {
+  width: 100%!important;
+}
+.el-table__body tr:nth-child(2n){
+  background: #F2F7FD;
+}
+.el-table__body tr{
+  height: 40px;
+  border-bottom: 1px dashed #ccc;
+}
+.el-table__body colgroup{
+  display: none;
+}
+.el-cascader-menus {
+  margin-left: 20px!important;
+}
+.el-tree__empty-block {
+  background: #4779AE!important;
+}
+.el-tree__empty-block .el-tree__empty-text {
+  color: #fff!important;
+}
+.el-tree__drop-indicator {
+  background: #4779AE!important;
+}
+.el-button {
+  padding: 7px 20px;
+}
+.imagetable th {
+  font-weight:bold;
+  /*background-color: #103251;*/
+  color:#fff;
+  font-size:0.95em;
+  text-align:center;
+  padding:4px;
+  border-collapse:collapse;
+  background-color: #6787B0;
+}
+.imagetable td {
+  font-size:0.95em;
+  text-align:center;
+  padding:4px;
+  border-collapse:collapse;
+}
+.imagetable tr {
+  height: 40px;
+}
+.imagetable thead {
+  background-color: #6787B0;
+}
+.imagetable tbody tr {
+  border-bottom: 1px dashed #ccc;
+  height: 50px;
+}
+.imagetable tbody tr:nth-child(2n) {
+   background-color: #F2F7FD;
+ }
+.imagetable:nth-child(2n+1) {
+   background-color: #fff;
+ }
+.el-input input{
+  border: 0;
+  border-radius: 0;
+}
+.el-input--suffix .el-input__inner {
+  border: 1px solid #ccc;
+  border-radius: 3px;
+}
+.gutter {
+  width:0px!important;
+}
+.el-table--border td, .el-table--border th, .el-table__body-wrapper .el-table--border.is-scrolling-left~.el-table__fixed {
+  border-right: 0px;
+}
+.el-table td, .el-table th.is-leaf{
+  border:none;
+}
+.el-table__row td{
+  text-align: center;
+  border-bottom: 1px solid #ccc;
+}
+.el-pagination button {
+  background: #D3D8DE!important;
+  padding-right: 6px!important;
+}
+.el-pager li {
+  margin-left: 10px;
+  background: #D3D8DE;
+  color: #333;
+}
+.el-pager li:hover, .el-pager li.active{
+  background:#236CB1;
+  color: #fff;
+}
+.el-pager {
+  margin-right: 10px;
+}
+.el-table__body-wrapper {
+  overflow-y: auto;
+  height: 678px;
+}
+.el-cascader__label {
+  left: 12px;
+}
+
+

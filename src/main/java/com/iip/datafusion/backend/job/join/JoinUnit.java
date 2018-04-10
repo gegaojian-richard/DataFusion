@@ -7,7 +7,7 @@ public class JoinUnit {
     private Map<String, String> s2tMap = new HashMap<>(); // 该joinunit需要映射到目标表的字段
     private List<String> fields2Select = new ArrayList<>(); // 需要select的字段
     private String databaseID; // 数据库标识
-    private String tableName; // 表格名
+    private String tableName;  // 表格名
 
     private String parentTable=""; // 左连接的join表格名
     private String parentJoinField=""; // 左连接的join字段
@@ -78,10 +78,21 @@ public class JoinUnit {
     public SQLTask getSQLTask(){
         SQLTask sqlTask = new SQLTask();
         sqlTask.setSql(getSQLStatement());
+        sqlTask.setSelectedFields((ArrayList<String>) fields2Select);
+        sqlTask.setDatasourceID(databaseID);
         sqlTask.whereFieldName = parentJoinField;
+        if (parentJoinUnit != null)
+            sqlTask.setParentJoinUnit(parentJoinUnit.getJoinUnitID());
+        else
+            sqlTask.setParentJoinUnit("");
+        sqlTask.setCurrentJoinUnit(getJoinUnitID());
         sqlTask.setAsync(false);
 
         return sqlTask;
+    }
+
+    public String getJoinUnitID(){
+        return databaseID + ":" + tableName;
     }
 
     public List<JoinUnit> getJoinUnits() {

@@ -1,9 +1,10 @@
 <template>
-  <el-menu class="navbar" mode="horizontal" style="background-color: #304156;color:#bfcbd9">
+  <el-menu class="navbar" mode="horizontal" style="color:#fff;">
     <hamburger   class="hamburger-container" :toggleClick="toggleSideBar" :isActive="sidebar.opened"></hamburger>
 
     <breadcrumb class="breadcrumb-container"></breadcrumb>
     <a class="navbar-brand" href="/">数据融合工具</a>
+    <a href="/#/login/" style="float:right;margin-right: 50px;">登录</a>
   </el-menu>
 </template>
 
@@ -42,12 +43,16 @@ export default {
 
 <style rel="stylesheet/scss" lang="scss" scoped>
 .navbar {
-  height: 50px;
-  line-height: 50px;
+  height: 70px;
+  line-height: 70px;
   border-radius: 0px !important;
+  background: url('/static/home/bg.png') no-repeat;
+  background-size: 100% 100%;
+  color: #fff;
+  margin-left: -1px;
+  margin-top: -1px;
   .hamburger-container {
-    line-height: 58px;
-    height: 50px;
+    height: 70px;
     float: left;
     padding: 0 10px;
   }
@@ -78,7 +83,7 @@ export default {
       vertical-align: 15px;
     }
     .avatar-container {
-      height: 50px;
+      height: 70px;
       margin-right: 30px;
       .avatar-wrapper {
         cursor: pointer;
@@ -98,5 +103,14 @@ export default {
       }
     }
   }
+  .navbar-brand {
+    height: 70px;
+    line-height: 70px;
+    padding: 0px 0px 0px 15px;
+    font-size: 22px;
+  }
+}
+a:hover {
+  color: #fff;
 }
 </style>
