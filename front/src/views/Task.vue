@@ -46,7 +46,7 @@
                   height="200"
                   style="margin:5px auto;">
                   <el-table-column :label="key" v-for="(value,key) in resultData[0]"
-                                   width="120">
+                                   width="200">
                     <template slot-scope="scope">
                       <span class="blockspan" v-if="editingRow!=scope.$index" @click="handleEdit(scope.$index)">{{resultData[scope.$index][key]}}</span>
                       <el-input class="smallinput" v-if="editingRow==scope.$index" v-model="resultData[scope.$index][key]"></el-input>
@@ -149,6 +149,7 @@
      axios.post("/kjb/tvs/privateTasks"
      ).then((response) => {
        var res = response.data;
+       alert(res.list)
        if (res.status == 1) {
          this.listLoading = false
         this.list=JSON.parse(res.data);
