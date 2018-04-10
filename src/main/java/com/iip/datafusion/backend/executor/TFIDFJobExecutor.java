@@ -53,7 +53,7 @@ public class TFIDFJobExecutor  extends AbstractTerminatableThread implements Job
     @Override
     public void doJob(TFIDFJob job) throws Exception {
         // todo: 1. 找到文件目录路径job.path下所有文本的关键词
-//        System.out.println("TFIDFExcutor path : " + job.getPath());
+//        System.out.println("TFIDFExcutor path : " + job.getCorpusPath());
 //        System.out.println("TFIDFExcutor topK: " + job.getTopK());
         if(job.getCorpusPath() == null || job.getTopK() == 0 || job.getTableName() == null || job.getDataSourceId() == null){
             job.setResult(new Result(0, "error", "some parameters doesn't exist: " +
