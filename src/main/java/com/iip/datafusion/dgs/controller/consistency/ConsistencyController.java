@@ -16,7 +16,7 @@ import java.util.Map;
 public class ConsistencyController {
     @Autowired
     ConsistencyService ConsistencyService;
-    @RequestMapping(path={"/if2"},method = RequestMethod.POST)
+    @RequestMapping(path={"/dgs/consistency/commitjob"},method = RequestMethod.POST)
     @ResponseBody
     public Result commitJob(@RequestBody ConsistencyConfiguration ConsistencyConfiguration){
    try{
