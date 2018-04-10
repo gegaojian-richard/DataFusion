@@ -13,11 +13,12 @@ import java.util.*;
  */
 public class JoinJob extends JobBase implements Job {
     Map<String,Integer> sqlRegistry;
+    @JsonIgnore
     List<SQLTask> sqlTasks = new ArrayList<>();
     String targetTableName;
     String targetDatasourceID;
     Map<String, String> s2tMap = new HashMap<>();
-
+    @JsonIgnore
     Map<String, JoinUnit> joinUnits;
     String primaryJoinUnitKey;
 

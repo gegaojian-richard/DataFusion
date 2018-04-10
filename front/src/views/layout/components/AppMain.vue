@@ -1,8 +1,8 @@
 <template>
-  <section class="app-main" style="height: calc(100% - 105px);">
-    <transition name="fade" mode="out-in" style="height:100% ">
-      <keep-alive :include="cachedViews" style="height:100%">
-        <router-view style="height:100%"></router-view>
+  <section class="app-main">
+    <transition name="fade" mode="out-in" >
+      <keep-alive :include="cachedViews">
+        <router-view ></router-view>
       </keep-alive>
     </transition>
   </section>

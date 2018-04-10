@@ -1,12 +1,12 @@
 <template>
   <div class="app-container calendar-list-container" >
     <!--<connect-info  @previewtable="previewTable" class="sidecontainer" style="height:100%;float:left;width:180px"></connect-info>-->
-    <div style="height: 100%;;border:1px solid #bfcbd9;padding: 0px 20px;">
+    <div style="border:1px solid #bfcbd9;padding: 0px 20px;">
       <p style="height: 50px;text-align: left;border-bottom: 1px solid #bfcbd9;line-height: 60px;color:#698EC3;font-size: 16px;">
         <span style="display: inline-block;height:20px;width:5px;background: #698EC3;margin-bottom:-5px;margin-right: 5px;"></span>
         <span>任务管理</span>
       </p>
-      <el-table :data="list" v-loading.body="listLoading" border fit highlight-current-row style="margin-top:20px;border-collapse:collapse;">
+      <el-table :data="list" v-loading.body="listLoading" border fit highlight-current-row style="margin-top:20px;">
         <el-table-column align="center" label="任务ID" width="80">
           <template slot-scope="scope">
             <span>{{scope.row.jobID}}</span>
@@ -145,13 +145,12 @@
     },
    created(){
      var  param={}
-     this.listLoading = true
+     this.listLoading = false;
      axios.post("/kjb/tvs/privateTasks"
      ).then((response) => {
        var res = response.data;
        alert(res.list)
        if (res.status == 1) {
-         this.listLoading = false
         this.list=JSON.parse(res.data);
        } else {
        }

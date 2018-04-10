@@ -2,9 +2,9 @@
   <div class="app-wrapper" :class="{hideSidebar:!sidebar.opened}">
     <sidebar class="sidebar-container" ></sidebar>
     <div class="main-container">
-      <navbar></navbar>
-      <tags-view></tags-view>
-      <app-main></app-main>
+      <navbar class="nav-container"></navbar>
+      <tags-view class="tag-container"></tags-view>
+      <app-main class="app-main"></app-main>
     </div>
   </div>
 </template>
@@ -19,6 +19,23 @@
       background-color: #1E73C4;
       z-index: 199!important;
     }
+  }
+  .nav-container{
+    position:fixed;
+    width:100%;
+    top:0px;
+    z-index: 199!important;
+  }
+  .tag-container{
+    position:fixed;
+    width:100%;
+    top:60px;
+    height:50px;
+    z-index: 199!important;
+  }
+  .app-main{
+    padding-top: 95px;
+
   }
   </style>
 <script>

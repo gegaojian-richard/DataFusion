@@ -38,10 +38,16 @@ public class DfsController {
     public Result commitJob(@RequestBody JoinConfiguration joinConfiguration){
 
         //        todo: 测试
+        try{
 //        JoinManager.getInstance().init();
         Map map = dataFusionService.commitJob(joinConfiguration,userManager.getUserId());
-
-        return new Result();
+        Result res = new Result(1,"Task Submitted successfully",null);;
+        //res.setMsg(integrityJob.getJobId());
+        return res;
+    }catch (Exception e){
+        return new Result(0,e.getMessage(),null);
+    }
+//        return new Result();
 //        return joinConfiguration.toString();
     }
 

@@ -23,7 +23,14 @@ public class AccuracyController {
     @RequestMapping(path={"/commitjob"},method = RequestMethod.POST)
     @ResponseBody
     public Result commitjob(@RequestBody AccuracyConfiguration accuracyConfiguration){
+        try{
         accuracyService.commitJob(accuracyConfiguration,userManager.getUserId());
-        return new Result();
+        Result res = new Result(1,"Task Submitted successfully",null);;
+        //res.setMsg(integrityJob.getJobId());
+        return res;
+    }catch (Exception e){
+        return new Result(0,e.getMessage(),null);
+    }
+//        return new Result();
     }
 }
