@@ -43,7 +43,7 @@ public class AccuracyDao {
 
     public ArrayList<String> getTableColumnList(String tableName){
 
-        ArrayList<String> result = new ArrayList<>();
+        ArrayList<String> result = new ArrayList<String>();
         String sql = String.format("SELECT * FROM %s LIMIT 0",tableName);
         SqlRowSet sqlRowSet = jdbcTemplate.queryForRowSet(sql);
         SqlRowSetMetaData sqlRsmd = sqlRowSet.getMetaData();
@@ -51,6 +51,13 @@ public class AccuracyDao {
             result.add(sqlRsmd.getColumnName(i));
         }
         return result;
+    }
+
+    public String getColumnType(String tableName,int i){
+        String sql = String.format("SELECT * FROM %s LIMIT 0",tableName);
+        SqlRowSet sqlRowSet = jdbcTemplate.queryForRowSet(sql);
+        SqlRowSetMetaData sqlRsmd = sqlRowSet.getMetaData();
+        return sqlRsmd.getColumnTypeName(i);
     }
 
 }
