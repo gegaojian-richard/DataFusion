@@ -57,13 +57,14 @@
                 </tbody>
               </table>
             </div>
-            <el-pagination
-              @current-change="handleCurrentChange"
-              :current-page="currentPage"
-              :page-size="10"
-              layout="total, sizes, prev, pager, next, jumper"
-              :total="totalCount">
-            </el-pagination>
+              <el-pagination
+                small
+                @current-change="handleCurrentChange"
+                :current-page="currentPage"
+                :page-size="10"
+                layout="total, prev, pager, next, jumper"
+                :total="totalCount">
+              </el-pagination>
           </div>
           <a href="javascript:;" class="btn-login" @click="sendAllData">确定</a>
           <!--<el-Button @click="sendAllData" style="margin-top: 15px;margin-left: 400px;">确定</el-Button>-->
@@ -129,6 +130,7 @@
   .md-modal {
     overflow: hidden;
     border-radius: 5px;
+    width: 600px;
   }
   .md-modal .md-modal-inner .md-top{
     width:100%;
@@ -164,6 +166,7 @@
   .el-pagination {
     margin-bottom: 20px;
     margin-top: 20px;
+    width:300px !important;
   }
 </style>
 <script>
@@ -204,19 +207,34 @@
        },
       handleCurrentChange(val){
         this.currentPage = val;
-        this.getData();
+        this.getData(val);
       },
       viewResult(index, row){
         this.showDetail = true;
         this.nowEditJob = row.jobID;
         this.nowUserId=row.userID;
+        this.getNum();
         this.getData();
       },
-      getData(){
+      getNum(){
         var redisParam = {
           "key": this.nowUserId+"-"+this.nowEditJob,
           "start": this.currentPage,
           "end": this.currentPage + 10
+        }
+        axios.post("/kjb/tvs/redisLen", redisParam).then
+        ((response) => {
+          var res = response.data;
+          if (res.status == 1) {
+            this.totalCount = parseInt(res.data);
+          }
+        })
+      },
+      getData(val){
+        var redisParam = {
+          "key": this.nowUserId+"-"+this.nowEditJob,
+          "start": this.currentPage*10,
+          "end": this.currentPage*10+10
         }
         axios.post("/kjb/tvs/redisData", redisParam).then
         ((response) => {
