@@ -19,7 +19,7 @@ public class ConsistencyController {
     ConsistencyService ConsistencyService;
     @Autowired
     UserManager userManager;
-    @RequestMapping(path={"/if2"},method = RequestMethod.POST)
+    @RequestMapping(path={"/dgs/consistency/commitjob"},method = RequestMethod.POST)
     @ResponseBody
     public Result commitJob(@RequestBody ConsistencyConfiguration ConsistencyConfiguration){
    try{
