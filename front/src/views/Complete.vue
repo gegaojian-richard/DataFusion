@@ -7,14 +7,14 @@
           <span style="display: inline-block;height:20px;width:5px;background: #698EC3;margin-bottom:-5px;margin-right: 5px;"></span>
           <span>完整性检测</span>
         </p>
-        <div  class = "quarter-div">   <!--  显示当前显示字段-->
+        <div  class = "quarter-div" style="padding:10px;">   <!--  显示当前显示字段-->
           <span  style="font-size:18px;color:#000;float:left;margin-top:12px;">选取属性：</span>
           <el-tag
             v-for="(item,index) in res_all"
             :key="item"
             closable
             :disable-transitions="false"
-            @close="delete_click(index)" style="float: left;">
+            @close="delete_click(index)" style="float: left;margin-top: 10px;">
             {{item}}
           </el-tag>
           <el-button type="primary" plain style="float:right;margin-top: 30px;position:relative;background-color: #82B7E3;color:#fff;" @click="submit()">确认提交</el-button>
@@ -71,6 +71,7 @@
     padding:4px;
     border-collapse:collapse;
     border:none;
+    min-width: 100px;
   }
   .imagetable td {
     font-size:0.95em;
@@ -181,6 +182,7 @@
               title: '提交成功',
               message: h('i', { style: 'color: teal'}, '完整性检测任务提交成功，任务号为'+res.msg)
             });
+            this.res_all=[];
           }else{
             const h = this.$createElement;
             this.$notify({

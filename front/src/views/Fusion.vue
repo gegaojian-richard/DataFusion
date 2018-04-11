@@ -553,15 +553,31 @@
           target_table_name: "",
           target_datasource_id: ""
         }
+        console.log(this.selectEntityInfo.properties[0].prime)
+        for(let i in this.selectEntityInfo.properties){  //先找到主表
+          var x = this.selectEntityInfo.properties[i];
+            if(x.prime==1){
+                for( let j in this.s2t ){
+                    var couple=this.s2t[j];
+                    if(couple.tfn===x.name){
+                        let sfn=couple.sfn.split(":").slice(0,2).join(":");
+                        result.join_units[0]=sfn;
+                    }
+                }
+            }
+        }
         result.s2t = this.s2t;
-//        for (let i = 0; i < this.join_units.length; i++) {
-//          result.join_units.push(this.join_units[i].label);
-//        }
+        for (let i = 0; i < this.join_units.length; i++) {
+            if(result.join_units.indexOf(this.join_units[i].label)<0){
+              result.join_units.push(this.join_units[i].label);
+            }
+
+        }
         for (let j = 0; j < this.relations.length; j++) {
           if (this.relations[j].left[0]) {
             var templeft = this.relations[j].left.join(":");
             var tempright = this.relations[j].right.join(":");
-            result.join_units.push(this.relations[j].left[0]);  //按照join的顺序添加表
+//            result.join_units.push(this.relations[j].left[0]);  //按照join的顺序添加表
             var temp = {
               left: templeft,
               right: tempright
@@ -569,7 +585,7 @@
             result.relations.push(temp)
           }
         }
-        result.join_units.push(this.relations[this.relations.length - 2].right[0]);
+//        result.join_units.push(this.relations[this.relations.length - 2].right[0]);
 
         result.target_table_name = this.target_table_name;
         result.target_datasource_id = this.target_datasource_id;

@@ -1,6 +1,6 @@
 <template>
   <div style="height:700px;background-color: #ffffff;">
-    <connect-info  @previewtable="previewTable" style="height:500px;float:left;width:180px;overflow: auto;"></connect-info>
+    <connect-info  @previewtable="previewTable" style="height:700px;float:left;width:180px;overflow: auto;"></connect-info>
     <div style="margin-left: 180px;padding: 20px;">
       <div style="height: 100%;;border:1px solid #bfcbd9;padding: 0px 20px;">
         <p style="height: 50px;text-align: left;border-bottom: 1px solid #bfcbd9;line-height: 60px;color:#698EC3;font-size: 16px;">
@@ -114,6 +114,7 @@
     padding:4px;
     border-collapse:collapse;
     border:none;
+    min-width: 100px;
   }
   .imagetable td {
     font-size:0.95em;
@@ -166,6 +167,8 @@
         options_source_key: [[{value: '', label: ''}], [{value: '', label: ''}]],
         save_jsondata: '',
         res_all: [],
+        dataSourceId:"",     //  数据库id
+        tableName:"",         //  当前表名
       }
     },
     components: {
@@ -201,6 +204,9 @@
           if (res.status == 1) {
             var receive = JSON.parse(res.data);
             this.previewData = receive.items;
+            this.res_all=[];    ///  这里用于换表的时候清空之前的
+            this.dataSourceId = emitdata.database;
+            this.tableName = emitdata.table;
           }
           /////  以下部分是完成目标表的对应字段选择   和 目标表 主键
           var count = 0;
@@ -304,8 +310,12 @@
 
           }
           else if (this.save_item[i].primary_column != "" && this.save_item[i].primary_key != "" && this.save_item[i].source_column != "" && this.save_item[i].source_key != "") {
-            var a = "key" + ":" + this.save_item[i].primary_column + "," + this.save_item[i].primary_key + "," + ":" +
-              "value" + ":" + this.save_item[i].source_column[0] + "," + this.save_item[i].source_column[1] + "," + this.save_item[i].source_column[2] + "," + this.save_item[i].source_key;
+//            var a = "key" + ":" + this.save_item[i].primary_column + "," + this.save_item[i].primary_key + "," + ":" +
+//              "value" + ":" + this.save_item[i].source_column[0] + "," + this.save_item[i].source_column[1] + "," + this.save_item[i].source_column[2] + "," + this.save_item[i].source_key;
+            var a={
+                "key": this.save_item[i].primary_column + "," + this.save_item[i].primary_key,
+              "value": this.save_item[i].source_column[0] + "," + this.save_item[i].source_column[1] + "," + this.save_item[i].source_column[2] + "," + this.save_item[i].source_key
+            };
             this.res_all.push(a);
           }
           else {
@@ -316,9 +326,15 @@
             });
           }
         }
+        this.submit();
       },
       submit(){
-        axios.post("/kjb/dgs/consistency/commitjob", this.res_all).then
+          var forsubmit={
+              "dataSourceId":this.dataSourceId,
+            "tableName":this.tableName,
+            "m2f":this.res_all
+          };
+        axios.post("/kjb/dgs/consistency/commitjob", forsubmit).then
         ((response) => {
           var res = response.data;
         if (res.status == 1) {
@@ -327,6 +343,12 @@
             title: '提示',
             message: h('i', {style: 'color: teal'}, "任务提交成功，请在任务管理处查看进度")
           });
+          this.save_item= [{primary_column: '', primary_key: '', source_column: '', source_key: ''}, {
+            primary_column: '',
+            primary_key: '',
+            source_column: '',
+            source_key: ''}];
+            this.res_all=[];
         } else {
           const h = this.$createElement;
           this.$notify({

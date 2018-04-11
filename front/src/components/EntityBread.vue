@@ -119,6 +119,7 @@
                   </div>
                   <el-table
                     :data="addOnepro"
+                    class="entity-table"
                     border
                     style="width: 100%;margin-top:20px;">
                     <el-table-column
@@ -128,7 +129,8 @@
                       <template slot-scope="scope">
                         <span class="blockspan" v-if="editingRow!=scope.$index" @click="handleEdit(scope.$index)">{{ scope.row.name }}</span>
                         <span v-if="editingRow==scope.$index" class="cell-edit-input"><el-input
-                          v-model="scope.row.name"></el-input></span>
+                          v-model="scope.row.name" style="border:1px solid #ccc !important;
+    border-radius: 3px !important;" ></el-input></span>
                       </template>
                     </el-table-column>
                     <el-table-column
@@ -206,8 +208,9 @@
                   </div>
                   <el-table
                     :data="editArr.properties"
+                    class="entity-table"
                     border
-                    style="width: 100%">
+                    style="width: 100%;">
                     <el-table-column
                       align="center"
                       label="字段名"
@@ -215,7 +218,8 @@
                       <template slot-scope="scope">
                         <span class="blockspan" v-if="editingRow!=scope.$index" @click="handleEdit(scope.$index)">{{ scope.row.name }}</span>
                         <span v-if="editingRow==scope.$index" class="cell-edit-input"><el-input
-                          v-model="scope.row.name" style="color:#1f2d3d"></el-input></span>
+                          v-model="scope.row.name" style="color:#1f2d3d;border:1px solid #ccc !important;
+    border-radius: 3px !important; "></el-input></span>
                       </template>
                     </el-table-column>
                     <el-table-column
@@ -267,12 +271,17 @@
   </div>
 </template>
 <style rel="stylesheet/scss" lang="scss" scoped>
-  /*.el-input input{*/
-    /*color:#1f2d3d;*/
+   /*.el-input__inner{*/
+     /*border:1px solid #ccc !important;*/
+     /*border-radius: 3px !important;*/
   /*}*/
   /*.el-select{*/
     /*height:30px;*/
   /*}*/
+  .entity-table{
+    height:300px !important;
+    overflow: auto;
+  }
   .entity-event {
     height: 100%;
     border:1px solid #bfcbd9;
@@ -301,6 +310,7 @@
   .el-input__inner{
     height:30px;
     margin-top: 5px;
+
   }
   .inputEntity{
     height:50px;
@@ -394,8 +404,9 @@
     border-bottom: 1px solid #e9e9e9;
     height: 100%; }
   .md-modal {
-    overflow: hidden;
+    overflow:auto;
     border-radius: 5px;
+    height:500px !important;
   }
   .md-modal .md-modal-inner .md-top{
     width:100%;
