@@ -25,6 +25,8 @@ public class JvsService {
 
     public Result privateTasks(int userId) {
         List<JobBase> list = JobRegistry.getInstance().getUserJobList().get(userId);
+        if(list==null || list.isEmpty())
+            return new Result(0,null,null);
         try {
             StringBuilder json = new StringBuilder().append("[");
             for(JobBase job : list){
