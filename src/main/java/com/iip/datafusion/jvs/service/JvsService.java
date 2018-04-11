@@ -25,11 +25,19 @@ public class JvsService {
 
     public Result privateTasks(int userId) {
         List<JobBase> list = JobRegistry.getInstance().getUserJobList().get(userId);
+        if(list==null || list.isEmpty())
+            return new Result(0,null,null);
         try {
-            String json = JsonParse.getMapper().writeValueAsString(list);
-            return new Result(1,null,json);
+            StringBuilder json = new StringBuilder().append("[");
+            for(JobBase job : list){
+                json.append(job.toJson()).append(",");
+            }
+            json.deleteCharAt(json.length() - 1);
+            json.append("]");
+//            String json = JsonParse.getMapper().writeValueAsString(list);
+            return new Result(1,null,json.toString());
         }
-        catch (JsonProcessingException e){
+        catch (Exception e){
             e.printStackTrace();
             return new Result(0,"json处理出错",null);
         }

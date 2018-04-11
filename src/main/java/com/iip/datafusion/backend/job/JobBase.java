@@ -54,4 +54,15 @@ public class JobBase implements Job{
     public JobStatusType getStatus() {
         return status;
     }
+
+    public String toJson(){
+        StringBuilder sb = new StringBuilder();
+        sb.append("{ \"jobID\" : \"").append(JobID).append("\"");
+        sb.append(", \"userID\" : \"").append(UserID).append("\"");
+        sb.append(", \"status\" : \"").append(status).append("\"");
+        sb.append(", \"jobType\" : \"").append(jobType).append("\"");
+        sb.append("}");
+
+        return sb.toString();
+    }
 }

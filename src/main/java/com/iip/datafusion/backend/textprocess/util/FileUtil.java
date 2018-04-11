@@ -29,6 +29,12 @@ public class FileUtil {
     // 获得某个路径下的所有文件，包括所有子文件下的文件，递归查找，使用方法就是getAllFilePath(new ArrayList<>() , dir_path)
     public static List<File> getAllFilePath(List<File> files , String dirPath){
         File file = new File(dirPath);  //File can represent as file or directory
+        try{
+            System.out.println("AbsoutePath: " + file.getAbsolutePath());
+        }catch(Exception ex){
+            System.out.println("AbsoutePath: error");
+            ex.printStackTrace();
+        }
         File[] fileList = file.listFiles();
         for (int i = 0; i < fileList.length; i++) {
             if (fileList[i].isFile()) { // this is a file
@@ -38,6 +44,7 @@ public class FileUtil {
                 files = getAllFilePath(files , fileList[i].getPath());
             }
         }
+
         return files;
     }
 

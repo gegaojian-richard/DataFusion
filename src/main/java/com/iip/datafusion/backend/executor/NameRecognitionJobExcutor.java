@@ -60,7 +60,7 @@ public class NameRecognitionJobExcutor  extends AbstractTerminatableThread imple
     @Override
     public void doJob(NameRecognitionJob job) throws Exception {
         if(job.getCorpusPath() == null || job.getTableName() == null || job.getDataSourceId() == null){
-            job.setResult(new Result(-1, "error", "some parameters doesn't exist: " +
+            job.setResult(new Result(0, "error", "some parameters doesn't exist: " +
                     "'corpusPath', 'tableName', 'dataSourceId'"));
         }
         else {
@@ -69,12 +69,12 @@ public class NameRecognitionJobExcutor  extends AbstractTerminatableThread imple
             // todo: 2. 根据每个文件的人名实体建立数据库表，并加入数据，每个文件的路径作为对应的关键词
             int status = MySqlDAO.createWordsTable("name_entities" , jdbcTemplate , job.getDataSourceId() , job.getTableName());
             if(status == -1){
-                job.setResult(new Result(-1, "error", "create table error"));
+                job.setResult(new Result(0, "error", "create table error"));
             }
             else{
                 status = MySqlDAO.insertWordsToTable("name_entities" , jdbcTemplate , job.getDataSourceId() , job.getTableName() , words);
-                if(status == -1) job.setResult(new Result(-1, "error", "create table error"));
-                else job.setResult(new Result(0, "right", JsonParse.getMapper().writeValueAsString(words)));
+                if(status == -1) job.setResult(new Result(0, "error", "create table error"));
+                else job.setResult(new Result(1, "right", JsonParse.getMapper().writeValueAsString(words)));
             }
         }
 

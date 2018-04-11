@@ -60,7 +60,7 @@ public class AccuracyParser implements Parser {
                 param = new LengthParam(type,split[1].trim(),split[2].trim());
                 break;
             case 4 :
-                param = new RangeParam(type,split[1].trim());
+                param = new RangeParam(type,split[1].trim(),split[2].trim());
                 break;
             case 5 :
                 param = new EmailParam(type,split[1].trim());

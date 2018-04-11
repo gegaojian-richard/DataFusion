@@ -55,28 +55,30 @@ public class AccuracyJobExecutor extends AbstractTerminatableThread implements J
 
         DataSourceRouterManager.setCurrentDataSourceKey(dataSourceId);
 
+        String key = job.getUserID() + "-" + job.getJobID();
+
         Result result = new Result();
         for(Param pm : paramList){
             switch (pm.getType())
             {
                 case 1:
-                    result = accuracyCheckUnit.doCheck(tableName,(FormulaParam) pm);
+                    result = accuracyCheckUnit.doCheck(tableName,(FormulaParam) pm,key);
                     System.out.println(result.toString());
                     break;
                 case 2:
-                    result = accuracyCheckUnit.doCheck(tableName,(ConditionParam) pm);
+                    result = accuracyCheckUnit.doCheck(tableName,(ConditionParam) pm,key);
                     System.out.println(result.toString());
                     break;
                 case 3:
-                    result = accuracyCheckUnit.doCheck(tableName,(LengthParam) pm);
+                    result = accuracyCheckUnit.doCheck(tableName,(LengthParam) pm,key);
                     System.out.println(result.toString());
                     break;
                 case 4:
-                    result = accuracyCheckUnit.doCheck(tableName,(RangeParam) pm);
+                    result = accuracyCheckUnit.doCheck(tableName,(RangeParam) pm,key);
                     System.out.println(result.toString());
                     break;
                 case 5:
-                    result = accuracyCheckUnit.doCheck(tableName,(EmailParam) pm);
+                    result = accuracyCheckUnit.doCheck(tableName,(EmailParam) pm,key);
                     System.out.println(result.toString());
                     break;
             }

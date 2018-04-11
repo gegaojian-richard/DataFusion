@@ -29,22 +29,15 @@ public class CmsController {
     @Autowired
     CmsDao cmsDao;
 
-    @RequestMapping("testJvs")
-    @ResponseBody
-    public Result test(@RequestParam(value ="db") String dbID,
-                       @RequestParam(value="table") String tableName){
-
-
-        cmsDao.deleteTable(dbID,tableName);
-        return new Result(0,null,null);
-    }
-
     /*创建连接
     @return dbid
      */
     @RequestMapping(path={"/cms/creationDataBase"},method = RequestMethod.POST)
     @ResponseBody
-    public Result setCon(@RequestBody DataSourceProperties c){ return service.creCon(c); }
+    public Result setCon(@RequestBody DataSourceProperties c){
+        c.setUrl(c.getUrl());
+        return service.creCon(c);
+    }
 
 
     //删除连接
