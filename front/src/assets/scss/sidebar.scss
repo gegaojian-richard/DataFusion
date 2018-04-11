@@ -1,7 +1,7 @@
 #app {
   // 主体区域
   .main-container {
-    min-height: 100%;
+    height: 100%;
     transition: margin-left 0.28s;
     margin-left: 180px;
   } // 侧边栏
@@ -21,9 +21,22 @@
     .svg-icon {
       margin-right: 16px;
     }
+    .router-link-active .el-menu-item{
+      background-color: $menuHover!important;
+    }
     .el-menu {
       border: none;
       width: 100%;
+      .el-menu-item:hover {
+        background-color: $menuHover!important;
+      }
+      img {
+        width: 18px;
+        height: 18px;
+      }
+      span {
+        margin-left:10px;
+      }
     }
   }
   .hideSidebar {
@@ -96,5 +109,8 @@
   }
   .el-menu--collapse .el-menu .el-submenu{
     min-width: 180px!important;
+  }
+  .el-submenu__title:hover {
+    background-color: $menuHover!important;
   }
 }

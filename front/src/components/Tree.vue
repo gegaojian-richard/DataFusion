@@ -6,7 +6,7 @@
     default-expand-all
     @node-click="handleNodeClick"
     :render-content="renderContent"
-    style=" background-color:#304156;color:#bfcbd9">
+    style="background-color:#1F5FA6;color:#fff;">
   </tree>
 </template>
 <script type="text/jsx">

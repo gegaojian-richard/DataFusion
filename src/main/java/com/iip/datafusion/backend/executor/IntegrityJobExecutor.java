@@ -1,17 +1,23 @@
 package com.iip.datafusion.backend.executor;
 
+import com.iip.datafusion.backend.JobRegistry;
 import com.iip.datafusion.backend.channel.ChannelManager;
 import com.iip.datafusion.backend.common.AbstractTerminatableThread;
 import com.iip.datafusion.backend.common.TerminationToken;
 import com.iip.datafusion.backend.jdbchelper.JDBCHelper;
+import com.iip.datafusion.backend.job.JobStatusType;
 import com.iip.datafusion.backend.job.integrity.IntegrityJob;
 
+import com.iip.datafusion.redis.model.RedisTransform;
+import com.iip.datafusion.redis.model.RedisHelper;
 import com.iip.datafusion.util.dbutil.DataSourceRouterManager;
 import com.iip.datafusion.util.jsonutil.Result;
 
+import com.iip.datafusion.util.userutil.UserManager;
 import net.sf.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.jdbc.support.rowset.SqlRowSetMetaData;
@@ -23,9 +29,9 @@ import java.util.concurrent.BlockingQueue;
 public class IntegrityJobExecutor extends AbstractTerminatableThread implements JobExecutor<IntegrityJob> {
     private final BlockingQueue<IntegrityJob> workQueue;
 
-
     private final JdbcTemplate jdbcTemplate = JDBCHelper.getJdbcTemplate();
 
+    private RedisTemplate<String, String> redisTemplate = RedisHelper.getRedisTemplate();
 
 
 
@@ -37,11 +43,14 @@ public class IntegrityJobExecutor extends AbstractTerminatableThread implements 
     @Override
     protected void doRun() throws Exception {
         IntegrityJob integrityJob = ChannelManager.getInstance().getIntegrityChannel().take(workQueue);
+        JobRegistry.getInstance().update(integrityJob, JobStatusType.EXECUTING);
 
         try{
             doJob(integrityJob);
+            JobRegistry.getInstance().update(integrityJob, JobStatusType.SUCCESS);
         } catch (Exception e){
             e.printStackTrace();
+            JobRegistry.getInstance().update(integrityJob, JobStatusType.ERROR);
         } finally {
             terminationToken.reservations.decrementAndGet();
         }
@@ -55,29 +64,33 @@ public class IntegrityJobExecutor extends AbstractTerminatableThread implements 
         //job.setResult(new Result(0,"wawawawawa",null));
 
         DataSourceRouterManager.setCurrentDataSourceKey(job.getDataSourceId());
+        //System.out.println(job.getDataSourceId());
+        //System.out.println(job.getTableName());
+        //System.out.println(job.getSqlList());
 
         try{
-            if(job.getJobType().equals("query")) {
+            if(job.getInnerJobType().equals("query")) {
                 SqlRowSet resRowset = jdbcTemplate.queryForRowSet(job.getSqlList().get(0));
                 String json = job.rowSetToJson(resRowset);
                 resRowset = jdbcTemplate.queryForRowSet(job.getSqlList().get(0));
 
-                job.setResult(new Result(1,null,json));
+                String key = job.getUserID() + "-" + job.getJobID();
 
-                rowsetToRedis(resRowset);
-            }else if(job.getJobType().equals("execute")){
+                //rowsetToRedis(resRowset,job.getJobId());
+
+                RedisTransform.rowsetToRedis(resRowset,key,redisTemplate);
+            }else if(job.getInnerJobType().equals("execute")){
                 //todo: 更新任务
             }
 
         }catch (Exception e){
                 e.printStackTrace();
-                job.setResult(new Result(0,"出现内部错误",null));
         }
 
 
     }
 
-    public boolean rowsetToRedis(SqlRowSet sqlRowSet)throws Exception{
+    public boolean rowsetToRedis(SqlRowSet sqlRowSet,String jobId)throws Exception{
         SqlRowSetMetaData sqlRsmd = sqlRowSet.getMetaData();
         ArrayList<String> trueColumnNames = new ArrayList<>();
         for(int i=1;i<=sqlRsmd.getColumnCount();i++){
@@ -102,7 +115,11 @@ public class IntegrityJobExecutor extends AbstractTerminatableThread implements 
             }
             lists.add(jsonObj.toString());
         }
-        System.out.println(lists);
+        //System.out.println(lists);
+        String id = jobId;
+        //System.out.println(id);
+        redisTemplate.opsForList().leftPushAll(id, lists);
+        //System.out.println(redisTemplate.opsForList().range(id,0,2));
 
         return true;
     }

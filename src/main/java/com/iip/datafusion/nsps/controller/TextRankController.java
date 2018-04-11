@@ -7,6 +7,7 @@ import com.iip.datafusion.nsps.model.TextRankConfiguration;
 import com.iip.datafusion.nsps.service.TestService;
 import com.iip.datafusion.nsps.service.TextRankService;
 import com.iip.datafusion.util.jsonutil.Result;
+import com.iip.datafusion.util.userutil.UserManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,15 +24,16 @@ public class TextRankController {
     @Autowired
     TextRankService textRankService;
 
-
+    @Autowired
+    UserManager userManager;
 
     @RequestMapping(path = {"/nsps/TextRank"}, method = RequestMethod.POST)
     @ResponseBody
-    public Result checkIntegrity(@RequestBody TextRankConfiguration textRankConfiguration) {
+    public Result textRank(@RequestBody TextRankConfiguration textRankConfiguration) {
 
         try{
-            TextRankJob textRankJob = textRankService.commitJob(textRankConfiguration);
-            System.out.println("TextRankController: " + textRankJob.getPath());
+            TextRankJob textRankJob = textRankService.commitJob(textRankConfiguration,userManager.getUserId());
+//            System.out.println("TextRankController: " + textRankJob.getCorpusPath());
             while(textRankJob.getResult() == null){
                 Thread.sleep(1000);
             }

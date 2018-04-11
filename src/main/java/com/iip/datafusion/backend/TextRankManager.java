@@ -6,6 +6,7 @@ import com.iip.datafusion.backend.common.TerminationToken;
 import com.iip.datafusion.backend.config.Capabilities;
 import com.iip.datafusion.backend.executor.TestJobExecutor;
 import com.iip.datafusion.backend.executor.TextRankJobExcutor;
+import com.iip.datafusion.backend.job.JobType;
 import com.iip.datafusion.backend.job.algorithm.TextRankJob;
 import com.iip.datafusion.backend.job.algorithm.TextRankJob;
 
@@ -62,7 +63,7 @@ public class TextRankManager {
 
     public void commitJob(TextRankJob textRankJob){
         try {
-            System.out.println("TextRankManager: " + textRankJob.getPath() + " " + textRankJob.getTopK());
+//            System.out.println("TextRankManager: " + textRankJob.getCorpusPath() + " " + textRankJob.getTopK());
             ChannelManager.getInstance().getTextRankChannel().put(textRankJob);
             token.reservations.incrementAndGet();
         }catch (Exception e){

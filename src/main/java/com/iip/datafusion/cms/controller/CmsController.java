@@ -1,5 +1,8 @@
 package com.iip.datafusion.cms.controller;
 
+import com.iip.datafusion.backend.AccuracyManager;
+import com.iip.datafusion.backend.job.accuracy.AccuracyJob;
+import com.iip.datafusion.cms.dao.CmsDao;
 import com.iip.datafusion.cms.service.CmsService;
 import com.iip.datafusion.ums.service.UmsService;
 import com.iip.datafusion.util.dbutil.DataSourceProperties;
@@ -23,21 +26,18 @@ public class CmsController {
     @Autowired
     UserManager userManager;
 
-    @RequestMapping("test")
-    @ResponseBody
-    public Result test(HttpSession session){
-//        Result res = umsService.getUserNameByTicket(ticket);
-
-        return new Result(1, null, "qq, this sessionid is: " + session.getId() +
-                    ";the user name is "+userManager.getUserName());
-    }
+    @Autowired
+    CmsDao cmsDao;
 
     /*创建连接
     @return dbid
      */
     @RequestMapping(path={"/cms/creationDataBase"},method = RequestMethod.POST)
     @ResponseBody
-    public Result setCon(@RequestBody DataSourceProperties c){ return service.creCon(c); }
+    public Result setCon(@RequestBody DataSourceProperties c){
+        c.setUrl(c.getUrl());
+        return service.creCon(c);
+    }
 
 
     //删除连接

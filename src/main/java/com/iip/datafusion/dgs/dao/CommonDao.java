@@ -70,4 +70,9 @@ public class CommonDao {
         }
         return result;
     }
+
+    public void doExecute(String dataSourceId,String sql)throws Exception{
+        DataSourceRouterManager.setCurrentDataSourceKey(dataSourceId);
+        jdbcTemplate.execute(sql);
+    }
 }

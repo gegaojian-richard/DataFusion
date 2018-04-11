@@ -7,10 +7,14 @@ import com.iip.datafusion.eems.model.Entity;
 import com.iip.datafusion.eems.model.UserEntity;
 import com.iip.datafusion.eems.service.EntityService;
 import com.iip.datafusion.eems.service.UserEntityService;
+import com.iip.datafusion.util.dbutil.DataSourceProperties;
+import com.iip.datafusion.util.dbutil.DataSourceRouterManager;
 import com.iip.datafusion.util.jsonutil.JsonParse;
 import com.iip.datafusion.util.jsonutil.Result;
 import com.iip.datafusion.util.userutil.UserManager;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
@@ -26,6 +30,8 @@ public class EntityController {
     UserEntityService userEntityService;
     @Autowired
     UserManager userManager;
+    @Autowired
+    private DataSourceRouterManager dataSourceRouterManager;
 
     @RequestMapping(path={"/entity/show"},method={RequestMethod.GET})
     @ResponseBody
@@ -35,6 +41,9 @@ public class EntityController {
             return new Result(0,"用户未登录",null);
         }
         List<Entity> list = entityService.getEntityByUserId(userId);
+
+        // todo:遍历list检查每个Entity是否已连接，已连接-获得DataSourceId，未连接-空字符串
+
         if(list==null) {
             return new Result(0, "entity not exist for user " + userId, null);
         }
@@ -48,7 +57,10 @@ public class EntityController {
     @RequestMapping(path={"/entity/delete"},method={RequestMethod.GET})
     @ResponseBody
     public Result  deleteEntity(@RequestParam(value="entityId") int entityId){
-        if(!(entityService.deleteEntity(entityId) && userEntityService.deleteEntity(entityId))){
+        //删除实体对应的目标数据库
+        boolean del = entityService.delEntDB(entityId);
+
+        if(!(entityService.deleteEntity(entityId) && userEntityService.deleteEntity(entityId)&&del)){
             return new Result(0,"删除实体失败",null);
         }
         return  new Result(1,"删除实体成功",null);
@@ -94,11 +106,21 @@ public class EntityController {
         Result result;
         int id = userManager.getUserId();
         result = entityService.createEntityTable(entity,id);
-        if(result.getStatus()==1){
+
+        //创建表失败，返回错误信息
+        if(result.getStatus()==0){
             return result;
         }
 
         //创建成功后，insert
+        //将entity中的db_position由数据库id改为数据库实际url
+        for (DataSourceProperties d : dataSourceRouterManager.getDataSourceProperties()) {
+            if (d.getId().equals(entity.getDbPosition())) {
+                //将URL前缀的"jdbc:mysql://",后缀的"?useUnicode.."去除
+                entity.setDbPosition(d.getUrl().split("\\?")[0]);
+            }
+        }
+
         int addEntity=entityService.insertEntity(entity);
         UserEntity newUserEntity=new UserEntity();
         newUserEntity.setEntityId(addEntity);

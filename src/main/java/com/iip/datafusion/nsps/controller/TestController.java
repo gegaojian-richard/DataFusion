@@ -7,6 +7,7 @@ import com.iip.datafusion.dgs.service.integrity.IntegrityService;
 import com.iip.datafusion.nsps.model.TestConfiguration;
 import com.iip.datafusion.nsps.service.TestService;
 import com.iip.datafusion.util.jsonutil.Result;
+import com.iip.datafusion.util.userutil.UserManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,15 +23,17 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class TestController {
     @Autowired
     TestService testService;
+    @Autowired
+    UserManager userManager;
 
 
 
     @RequestMapping(path = {"/nsps/Test"}, method = RequestMethod.POST)
     @ResponseBody
-    public Result checkIntegrity(@RequestBody TestConfiguration testConfiguration) {
+    public Result checkTest(@RequestBody TestConfiguration testConfiguration) {
 
         try{
-            TestJob testJob = testService.commitJob(testConfiguration);
+            TestJob testJob = testService.commitJob(testConfiguration,userManager.getUserId());
             System.out.println("Controller: " + testJob.getPath());
         }catch (Exception e){
             return new Result(0,e.getMessage(),null);

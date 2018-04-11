@@ -2,9 +2,6 @@ package com.iip.datafusion.eems.model;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.iip.datafusion.cms.model.ColumnStructure;
-
-import java.util.List;
 
 public class Entity{
     @JsonProperty("id")
@@ -14,12 +11,18 @@ public class Entity{
     @JsonProperty("tableName")
     private String tableName;
     @JsonProperty("dbPosition")
-    private String dbPosition;
-    // todo: 主数据库中存储的是物理位置，不是当时系统中某个DataSource的ID
+    private String dbPosition;//格式同dataSourceProperty中的URL  host:port/dataBaseName
     @JsonProperty("entityType")
     private int entityType;//0表示实体，1表示事件
     @JsonProperty("properties")
     private String properties;
+
+    /*表示该entity是否已连接
+    dbID.isEmpty()==true  未连接
+    dbID.isEmpty()==false 已连接，存储连接的ID
+     */
+    @JsonProperty("dbID")
+    private String dbID;
 
     @JsonCreator
     public Entity(@JsonProperty("id") int id,
@@ -33,10 +36,13 @@ public class Entity{
         this.dbPosition = dbPosition;
         this.entityType = entityType;
         this.properties = properties;
+        //初始化为空字符串，表示未连接
+        this.dbID="";
     }
 
     public Entity(){
         super();
+        this.dbID="";
     }
 
     public int  getId() {
@@ -86,5 +92,13 @@ public class Entity{
 
     public void setProperties(String properties) {
         this.properties = properties;
+    }
+
+    public String getDbID() {
+        return dbID;
+    }
+
+    public void setDbID(String dbID) {
+        this.dbID = dbID;
     }
 }

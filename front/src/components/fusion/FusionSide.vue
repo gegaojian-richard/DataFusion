@@ -3,8 +3,8 @@
     <div class="entityinfo">
       <dl>
         <dt><span style="width:100px;display:inline-block">实体库</span></dt>
-        <dd v-for="(value,index) in entityLi">
-         <a @click="emitChoose(value)">{{value.displayName}}</a>
+        <dd v-for="(value,index) in entityLi" @click="emitChoose(value)">
+         <a  v-bind:class="{blue:value.dbID}" >{{value.displayName}}</a>
         </dd>
       </dl>
     </div>
@@ -19,13 +19,35 @@
   </div>
 </template>
 <style>
+  .blue{
+    color: #2bc4e2;
+  }
   .sidebar{
     height:100%;
     /*border-left:2px solid #bfcbd9;*/
-    background-color: #103251;
-    color:#bfcbd9;
-    padding-top:5px;
+    background-color: #1F5FA6;
+    color:#fff;
     font-size: large;
+    overflow: auto;
+  }
+  .entityinfo dd {
+    height: 50px;
+    line-height: 50px;
+  }
+  .entityinfo dd:hover {
+    background: #4686C4;
+  }
+  .entityinfo dd a:hover {
+    color:inherit;
+  }
+  .entityinfo dl dt, .eventinfo dl dt {
+    height: 60px;
+    text-align: center;
+    font-size: 18px;
+    color: #145398;
+    line-height: 60px;
+    background: #DFE2EB;
+    font-weight: bold;
   }
 </style>
 <script>
@@ -35,7 +57,8 @@
       data(){
           return{
             entityLi:[],
-            eventLi:[]
+            eventLi:[],
+
           }
       },
     computed: {
