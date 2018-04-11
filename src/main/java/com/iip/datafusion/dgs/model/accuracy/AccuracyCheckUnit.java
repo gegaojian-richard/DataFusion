@@ -177,8 +177,8 @@ public class AccuracyCheckUnit {
         try{
             SqlRowSet sqlRowSet = accuracyDao.doSelect(tableName,selectClause,whereClause);
             String newColumnName = "new_" + columnName;
-            String neaValue = "邮箱格式不正确";
-            JSONObject result_data = getResultData(tableName,sqlRowSet,newColumnName,neaValue,key);
+            String newValue = "邮箱格式不正确";
+            JSONObject result_data = getResultData(tableName,sqlRowSet,newColumnName,newValue,key);
 
             Result result = new Result(1,null,result_data.toString());
             return result;
