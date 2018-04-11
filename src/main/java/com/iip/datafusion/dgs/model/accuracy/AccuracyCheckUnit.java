@@ -22,7 +22,7 @@ public class AccuracyCheckUnit {
     @Autowired
     private StringRedisTemplate redisTemplate;
 
-    public Result doCheck(String tableName, FormulaParam formulaParam){
+    public Result doCheck(String tableName, FormulaParam formulaParam,String key){
         String whereClause = formulaParam.getWhereClause();
         List<ColumnAttributeValue> columnAttributeValues = formulaParam.getColumnAttributeValues();
 
@@ -59,7 +59,7 @@ public class AccuracyCheckUnit {
             }
             JSONObject result_data = new JSONObject();
             result_data.put("items", data_items);
-            redisTemplate.opsForList().leftPushAll("222",lists);
+            redisTemplate.opsForList().leftPushAll(key,lists);
 
             Result result = new Result(1,null,result_data.toString());
             return result;
@@ -69,7 +69,7 @@ public class AccuracyCheckUnit {
         }
     }
 
-    public Result doCheck(String tableName, ConditionParam conditionParam){
+    public Result doCheck(String tableName, ConditionParam conditionParam,String key){
         String columnName = conditionParam.getColumnName();
         List<ConditionValue> conditionValues = conditionParam.getConditionValues();
 
@@ -114,7 +114,7 @@ public class AccuracyCheckUnit {
             JSONObject result_data = new JSONObject();
             result_data.put("items",data_items);
 
-            redisTemplate.opsForList().leftPushAll("222",lists);
+            redisTemplate.opsForList().leftPushAll(key,lists);
 
             Result result = new Result(1,null,result_data.toString());
             return result;
@@ -125,7 +125,7 @@ public class AccuracyCheckUnit {
         }
     }
 
-    public Result doCheck(String tableName, LengthParam lengthParam){
+    public Result doCheck(String tableName, LengthParam lengthParam,String key){
         String columnName = lengthParam.getColumnName();
         String length = lengthParam.getLength();
 
@@ -135,8 +135,8 @@ public class AccuracyCheckUnit {
         try{
             SqlRowSet sqlRowSet = accuracyDao.doSelect(tableName,selectClause,whereClause);
             String newColumnName = "new_" + columnName;
-            String newVlaue = columnName+"长度应为"+length;
-            JSONObject result_data = getResultData(tableName,sqlRowSet,newColumnName,newVlaue);
+            String newValue = columnName+"长度应为"+length;
+            JSONObject result_data = getResultData(tableName,sqlRowSet,newColumnName,newValue,key);
 
             Result result = new Result(1,null,result_data.toString());
             return result;
@@ -146,7 +146,7 @@ public class AccuracyCheckUnit {
         }
     }
 
-    public Result doCheck(String tableName, RangeParam rangeParam){
+    public Result doCheck(String tableName, RangeParam rangeParam,String key){
         String columnName = rangeParam.getColumnName();
         String whereClause = rangeParam.getWhereClause();
 
@@ -156,8 +156,8 @@ public class AccuracyCheckUnit {
         try {
             SqlRowSet sqlRowSet = accuracyDao.doSelect(tableName,selectClause,newWhereClause);
             String newColumnName = "new_" + columnName;
-            String neaValue = whereClause;
-            JSONObject result_data = getResultData(tableName,sqlRowSet,newColumnName,neaValue);
+            String newValue = whereClause;
+            JSONObject result_data = getResultData(tableName,sqlRowSet,newColumnName,newValue,key);
 
             Result result = new Result(1,null,result_data.toString());
             return result;
@@ -167,7 +167,7 @@ public class AccuracyCheckUnit {
         }
     }
 
-    public Result doCheck(String tableName, EmailParam emailParam){
+    public Result doCheck(String tableName, EmailParam emailParam,String key){
         String columnName = emailParam.getColumnName();
 
         String whereClause = columnName +" REGEXP '^[a-zA-Z0-9]+[a-zA-Z0-9_-]*@[a-zA-Z0-9]+([\\.][a-zA-Z0-9]+){1,}$'";
@@ -178,7 +178,7 @@ public class AccuracyCheckUnit {
             SqlRowSet sqlRowSet = accuracyDao.doSelect(tableName,selectClause,whereClause);
             String newColumnName = "new_" + columnName;
             String neaValue = "邮箱格式不正确";
-            JSONObject result_data = getResultData(tableName,sqlRowSet,newColumnName,neaValue);
+            JSONObject result_data = getResultData(tableName,sqlRowSet,newColumnName,neaValue,key);
 
             Result result = new Result(1,null,result_data.toString());
             return result;
@@ -188,7 +188,7 @@ public class AccuracyCheckUnit {
         }
     }
 
-    private JSONObject getResultData(String tableName,SqlRowSet sqlRowSet, String newColumnName, String newValue) {
+    private JSONObject getResultData(String tableName,SqlRowSet sqlRowSet, String newColumnName, String newValue,String key) {
         ArrayList<String> columnNames = accuracyDao.getTableColumnList(tableName);
         List<String> lists = new ArrayList<String>();
         JSONArray data_items = new JSONArray();
@@ -204,7 +204,7 @@ public class AccuracyCheckUnit {
         JSONObject result_data = new JSONObject();
         result_data.put("items",data_items);
 
-        redisTemplate.opsForList().leftPushAll("222",lists);
+        redisTemplate.opsForList().leftPushAll(key,lists);
 
         return result_data;
     }
