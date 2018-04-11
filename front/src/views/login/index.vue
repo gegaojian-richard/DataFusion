@@ -49,7 +49,8 @@
             </ul>
           </div>
           <div class="login-wrap">
-            <a href="javascript:;" class="btn-login" @click="register">注册</a>
+            <!--<el-button href="javascript:void(0)" class="btn-login" v-on:click="register" style="width:340px;">注册</el-button>-->
+            <a href="javascript:void(0)" class="btn-login" @click="register">注册</a>
           </div>
         </div>
       </div>
@@ -217,6 +218,7 @@
 </style>
 <script>
   import { mapGetters } from 'vuex'
+  import axios from 'axios'
 export default {
   name: 'login',
   data() {
@@ -287,24 +289,30 @@ export default {
       if(!this.regName || !this.regPwd1 ||!this.regPwd2||this.regPwd1!=this.regPwd2){
         this.regErrorTip="填写不规范";
         return;
-      }else if(this.regPwd1.length<5||this.regPwd1.length>10){
-          this.regErrorTip="密码长度不在5位至10位之间，请重新填写";
+      }else if(this.regPwd1.length<5||this.regPwd1.length>10) {
+        this.regErrorTip = "密码长度不在5位至10位之间，请重新填写";
+        return;
       }
+//      var  param={
+//      "username":this.regName,
+//      "password":this.regPwd2
+//      };
       let param=new URLSearchParams();
       param.append("username",this.regName);
       param.append("password",this.regPwd2);
-      axios.post("/kjb/ums/register",param).then((response)=>{
-        let res=response.data;
+        axios.post("/kjb/ums/register",param).then((response)=>{
+          let res=response.data;
         if(res.status==1){
           this.regErrorTip=null;
           this.registerFlag=false;
           this.regSuc=true;
+          this.loginForm.username=this.regName;
+          this.loginForm.password=this.regPwd2;
         }else{
           this.regErrorTip=true;
         }
-      }).catch((e)=>{this.regErrorTip="该账号已被申请，请重新设置";})
-
-    }
+      }).catch(function(e){ this.regErrorTip="该账号已被申请，请重新设置";})
+      }
   }
 }
 </script>

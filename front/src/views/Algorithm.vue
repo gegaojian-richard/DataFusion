@@ -30,27 +30,20 @@
           <el-select v-model="database" @change="chooseDatabase()" style="margin-left: 15px;width:200px;">
             <el-option
               v-for="item in conns"
-              :key="item.displayName"
+              :key="item.id"
               :label="item.displayName"
-              :value="item.displayName">
+              :value="item.id">
             </el-option>
           </el-select>
         </div>
         <div style="margin-left: 120px">
           <span>目标表</span>
-          <el-select v-model="table" style="margin-left: 15px;width:200px;">
-            <el-option
-              v-for="item in tableForChoose"
-              :key="item.tableName"
-              :label="item.tableName"
-              :value="item.tableName">
-            </el-option>
-          </el-select>
+          <input v-model="table" style="width:200px;margin-left: 20px;border-radius: 3px;border: 1px solid #ccc;height: 47px;padding-left: 20px;font-size: 16px;color:#333;" >
         </div>
       </div>
       <div style="margin-top: 20px;text-align: left;margin-left: 40px;">
-        <span v-if="algorithms==1||algorithms==2">TOP-K:</span><el-input  v-model="topK" v-if="algorithms==1||algorithms==2" style="width:200px"></el-input>
-        <span v-if="algorithms==3">主题数:</span><el-input v-model="topicNum" v-if="algorithms==3" style="width:200px"></el-input>
+        <span v-if="algorithms==1||algorithms==2">TOP-K:</span><input v-model="topK" v-if="algorithms==1||algorithms==2" style="width:200px;margin-left: 20px;border-radius: 3px;border: 1px solid #ccc;height: 47px;padding-left: 20px;font-size: 16px;color:#333;" >
+        <span v-if="algorithms==3">主题数:</span> <input v-model="topicNum"  v-if="algorithms==3" style="width:200px;margin-left: 20px;border-radius: 3px;border: 1px solid #ccc;height: 47px;padding-left: 20px;font-size: 16px;color:#333;" >
       </div>
     </div>
     <el-Button @click="submit" class="submit" style="background: #78BDF8;color:#fff;">提交</el-Button>
@@ -108,7 +101,15 @@ span{
         }
       },
       submit(){
-        switch (this. algorithms) {
+        if(!this.position||!this.table||!this.database){
+          const h = this.$createElement;
+          this.$notify({
+            title: '提示',
+            message: h('i', {style: 'color: teal'}, "数据没有配置完整无法提交任务")
+          });
+          return;
+        }
+        switch (this.algorithms) {
           case "0":
               var resultforNameRecognition={
                 "corpusPath":this.position,
@@ -118,8 +119,25 @@ span{
             axios.post("kjb/nsps/NameRecognition",resultforNameRecognition).then((response)=>{
                   var res=response.data;
                   if(res.status==1){
-                    this.$message('任务提交成功，请在任务管理处查看进度');
+//                    this.$message('任务提交成功，请在任务管理处查看进度');
+                    const h = this.$createElement;
+                    this.$notify({
+                      title: '提示',
+                      message: h('i', {style: 'color: teal'}, "任务提交成功，请在任务管理处查看进度")
+                    });
+                  }else{
+                    const h = this.$createElement;
+                    this.$notify({
+                      title: '提示',
+                      message: h('i', {style: 'color: teal'}, "任务提交失败，请再次提交")
+                    });
                   }
+            }).catch(()=>{
+              const h = this.$createElement;
+              this.$notify({
+                title: '提示',
+                message: h('i', {style: 'color: teal'}, "任务提交失败，请再次提交")
+              });
             })
                 break;
           case "1":
@@ -132,8 +150,25 @@ span{
             axios.post("kjb/nsps/TextRank",resultforTextRank).then(response=>{
               var res=response.data;
               if(res.status==1){
-                this.$message('任务提交成功，请在任务管理处查看进度');
-              }
+//                this.$message('任务提交成功，请在任务管理处查看进度');
+                const h = this.$createElement;
+                this.$notify({
+                  title: '提示',
+                  message: h('i', {style: 'color: teal'}, "任务提交成功，请在任务管理处查看进度")
+                });
+              } else{
+                const h = this.$createElement;
+                  this.$notify({
+                    title: '提示',
+                    message: h('i', {style: 'color: teal'}, "任务提交失败，请再次提交")
+                  });
+                }
+            }).catch(()=>{
+              const h = this.$createElement;
+              this.$notify({
+                title: '提示',
+                message: h('i', {style: 'color: teal'}, "任务提交失败，请再次提交")
+              });
             })
             break;
           case "2":
@@ -146,8 +181,25 @@ span{
             axios.post("kjb/nsps/TFIDF",resultforTFIDF).then(response=>{
               var res=response.data;
               if(res.status==1){
-                this.$message('任务提交成功，请在任务管理处查看进度');
+//                this.$message('任务提交成功，请在任务管理处查看进度');
+                const h = this.$createElement;
+                this.$notify({
+                  title: '提示',
+                  message: h('i', {style: 'color: teal'}, "任务提交成功，请在任务管理处查看进度")
+                });
+              }else{
+                const h = this.$createElement;
+                this.$notify({
+                  title: '提示',
+                  message: h('i', {style: 'color: teal'}, "任务提交失败，请再次提交")
+                });
               }
+            }).catch(()=>{
+              const h = this.$createElement;
+              this.$notify({
+                title: '提示',
+                message: h('i', {style: 'color: teal'}, "任务提交失败，请再次提交")
+              });
             })
             break;
           case "3":
@@ -157,11 +209,28 @@ span{
               "tableName":this.table,
               "dataSourceId":this.database,
             }
-            axios.post("kjb/nsps/TFIDF",resultforTopicModel).then(response=>{
+            axios.post("kjb/nsps/TopicModel",resultforTopicModel).then(response=>{
               var res=response.data;
               if(res.status==1){
-                this.$message('任务提交成功，请在任务管理处查看进度');
+//                this.$message('任务提交成功，请在任务管理处查看进度');
+                const h = this.$createElement;
+                this.$notify({
+                  title: '提示',
+                  message: h('i', {style: 'color: teal'}, "任务提交成功，请在任务管理处查看进度")
+                });
+              }else{
+                const h = this.$createElement;
+                this.$notify({
+                  title: '提示',
+                  message: h('i', {style: 'color: teal'}, "任务提交失败，请再次提交")
+                });
               }
+            }).catch(()=>{
+              const h = this.$createElement;
+              this.$notify({
+                title: '提示',
+                message: h('i', {style: 'color: teal'}, "任务提交失败，请再次提交")
+              });
             })
             break;
           default:

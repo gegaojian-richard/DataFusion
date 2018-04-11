@@ -7,18 +7,20 @@
           <span style="display: inline-block;height:20px;width:5px;background: #698EC3;margin-bottom:-5px;margin-right: 5px;"></span>
           <span>数据源</span>
         </p>
-        <el-table
-          :data="previewData"
-          height="calc(100% - 300px)"
-          style="margin:5px auto;background-color:#fff">
-
-          <el-table-column :label="key" v-for="(value,key) in previewData[0]"
-                           width="120" style="background-color: #103251;">
-            <template slot-scope="scope">
-              {{previewData[scope.$index][key]}}
-            </template>
-          </el-table-column>
-        </el-table>
+        <div class="showtable" style="width:100%;margin-top: 50px;border: 1px solid #ccc;color: #333;overflow:auto;height:350px;">
+          <table class="imagetable quarter-div_table">
+            <thead>
+            <tr>
+              <th  style=" text-algin:center;color:#fff;" v-for="(key,item) in previewData[0]">{{item}}</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr v-for = "item in previewData">
+              <td v-for ="it in  item">{{it}}</td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   </div>
@@ -31,7 +33,53 @@
     height: 100%;
     width: 100%;
   }
+  .showtable{
+    margin-top: 40px;
+    position:relative;
+    overflow: auto;
+    background-color: #ffffff;
+    tbody {
+      height: 600px;
+      overflow-x: auto;
+      overflow-y: auto;
+    }
+  }
 
+  .imagetable {
+    width:100%;
+    border:none;
+    font-size:1.2em;
+    text-align:center;
+    padding:4px;
+    border-collapse:collapse;
+  }
+  .imagetable th {
+    font-weight:bold;
+    /*background-color: #103251;*/
+    color:#bfcbd9;
+    font-size:0.95em;
+    text-align:center;
+    padding:4px;
+    border-collapse:collapse;
+    border:none;
+    min-width: 100px;
+  }
+  .imagetable td {
+    font-size:0.95em;
+    text-align:center;
+    padding:4px;
+    border-collapse:collapse;
+  }
+  .imagetable thead {
+    background-color: #6787B0;
+  }
+  .imagetable tbody tr {
+    border-bottom: 1px dashed #ccc;
+    height: 50px;
+    &:nth-child(2n) {
+      background-color: #F2F7FD;
+    }
+  }
 </style>
 <style>
   .sidecontainer{
@@ -46,9 +94,9 @@
     data(){
       return {
         addMySql: false,
-        dataUrl: "localhost:3306/dataset1",
+        dataUrl: "114.212.84.208:3306/fupin",
         dataUserName: "root",
-        dataPassword: "tangsy",
+        dataPassword: "iipconfig",
         displayName:"china-regions",
         errorTip: false,
         createError:false,
@@ -69,36 +117,7 @@
         var name=this.databaseDetail[index].tablename;
         this.previewTable(name);
       },
-      addMysqlConnect(){
-        if(!this.dataUrl||!this.dataPassword||!this.dataUrl||!this.displayName){
-          this.errorTip=true;
-          return;
-        }
-        var param={
-          id:this.displayName,
-          displayName:this.displayName,
-          type:"mysql",
-          url:this.dataUrl,
-          user:this.dataUserName,
-          pwd:this.dataPassword
 
-        };
-        axios.post("/kjb/cms/creationDataBase", param
-        ).then((response)=>{
-          var res=response.data;
-          if(res.status==1){
-            this.getConnect();
-            this.addMySql=false;
-          }else{
-            this.createError=true;
-
-          }
-        })
-
-      },
-//      getConnect(){
-//        this.$store.dispatch('GetConnect')
-//      },
       descriptDataBase(param){
         this.nowConn=param;
         axios.get("/kjb/cms/descriptionDataBase",{
