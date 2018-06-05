@@ -34,10 +34,9 @@ public class TextRankController {
         try{
             TextRankJob textRankJob = textRankService.commitJob(textRankConfiguration,userManager.getUserId());
 //            System.out.println("TextRankController: " + textRankJob.getCorpusPath());
-            while(textRankJob.getResult() == null){
-                Thread.sleep(1000);
-            }
-            return textRankJob.getResult();
+            Result result = new Result(1,"Task Submitted successfully",null);
+
+            return result;
         }catch (Exception e){
             return new Result(0,e.getMessage(),null);
         }

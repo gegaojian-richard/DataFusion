@@ -31,10 +31,9 @@ public class NameRecognitionController {
         try{
             NameRecognitionJob job = nameRecognitionService.commitJob(configuration,userManager.getUserId());
 //            System.out.println("Controller: " + job.getCorpusPath());
-            while(job.getResult() == null){
-                Thread.sleep(1000);
-            }
-            return job.getResult();
+            Result result = new Result(1,"Task Submitted successfully",null);
+
+            return result;
         }catch (Exception e){
             return new Result(0,e.getMessage(),null);
         }
