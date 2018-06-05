@@ -52,14 +52,15 @@ public class TopicModelExecutor  extends AbstractTerminatableThread implements J
     @Override
     public void doJob(TopicModelJob job) throws Exception {
         // todo: 1. 找到文件目录路径job.path下所有文本的关键词
-//        System.out.println("TFIDFExcutor path : " + job.getPath());
-//        System.out.println("TFIDFExcutor topK: " + job.getTopK());
+        System.out.println("TFIDFExcutor path : " + job.getCorpusPath());
+        System.out.println("TFIDFExcutor topK: " + job.getTopicNum());
         if(job.getCorpusPath() == null || job.getTopicNum() == 0 || job.getTableName() == null || job.getDataSourceId() == null){
             job.setResult(new Result(0, "error", "some parameters doesn't exist: " +
                     "'corpusPath', 'topicNum'(>0), 'tableName', 'dataSourceId'"));
         }
         else {
             Map<String, List<String>> keyWords = BTM.btm(job.getCorpusPath() , job.getTopicNum());
+            System.out.println("topic model complete!");
             // todo: 2. 根据文本关键词建立数据库表,并加入数据，每个文件对应的关键词
             int status = MySqlDAO.createWordsTable("topics" , jdbcTemplate , job.getDataSourceId() , job.getTableName());
             if(status == -1){
