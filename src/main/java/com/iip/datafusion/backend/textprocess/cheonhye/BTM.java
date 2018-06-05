@@ -334,19 +334,19 @@ public class BTM  {
 
     private Map<String,List<String>> save_result(List<String> filelist)throws IOException {
 
-            Map<String,List<String>> map =new HashMap<String,List<String>>();
+        Map<String,List<String>> map =new HashMap<String,List<String>>();
 
-            this.save_twords(20);
-            map=this.save_theta(filelist);
+        this.save_twords(20);
+        map=this.save_theta(filelist);
 //            this.save_tassign();
-            this.save_wordMap();
-            this.save_phi();
-            return map;
+        this.save_wordMap();
+        this.save_phi();
+        return map;
 
 
     }
 
-   // @Override
+    // @Override
     public Map<String,List<String>> execute(List<String> filelist)throws IOException {
         Map<String,List<String>> map =new HashMap<String,List<String>>();
         this.load_data();
@@ -358,15 +358,15 @@ public class BTM  {
 
     public static Map<String,List<String>> build_BTM_Model(String data_path, int topic_num, double alpha, double beta, int iter_num,  int instance_num,List<String> filelist)throws IOException
     {
-            Map<String,List<String>> map =new HashMap<String,List<String>>();
-            BTM btm=new BTM(data_path, topic_num, iter_num, alpha, beta, instance_num);
-            map=btm.execute(filelist);
-            return map;
+        Map<String,List<String>> map =new HashMap<String,List<String>>();
+        BTM btm=new BTM(data_path, topic_num, iter_num, alpha, beta, instance_num);
+        map=btm.execute(filelist);
+        return map;
 
     }
     public static Map<String,List<String>> btm(String dirc,int tN)throws Exception{
         Map<String,List<String>> map =new HashMap<String,List<String>>();
-        List<String> filelist=BTM_PreProceed.toNormal(dirc);
+        List<String> filelist= BTM_PreProceed.toNormal(dirc);
         map=build_BTM_Model("./toNormal.txt",tN,0.1,0.01,500,1,filelist);
         return map;
 
@@ -380,4 +380,6 @@ public class BTM  {
         System.out.println(map);
     }
 }
+
+
 
