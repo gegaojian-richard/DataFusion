@@ -122,7 +122,7 @@ public class CmsDao {
             }
 
             stringBuilder.delete(stringBuilder.length()-1,stringBuilder.length());
-            stringBuilder.append(");");
+            stringBuilder.append(") DEFAULT CHARSET=utf8;");
             jdbcTemplate.execute(stringBuilder.toString());
 
 //            //检查目标表是否成功建立
