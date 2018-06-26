@@ -3,6 +3,7 @@ package com.iip.datafusion.dgs.controller.consistency;
 import com.iip.datafusion.dgs.model.consistency.ConsistencyConfiguration;
 import com.iip.datafusion.dgs.service.consistency.ConsistencyService;
 import com.iip.datafusion.util.jsonutil.Result;
+import com.iip.datafusion.util.userutil.UserManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,11 +17,13 @@ import java.util.Map;
 public class ConsistencyController {
     @Autowired
     ConsistencyService ConsistencyService;
-    @RequestMapping(path={"/if2"},method = RequestMethod.POST)
+    @Autowired
+    UserManager userManager;
+    @RequestMapping(path={"/dgs/consistency/commitjob"},method = RequestMethod.POST)
     @ResponseBody
     public Result commitJob(@RequestBody ConsistencyConfiguration ConsistencyConfiguration){
    try{
-        Map map = ConsistencyService.commitJob(ConsistencyConfiguration);
+        Map map = ConsistencyService.commitJob(ConsistencyConfiguration,userManager.getUserId());
         Result res = new Result(1,"Task Submitted successfully",null);;
         //res.setMsg(integrityJob.getJobId());
         return res;

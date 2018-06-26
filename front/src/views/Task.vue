@@ -35,33 +35,37 @@
     <div class="md-modal modal-msg md-modal-transition"  v-bind:class="{'md-show':showDetail}">
       <div class="md-modal-inner">
         <div class="md-top">
-          <div class="md-title">完整性检查结果</div>
+          <div class="md-title">检查结果</div>
           <button class="md-close" @click="showDetail=false">Close</button>
         </div>
-        <div class="md-content" >
-            <div style="margin-top:15px">
-              <div align="center">
-                <el-table
-                  :data="resultData"
-                  height="200"
-                  style="margin:5px auto;">
-                  <el-table-column :label="key" v-for="(value,key) in resultData[0]"
-                                   width="200">
-                    <template slot-scope="scope">
-                      <span class="blockspan" v-if="editingRow!=scope.$index" @click="handleEdit(scope.$index)">{{resultData[scope.$index][key]}}</span>
-                      <el-input class="smallinput" v-if="editingRow==scope.$index" v-model="resultData[scope.$index][key]"></el-input>
-                    </template>
-                  </el-table-column>
-                </el-table>
-                <el-pagination
-                  @current-change="handleCurrentChange"
-                  :current-page="currentPage"
-                  :page-size="10"
-                  layout="total, sizes, prev, pager, next, jumper"
-                  :total="totalCount">
-                </el-pagination>
-              </div>
-             </div>
+        <div class="md-content"  >
+          <div>
+            <div  class="showtable" align="center" style="width:100%;margin:0px 5px 20px 5px;border: 1px solid #ccc;color: #333;overflow:auto;height:300px;">
+              <table class="imagetable quarter-div_table" >
+                <thead>
+                <tr>
+                  <th  style=" text-algin:center;color:#fff;" v-for="(key,item) in resultData[0]" >{{item}}</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr v-for = "(item,index_outer) in resultData">
+                  <td v-for ="(it,index_inner) in item">
+                    <span class="blockspan" v-if="editingRow!=index_outer" @click="handleEdit(index_outer)">{{it}}</span>
+                    <el-input class="smallinput" v-if="editingRow==index_outer" v-model="resultData[index_outer][index_inner]"></el-input>
+                  </td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+              <el-pagination
+                small
+                @current-change="handleCurrentChange"
+                :current-page="currentPage"
+                :page-size="10"
+                layout="total, prev, pager, next, jumper"
+                :total="totalCount">
+              </el-pagination>
+          </div>
           <a href="javascript:;" class="btn-login" @click="sendAllData">确定</a>
           <!--<el-Button @click="sendAllData" style="margin-top: 15px;margin-left: 400px;">确定</el-Button>-->
         </div>
@@ -71,6 +75,42 @@
   </div>
 </template>
 <style rel="stylesheet/scss" lang="scss" scoped>
+  .imagetable {
+    width:100%;
+    border:none;
+    font-size:1.2em;
+    text-align:center;
+    padding:4px;
+    border-collapse:collapse;
+    height:300px;
+  }
+  .imagetable th {
+    font-weight:bold;
+    /*background-color: #103251;*/
+    color:#bfcbd9;
+    font-size:0.95em;
+    text-align:center;
+    padding:4px;
+    border-collapse:collapse;
+    border:none;
+    min-width: 100px;
+  }
+  .imagetable td {
+    font-size:0.95em;
+    text-align:center;
+    padding:4px;
+    border-collapse:collapse;
+  }
+  .imagetable thead {
+    background-color: #6787B0;
+  }
+  .imagetable tbody tr {
+    border-bottom: 1px dashed #ccc;
+    height: 50px;
+    &:nth-child(2n) {
+      background-color: #F2F7FD;
+    }
+  }
   .smallinput >.el-input__inner{
     height:20px;
   }
@@ -82,13 +122,15 @@
     right: 15px;
     top: 10px;
   }
-  .el-table td, .el-table th.is-leaf {
-    background: #6C89B1;
-    color: #fff;
-  }
+  /*.el-table td, .el-table th.is-leaf {*/
+    /*background: #6C89B1;*/
+    /*color: #fff;*/
+    /*min-width: 100px !important;*/
+  /*}*/
   .md-modal {
     overflow: hidden;
     border-radius: 5px;
+    width: 600px;
   }
   .md-modal .md-modal-inner .md-top{
     width:100%;
@@ -124,6 +166,7 @@
   .el-pagination {
     margin-bottom: 20px;
     margin-top: 20px;
+    width:300px !important;
   }
 </style>
 <script>
@@ -149,7 +192,6 @@
      axios.post("/kjb/tvs/privateTasks"
      ).then((response) => {
        var res = response.data;
-       alert(res.list)
        if (res.status == 1) {
         this.list=JSON.parse(res.data);
        } else {
@@ -165,19 +207,34 @@
        },
       handleCurrentChange(val){
         this.currentPage = val;
-        this.getData();
+        this.getData(val);
       },
       viewResult(index, row){
         this.showDetail = true;
         this.nowEditJob = row.jobID;
         this.nowUserId=row.userID;
+        this.getNum();
         this.getData();
       },
-      getData(){
+      getNum(){
         var redisParam = {
           "key": this.nowUserId+"-"+this.nowEditJob,
           "start": this.currentPage,
           "end": this.currentPage + 10
+        }
+        axios.post("/kjb/tvs/redisLen", redisParam).then
+        ((response) => {
+          var res = response.data;
+          if (res.status == 1) {
+            this.totalCount = parseInt(res.data);
+          }
+        })
+      },
+      getData(val){
+        var redisParam = {
+          "key": this.nowUserId+"-"+this.nowEditJob,
+          "start": this.currentPage*10,
+          "end": this.currentPage*10+10
         }
         axios.post("/kjb/tvs/redisData", redisParam).then
         ((response) => {

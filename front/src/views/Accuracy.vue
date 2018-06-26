@@ -21,7 +21,7 @@
             </tbody>
           </table>
         </div>
-        <el-button type = "primary" plain @click="submit()" style="width:100px;float:right;margin-top: 30px;position:relative;background-color: #82B7E3;color:#fff;">提交</el-button>
+        <el-button type = "primary" plain @click="submit" style="width:100px;float:right;margin-top: 30px;position:relative;background-color: #82B7E3;color:#fff;">提交</el-button>
       </div>
 
     </div>  <!-- 显示字段那列结束 -->
@@ -60,7 +60,7 @@
 
     <div >  <!-- 弹出类型1输入 -->
       <div  class="md-modal modal-msg md-modal-transition"  v-bind:class="{'md-show':click_flag1}">
-        <div class="md-modal-inner" style="overflow:auto;padding-bottom: 30px;">
+        <div class="md-modal-inner" style="height:500px;overflow:auto;padding-bottom: 30px;">
           <div class="md-top">
             <div class="md-title">公式检查</div>
             <button class="md-close " @click="flag1_close">Close</button>
@@ -69,15 +69,14 @@
             <span style="display: inline-block;width: 100%;padding: 10px 20px;text-align: left;">当前的属性是:{{save_item}}</span>
             <div style="margin:15px 20px;text-align: left">
             <span style="margin-right: 15px">公式：{{save_item}} = </span>
-              <input v-model="type1_formu" type="text" class="edit">
-              <el-button type="primary" plain @click="type1_ok" style="position: relative;right:80px;height:35px;color:#fff;background:#51BA65;">确定</el-button>
+              <input v-model="type1_formu" type="text" class="edit" style="width:200px">
+              <el-button type="primary" plain @click="type1_ok" style="position: relative;height:35px;color:#fff;background:#51BA65;">确定</el-button>
             </div>
             <button type="button" class="  button" style="width: 100%;background: url('/static/home/add.png') 15px center no-repeat;padding-left: 20px;" aria-label="Left Align" @click="type1_add_newcolumn">
               <span style="display: inline-block;width: 100%;padding: 10px 20px;text-align: left;">添加新的字段</span>
             </button>
             <br><br>
             <dl v-for = "(change_for_add,index) in all_for_change" class = "imagetable1">
-
               <div style="margin:15px 20px;text-align: left">
                 <span style="margin-right: 15px;font-size: 14px;">公式中非数值字段</span>
                 <input v-model="newclos[index].save"type="text" class="edit">
@@ -237,6 +236,7 @@
     padding:4px;
     border-collapse:collapse;
     border:none;
+    min-width: 100px;
   }
   .imagetable td {
     font-size:0.95em;
@@ -380,6 +380,8 @@
         type4_max:"",   //   类型4 -- 上限
         type4_min:"",   //   类型4  --下限
         res_all:[],     //  最终存的数组
+        dataSourceId:"",     //  数据库id
+        tableName:"",         //  当前表名
       }
     },   ///   data
     components: {
@@ -388,7 +390,6 @@
     computed:{
     },
     methods: {
-
       previewTable(emitdata) {
         axios.get("/kjb/cms/preview", {
             params: {
@@ -402,6 +403,9 @@
             var receive = JSON.parse(res.data);
             this.previewData = receive.items;
             this.flag = true;
+            this.res_all=[];    ///  这里用于换表的时候清空之前的
+            this.dataSourceId = emitdata.database
+            this.tableName = emitdata.table
           }
         })
       },
@@ -439,12 +443,17 @@
         this.show = false;
         var a = "5" + "," + this.save_item;
         this.res_all.push(a);
-        alert('添加成功');
+//        alert('添加成功');
+        const h = this.$createElement;
+        this.$notify({
+          title: '提示',
+          message: h('i', {style: 'color: teal'}, "添加成功")
+        })
         //   记录下来
       },
       click_type6() {
         this.show = false;
-        alert('之后会添加，暂无');
+//        alert('之后会添加，暂无');
       },
       //   类型1一个字段下添加新的对应对
       type1_add(index) {
@@ -465,26 +474,41 @@
       type1_ok() {
         if(this.type1_formu == "")
         {
-          alert("公式为空");
+          //alert("公式为空");
+          const h = this.$createElement;
+          this.$notify({
+            title: '提示',
+            message: h('i', {style: 'color: teal'}, "公式为空")
+          })
           return;
         }
         ///   先检查this.newclos是否有空的
        // if(this.newclos.length < this.all_for_change.length)
-        for(var k = 0; k<this.newclos.length; k++)
-        {
-          if(this.newclos[k].save == "")
-          {
-            alert("第"+ (k+1) +"个字段为空");
-            return;
-          }
-
-        }
+//        for(var k = 0; k<this.newclos.length; k++)
+//        {
+//          if(this.newclos[k].save == "")
+//          {
+//         //   alert("第"+ (k+1) +"个字段为空");
+//            const h = this.$createElement;
+//            this.$notify({
+//              title: '提示',
+//              message: h('i', {style: 'color: teal'}, "第"+(k+1)+"个字段为空")
+//            })
+//            return;
+//          }
+//
+//        }
         ///  检查对应关系
         //alert("检查");
         for (var i = 0; i < this.all_for_change.length; i++) {
           for (var j = 0; j < this.all_for_change[i].length; j++) {
             if((this.all_for_change[i][j].mean == "" && this.all_for_change[i][j].truevalue != "" )||(this.all_for_change[i][j].mean != "" && this.all_for_change[i][j].truevalue ==""))           {
-               alert("第"+(i+1)+"字段的第"+ (j+1) +"个对应关系不正确");
+              // alert("第"+(i+1)+"字段的第"+ (j+1) +"个对应关系不正确");
+              const h = this.$createElement;
+              this.$notify({
+                title: '提示',
+                message: h('i', {style: 'color: teal'},"第"+(i+1)+"字段的第"+ (j+1) +"个对应关系不正确")
+              })
                return ;
             }
           }
@@ -504,7 +528,7 @@
         //alert(a);
         this.res_all.push(a);
         this.click_flag1 = false;
-        alert('add ok');
+        //alert('add ok');
         this.type1_formu="";
         this.all_for_change=[
           [
@@ -534,7 +558,12 @@
         {
           if((this.type2_change[i].condition!=""&& this.type2_change[i].num=="")||(this.type2_change[i].condition==""&& this.type2_change[i].num!=""))
           {
-            alert("第"+ i +"个对应对不匹配");
+           // alert("第"+ i +"个对应对不匹配");
+            const h = this.$createElement;
+            this.$notify({
+              title: '提示',
+              message: h('i', {style: 'color: teal'},"第"+ i +"个对应对不匹配")
+            })
             return ;
           }
         }
@@ -547,32 +576,32 @@
         }
         this.res_all.push(a);
         this.click_flag2 = false;
-        alert("add ok");
+//        alert("add ok");
         this.type2_change=[{num:"",condition:""}];
       },
       ////   类型3确认
       clcik_flag3_button_ok(){
         var a ="3"+","+this.save_item+","+this.type3_value;
         this.click_flag3=false;
-        alert(a);
+//        alert(a);
         this.res_all.push(a);
-        alert('add ok');
+//        alert('add ok');
         this.type3_value="";
       },
       //// 类型4确认
       clcik_flag4_button_ok(){
         if(this.type4_min == "" && this.type4_max== "")
         {
-          alert('请输入数据');
+//          alert('请输入数据');
           return;
         }
         else if(this.type4_max =="")  //   只有下限
         {
           var a = "4"+","+this.save_item+","+this.type4_min+"<="+this.save_item;
           this.click_flag4=false;
-          alert(a);
+//          alert(a);
           this.res_all.push(a);
-          alert('add ok');
+//          alert('add ok');
           this.type4_max="";
           this.type4_min="";
         }
@@ -580,23 +609,28 @@
         {
           var a = "4"+","+this.save_item+","+this.save_item+"<="+this.type4_max;
           this.click_flag4=false;
-          alert(a);
+         // alert(a);
           this.res_all.push(a);
-          alert('add ok');
+        //  alert('add ok');
           this.type4_max="";
           this.type4_min="";
         }
        else if(parseInt(this.type4_max)<parseInt(this.type4_min)) ///  不合法
        {
-           alert('min的值大于max的值，请检查后输入');
+//           alert('min的值大于max的值，请检查后输入');
+          const h = this.$createElement;
+          this.$notify({
+            title: '提示',
+            message: h('i', {style: 'color: teal'},"min的值大于max的值，请检查后输入")
+          })
        }
         else  //  都有合法
         {
           var a = "4"+","+this.save_item+","+this.type4_min+"<="+this.save_item +  " and " + this.save_item + "<=" +this.type4_max;
           this.click_flag4=false;
-          alert(a);
+//          alert(a);
           this.res_all.push(a);
-          alert('add ok');
+//          alert('add ok');
           this.type4_max="";
           this.type4_min="";
         }
@@ -635,13 +669,35 @@
         this.type4_min="";
       },
       submit(){
-        axios.post("/kjb/dgs/accuracy/commitjob",this.res_all).then
+          var forsubmit={
+            "dataSourceId":this.dataSourceId,
+            "tableName":this.tableName,
+            "paramStrings":this.res_all
+          }
+        axios.post("/kjb/dgs/accuracy/commitjob",forsubmit).then
         ((response)=>{
           var res=response.data;
+          this.res_all=[];
           if(res.status==1){
-            this.$message('任务提交成功，请在任务管理处查看进度');
+            const h = this.$createElement;
+            this.$notify({
+              title: '提示',
+              message: h('i', {style: 'color: teal'}, "任务提交成功，请在任务管理处查看进度")
+            });
+          } else {
+            const h = this.$createElement;
+            this.$notify({
+              title: '提示',
+              message: h('i', {style: 'color: teal'}, "提交失败")
+            })
           }
+      }).catch((e) => {
+          const h = this.$createElement;
+        this.$notify({
+          title: '提示',
+          message: h('i', {style: 'color: teal'}, "提交失败")
         })
+      })  //   method;
       }
     }   ///  method
   }

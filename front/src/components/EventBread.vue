@@ -115,6 +115,7 @@
                   </div>
                     <el-table
                       :data="addOnepro"
+                      class="entity-table"
                       border
                       style="margin-top:20px;width: 100%">
                       <el-table-column
@@ -124,7 +125,8 @@
                         <template slot-scope="scope">
                           <span class="blockspan" v-if="editingRow!=scope.$index" @click="handleEdit(scope.$index)">{{ scope.row.name }}</span>
                           <span v-if="editingRow==scope.$index" class="cell-edit-input"><el-input
-                            v-model="scope.row.name"></el-input></span>
+                            v-model="scope.row.name" style="border:1px solid #ccc !important;
+    border-radius: 3px !important;"></el-input></span>
                         </template>
                       </el-table-column>
                       <el-table-column
@@ -174,7 +176,7 @@
       </div>
       <!--修改一条实体的遮罩层-->
       <div>
-        <div class="md-modal modal-msg md-modal-transition" style="width:500px;color:#605F5F" v-bind:class="{'md-show':editShow}">
+        <div class="md-modal modal-msg md-modal-transition" style="width:500px;color:#605F5F;" v-bind:class="{'md-show':editShow}">
           <div class="md-modal-inner">
             <div class="md-top">
               <button class="md-close" @click="editShow=false">Close</button>
@@ -202,6 +204,7 @@
                   </div>
                   <el-table
                     :data="editArr.properties"
+                    class="entity-table"
                     border
                     style="width: 100%;margin-top:20px;">
                     <el-table-column
@@ -211,7 +214,8 @@
                       <template slot-scope="scope">
                         <span class="blockspan" v-if="editingRow!=scope.$index" @click="handleEdit(scope.$index)">{{ scope.row.name }}</span>
                         <span v-if="editingRow==scope.$index" class="cell-edit-input"><el-input
-                          v-model="scope.row.name" style="color:#1f2d3d"></el-input></span>
+                          v-model="scope.row.name" style="color:#1f2d3d;border:1px solid #ccc !important;
+    border-radius: 3px !important;"></el-input></span>
                       </template>
                     </el-table-column>
                     <el-table-column
@@ -263,29 +267,47 @@
   </div>
 </template>
 <style rel="stylesheet/scss" lang="scss" scoped>
+  .entity-table{
+    height:300px !important;
+    overflow: auto;
+  }
   .entity-event {
     height: 100%;
     border:1px solid #bfcbd9;
     padding: 0 20px;
   }
-  .md-modal>.md-modal-inner{
-    color: #605F5F;
-  }
-  .inputEntity{
+  .blockspan{
+    display:inline-block;
     height:30px;
-    margin-left:0px;
-    width:200px;
-    margin-top: 10px;
+    width:100px;
+    line-height: 30px;
   }
   .entity-item-list {
-    border: 1px solid #bfcbd9;
-    border-top: none;
-    li {
-      border: 1px dashed #bfcbd9;
-    }
     li:nth-child(2n) {
       background-color: #F2F7FD;
     }
+  }
+  .entity-item-list > li > div{
+    border-bottom: 1px dashed #ccc!important;
+  }
+  .entity-item-list > .blue{
+    color: #2bc4e2;
+  }
+  .el-input input{
+    color: #0c0709;
+    border:1px solid #7a7775 !important;
+    border-radius: 2px !important;
+  }
+  .el-input__inner{
+    height:30px;
+    margin-top: 5px;
+  }
+  .inputEntity{
+    height:50px;
+    margin-left:0px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    border-radius: 5px;
   }
   .entity-tab{
     /*width:100%;*/
@@ -328,12 +350,15 @@
     display:table;
     width:100%;
     color: #605F5F;
-    border: 1px solid #bfcbd9;
+    border:1px solid #bfcbd9;
     margin-top:20px;
   }
   .entity-item-head{
     display:table-header-group;
     width:100%;
+    color:#fff;
+    background: #6C89B1;
+
   }
 
   .entity-item-head ul{
@@ -342,9 +367,9 @@
   }
   .entity-item-head li{
     display: table-cell;
+    background: #6C89B1!important;
     height: 40px;
     line-height: 40px;
-    background: #6C89B1!important;
     color: #fff;
     text-align: center;
     text-transform: uppercase;
@@ -369,8 +394,9 @@
     border-bottom: 1px solid #e9e9e9;
     height: 100%; }
   .md-modal {
-    overflow: hidden;
+    overflow:auto;
     border-radius: 5px;
+    height:500px !important;
   }
   .md-modal .md-modal-inner .md-top{
     width:100%;
@@ -378,30 +404,30 @@
     line-height: 50px;
     background-color: #266CB4;
     color: #fff;
-  .md-title {
-    position: absolute;
-    top: 0px;
-    left: 20px;
-    line-height: 50px;
-    padding: 0;
-    color: #333;
-    font-size: 18px;
-    font-weight: 400;
-    font-style: normal;
-    color: #Fff;
-  }
+    .md-title {
+      position: absolute;
+      top: 0px;
+      left: 20px;
+      line-height: 50px;
+      padding: 0;
+      color: #333;
+      font-size: 18px;
+      font-weight: 400;
+      font-style: normal;
+      color: #Fff;
+    }
   }
   .md-modal .md-modal-inner {
     padding: 0px;
   }
   .md-modal .md-modal-inner .md-content {
     padding: 30px 30px 50px 30px;
-  .btn-login {
-    height: 50px;
-    line-height: 50px;
-    border: 2px solid  #5ACD70;
-    background: #5ACD70;
-  }
+    .btn-login {
+      height: 50px;
+      line-height: 50px;
+      border: 2px solid  #5ACD70;
+      background: #5ACD70;
+    }
   }
   .inputEntity {
     height: 40px;
@@ -414,12 +440,12 @@
   .input-group {
     margin-bottom: 10px;
     height: 40px;
+    color: #605F5F!important;
   }
   .el-select>.el-input {
     width: 380px!important;
     margin-bottom: 10px;
   }
-
 </style>
 <script>
   import axios from 'axios'
