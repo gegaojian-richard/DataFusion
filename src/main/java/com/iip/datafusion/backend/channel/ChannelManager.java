@@ -9,6 +9,8 @@ import com.iip.datafusion.backend.job.consistency.ConsistencyJob;
 import com.iip.datafusion.backend.job.integrity.IntegrityJob;
 import com.iip.datafusion.backend.job.join.JoinJob;
 import com.iip.datafusion.backend.job.test.TestJob;
+import com.iip.datafusion.dgs.model.UpdateIntegrityJob;
+
 public class ChannelManager {
 
     private WorkStealingEnabledChannel<JoinJob> joinChannel;
@@ -18,6 +20,8 @@ public class ChannelManager {
     private WorkStealingEnabledChannel<ConsistencyJob> consistencyChannel;
 
     private WorkStealingEnabledChannel<IntegrityJob> integrityChannel;
+
+    private WorkStealingEnabledChannel<UpdateIntegrityJob> updateIntegrityChannel;
 
 
     private final static ChannelManager singleInstance = new ChannelManager();
@@ -56,6 +60,10 @@ public class ChannelManager {
         this.integrityChannel = integrityChannel;
     }
 
+    public void setUpdateIntegrityChannel(WorkStealingEnabledChannel<UpdateIntegrityJob> updateIntegrityChannel) {
+        this.updateIntegrityChannel = updateIntegrityChannel;
+    }
+
     public WorkStealingEnabledChannel<JoinJob> getJoinChannel() {
         return joinChannel;
     }
@@ -70,6 +78,10 @@ public class ChannelManager {
 
     public WorkStealingEnabledChannel<IntegrityJob> getIntegrityChannel() {
         return integrityChannel;
+    }
+
+    public WorkStealingEnabledChannel<UpdateIntegrityJob> getUpdateIntegrityChannel() {
+        return updateIntegrityChannel;
     }
 
     // ganjun add TestJob
