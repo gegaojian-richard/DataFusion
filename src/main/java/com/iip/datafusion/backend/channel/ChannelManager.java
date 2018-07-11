@@ -6,6 +6,7 @@ import com.iip.datafusion.backend.job.algorithm.TFIDFJob;
 import com.iip.datafusion.backend.job.algorithm.TextRankJob;
 import com.iip.datafusion.backend.job.algorithm.TopicModelJob;
 import com.iip.datafusion.backend.job.consistency.ConsistencyJob;
+import com.iip.datafusion.backend.job.consistency.UpdateConsistencyJob;
 import com.iip.datafusion.backend.job.integrity.IntegrityJob;
 import com.iip.datafusion.backend.job.join.JoinJob;
 import com.iip.datafusion.backend.job.test.TestJob;
@@ -18,6 +19,8 @@ public class ChannelManager {
     private WorkStealingEnabledChannel<AccuracyJob> accuracyChannel;
 
     private WorkStealingEnabledChannel<ConsistencyJob> consistencyChannel;
+
+    private WorkStealingEnabledChannel<UpdateConsistencyJob> updateconsistencyChannel;
 
     private WorkStealingEnabledChannel<IntegrityJob> integrityChannel;
 
@@ -56,6 +59,10 @@ public class ChannelManager {
         this.consistencyChannel = consistencyChannel;
     }
 
+    public void setUpdateConsistencyChannel(WorkStealingEnabledChannel<UpdateConsistencyJob> updateconsistencyChannel) {
+        this.updateconsistencyChannel = updateconsistencyChannel;
+    }
+
     public void setIntegrityChannel(WorkStealingEnabledChannel<IntegrityJob> integrityChannel) {
         this.integrityChannel = integrityChannel;
     }
@@ -74,6 +81,10 @@ public class ChannelManager {
 
     public WorkStealingEnabledChannel<ConsistencyJob> getConsistencyChannel() {
         return consistencyChannel;
+    }
+
+    public WorkStealingEnabledChannel<UpdateConsistencyJob> getUpdateConsistencyChannel() {
+        return updateconsistencyChannel;
     }
 
     public WorkStealingEnabledChannel<IntegrityJob> getIntegrityChannel() {

@@ -32,6 +32,7 @@ public class DatafusionApplication {
 		JoinManager.getInstance().init();
 		AccuracyManager.getInstance().init();
 		ConsistencyManager.getInstance().init();
+		UpdateConsistencyManager.getInstance().init();
 		IntegrityManager.getInstance().init();
 		UpdateIntegrityManager.getInstance().init();
 
