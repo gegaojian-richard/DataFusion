@@ -2,7 +2,7 @@
   <div class="menu-wrapper">
     <template v-for="(item, index) in routes" v-if="!item.hidden&&item.children">
 
-      <router-link v-if="item.children.length===1 && !item.children[0].children" :to="item.path+'/'+item.children[0].path" :key="item.children[0].name">
+      <router-link v-if="(item.children.length===1 && !item.children[0].children )|| !item.children[1].name" :to="item.path+'/'+item.children[0].path" :key="item.children[0].name">
         <el-menu-item  style="text-align:left;" :index="item.path+'/'+item.children[0].path" :class="{'submenu-title-noDropdown':!isNest}">
           <!--<svg-icon v-if="item.children[0].meta&&item.children[0].meta.icon" :icon-class="item.children[0].meta.icon"></svg-icon>-->
           <img :src="'/static/home/' + (index - 2) + '.png'" alt="">
