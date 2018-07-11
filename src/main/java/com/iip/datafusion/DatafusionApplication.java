@@ -34,6 +34,7 @@ public class DatafusionApplication {
 		ConsistencyManager.getInstance().init();
 		UpdateConsistencyManager.getInstance().init();
 		IntegrityManager.getInstance().init();
+		UpdateIntegrityManager.getInstance().init();
 
 		// ganjun Manager init()
 		TestManager.getInstance().init();

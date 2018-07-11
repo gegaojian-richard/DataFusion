@@ -60,13 +60,10 @@ public class IntegrityJobExecutor extends AbstractTerminatableThread implements 
     public void doJob(IntegrityJob job) throws Exception {
         // todo: 实现完整性检查工作
 
-        //System.out.println("finished hahah");
-        //job.setResult(new Result(0,"wawawawawa",null));
+
 
         DataSourceRouterManager.setCurrentDataSourceKey(job.getDataSourceId());
-        //System.out.println(job.getDataSourceId());
-        //System.out.println(job.getTableName());
-        //System.out.println(job.getSqlList());
+
 
         try{
             if(job.getInnerJobType().equals("query")) {

@@ -1,7 +1,7 @@
 <template>
   <div style="height:700px;background-color: #ffffff;">
-    <connect-info  @previewtable="previewTable" style="height:700px;float:left;width:180px;overflow: auto;"></connect-info>
-    <div style="margin-left: 180px;padding: 20px;">
+    <connect-info  @previewtable="previewTable"style="height:100%;width:180px;position:fixed;overflow: auto;z-index:2000;"></connect-info>
+      <div style="padding: 20px;margin-left:180px;overflow: visible;">
       <div style="height: 100%;;border:1px solid #bfcbd9;padding: 0px 20px;">
         <p style="height: 50px;text-align: left;border-bottom: 1px solid #bfcbd9;line-height: 60px;color:#698EC3;font-size: 16px;">
           <span style="display: inline-block;height:20px;width:5px;background: #698EC3;margin-bottom:-5px;margin-right: 5px;"></span>
@@ -154,21 +154,14 @@
         }],
         options_primary_column: [{value: '', label: ''}],
         options_primary_key: [{value: '', label: ''}],
-        options_source_column: [
-          {
-            value: '', label: '', children: [
-            {
-              value: '', label: '', children: [
-              {
-                value: '', label: '', children: []
-              }]
-            }]
-          }],
-        options_source_key: [[{value: '', label: ''}], [{value: '', label: ''}]],
+        options_source_column: [],
+        options_source_key: [
+//            [{value: '', label: ''}], [{value: '', label: ''}]
+        ],
         save_jsondata: '',
         res_all: [],
-        mainDataSourceId:"",     //  数据库id
-        mainTableName:"",         //  当前表名
+        dataSourceId:"",     //  数据库id
+        tableName:"",         //  当前表名
       }
     },
     components: {
@@ -183,16 +176,7 @@
         this.options_primary_column = [{value: '', label: ''}];
         this.options_primary_key = [{value: '', label: ''}];
         this.options_source_key = [[{value: '', label: ''}], [{value: '', label: ''}]];
-        this.options_source_column = [
-          {
-            value: '', label: '', children: [
-            {
-              value: '', label: '', children: [
-              {
-                value: '', label: ''
-              }]
-            }]
-          }];
+        this.options_source_column = [ ];
         axios.get("/kjb/cms/preview", {
             params: {
               "display": emitdata.database,
@@ -204,29 +188,46 @@
           if (res.status == 1) {
             var receive = JSON.parse(res.data);
             this.previewData = receive.items;
-            this.res_all=[];    ///  这里用于换表的时候清空之前的
+            this.res_all = [];    ///  这里用于换表的时候清空之前的
             this.dataSourceId = emitdata.database;
             this.tableName = emitdata.table;
+            this.getconn();
           }
-          /////  以下部分是完成目标表的对应字段选择   和 目标表 主键
-          var count = 0;
-          for (var property in this.previewData[0]) {
-            count = count + 1;
+        })
+      },
+      getconn(){
+        var count = 0;
+        for (var property in this.previewData[0]) {
+          count = count + 1;
+        }
+        for (var zz = 0; zz < count - 1; zz++) {
+          this.options_primary_column.push({value: '', label: ''});
+        }
+        var z = 0;
+        for (var property in this.previewData[0]) {
+          this.options_primary_column[z].label = property;
+          this.options_primary_column[z].value = property;
+          z++;
+        }
+        this.options_primary_key = this.options_primary_column;
+        //////////////////////   以下部分是完成  源表的对应字段的选择
+        for (let i = 0; i < this.conns.length; i++) {
+          let temp={
+            value: '', label: '', children: [
+            {
+              value: '', label: '', children: [
+              {
+                value: '', label: ''
+              }]
+            }]
           }
-          for (var zz = 0; zz < count - 1; zz++) {
-            this.options_primary_column.push({value: '', label: ''});
-          }
-          var z = 0;
-          for (var property in this.previewData[0]) {
-            this.options_primary_column[z].label = property;
-            this.options_primary_column[z].value = property;
-            z++;
-          }
-          this.options_primary_key = this.options_primary_column;
-          //////////////////////   以下部分是完成  源表的对应字段的选择
-          for (var i = 0; i < this.conns.length; i++) {
-            this.options_source_column[i].label = this.conns[i].displayName;
-            this.options_source_column[i].value = this.conns[i].id;  //   数据库
+          temp.label = this.conns[i].displayName;
+          temp.value = this.conns[i].id;  //   数据库
+          this.options_source_column.push(temp);
+          this.search(i);
+        }
+      },
+      search(i){
             axios.get("/kjb/cms/descriptionDataBase", {
               params: {
                 "nick": this.conns[i].id,
@@ -236,33 +237,27 @@
               if (res.status == 1) {
                 var jsondata = JSON.parse(res.data);
                 this.save_jsondatandata = jsondata;
-                /////    莫名奇妙i 加了 1
-                i = i - 1;
-                //////   真是简直了
-                for (var j = 0; j < jsondata.tableStructures.length - 1; j++) {  ///   表添加
+                for (let j = 0; j < jsondata.tableStructures.length - 1; j++) {  ///   表添加
                   this.options_source_column[i].children.push({
                     value: '',
                     label: '',
                     children: [{value: '', label: '', children: []}]
                   });
                 }
-                for (var j = 0; j < jsondata.tableStructures.length; j++) {  ///   表
+                for (let j = 0; j < jsondata.tableStructures.length; j++) {  ///   表
                   this.options_source_column[i].children[j].label = jsondata.tableStructures[j].tableName;
                   this.options_source_column[i].children[j].value = jsondata.tableStructures[j].tableName;
-                  for (var k = 0; k < jsondata.tableStructures[j].colmnuStructures.length - 1; k++)   ///  字段添加
+                  for (let k = 0; k < jsondata.tableStructures[j].colmnuStructures.length - 1; k++)   ///  字段添加
                   {
                     this.options_source_column[i].children[j].children.push({value: '', label: ''});
                   }
-                  for (var k = 0; k < jsondata.tableStructures[j].colmnuStructures.length; k++) {
+                  for (let k = 0; k < jsondata.tableStructures[j].colmnuStructures.length; k++) {
                     this.options_source_column[i].children[j].children[k].label = jsondata.tableStructures[j].colmnuStructures[k].name;
                     this.options_source_column[i].children[j].children[k].value = jsondata.tableStructures[j].colmnuStructures[k].name;
                   }
                 }
               }  //  if
             })
-
-          } //  for
-        })
       },  //  当前函数
       add_map(){
         this.save_item.push({primary_column: "", primary_key: "", source_column: "", source_key: ""});
@@ -330,8 +325,8 @@
       },
       submit(){
           var forsubmit={
-              "mainDataSourceId":this.mainDataSourceId,
-            "mainTableName":this.mainTableName,
+              "mainDataSourceId":this.dataSourceId,
+            "mainTableName":this.tableName,
             "m2f":this.res_all
           };
         axios.post("/kjb/dgs/consistency/commitjob", forsubmit).then
