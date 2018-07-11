@@ -33,6 +33,7 @@ public class DatafusionApplication {
 		AccuracyManager.getInstance().init();
 		ConsistencyManager.getInstance().init();
 		IntegrityManager.getInstance().init();
+		UpdateIntegrityManager.getInstance().init();
 
 		// ganjun Manager init()
 		TestManager.getInstance().init();

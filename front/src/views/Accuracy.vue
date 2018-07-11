@@ -278,7 +278,7 @@
     width:100%;
   }
   .md-content li{
-    border-bottom: 1px solid #3333;
+    border-bottom: 1px,bold;
     width:100%;
     height:30px;
     line-height: 30px;

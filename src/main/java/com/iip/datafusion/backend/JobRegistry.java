@@ -80,4 +80,14 @@ public class JobRegistry {
         return this.userJobList;
     }
 
+    public JobBase getJob(int userID, int jobID){
+        List<JobBase> userJobs = this.userJobList.get(userID);
+        if (userJobs != null){
+            for(int i=0;i<userJobs.size();i++)
+                if(userJobs.get(i).getJobID() == jobID)
+                    return userJobs.get(i);
+        }
+        return null;
+    }
+
 }
