@@ -2,7 +2,6 @@ package com.iip.datafusion.dgs.model.integrity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.iip.datafusion.backend.configuration.Configuration;
-
 import java.util.ArrayList;
 
 /**
