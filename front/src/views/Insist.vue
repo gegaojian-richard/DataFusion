@@ -167,8 +167,8 @@
         options_source_key: [[{value: '', label: ''}], [{value: '', label: ''}]],
         save_jsondata: '',
         res_all: [],
-        dataSourceId:"",     //  数据库id
-        tableName:"",         //  当前表名
+        mainDataSourceId:"",     //  数据库id
+        mainTableName:"",         //  当前表名
       }
     },
     components: {
@@ -330,8 +330,8 @@
       },
       submit(){
           var forsubmit={
-              "dataSourceId":this.dataSourceId,
-            "tableName":this.tableName,
+              "mainDataSourceId":this.mainDataSourceId,
+            "mainTableName":this.mainTableName,
             "m2f":this.res_all
           };
         axios.post("/kjb/dgs/consistency/commitjob", forsubmit).then
