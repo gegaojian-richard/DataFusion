@@ -32,11 +32,9 @@ public class TopicModelController {
 
         try{
             TopicModelJob job = service.commitJob(configuration,userManager.getUserId());
-            System.out.println("TopicModel Controller: " + job.getCorpusPath() + job.getTopicNum());
-            while(job.getResult() == null){
-                Thread.sleep(1000);
-            }
-            return job.getResult();
+            Result result = new Result(1,"Task Submitted successfully",null);
+
+            return result;
         }catch (Exception e){
             return new Result(0,e.getMessage(),null);
         }

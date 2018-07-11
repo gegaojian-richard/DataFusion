@@ -1,8 +1,8 @@
 package com.iip.datafusion.backend.textprocess.cheonhye;
 
 import com.iip.datafusion.backend.textprocess.util.FileUtil;
-import org.wltea.analyzer.lucene.IKAnalyzer;
-
+import com.hankcs.hanlp.HanLP;
+import com.hankcs.hanlp.seg.common.Term;
 import java.io.*;
 import java.util.*;
 import java.util.regex.Matcher;
@@ -41,12 +41,20 @@ public class TF_IDF {
 
         ArrayList<String> words = new ArrayList<String>();
         String text = TF_IDF.readFile(file);
-        IKAnalyzer analyzer = new IKAnalyzer();
-        words = analyzer.split(text);
+
+        //开始分词
+        List<Term> termList = HanLP.segment(text);
+
+        for (int i = 0; i < termList.size() ; i++){
+
+            words.add(termList.get(i).word);
+        }
 
         //用来存放停用词的集合
         // ganjun update load stopwords function
+
         FileUtil.loadStopWords();
+
         Set<String> stopWordSet = FileUtil.stopWords;
 
         ArrayList<String> newwords=new ArrayList<String>();
@@ -226,7 +234,7 @@ public class TF_IDF {
             System.out.println("}");
             map.put(stringName,list);
         }
-    return map;
+        return map;
     }
 
     public static Map<String,List<String>>  tfIdf( String file,int tN )throws IOException{
