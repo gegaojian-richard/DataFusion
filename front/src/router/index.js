@@ -72,7 +72,17 @@ export const constantRouterMap=[
       component:_import('Task'),
       name:'Task',
       meta:{title:'任务管理',icon:'dashboard',noCache:true}
-    }]
+    },
+      {
+        path:'completeresult',
+        component:_import('CompleteResult')
+      },
+      {
+        path:'insistresult',
+        component:_import('InsistResult')
+      },
+
+    ]
   },
   {
     path:'/algorithm',

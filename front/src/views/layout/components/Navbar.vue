@@ -3,8 +3,8 @@
     <hamburger   class="hamburger-container" :toggleClick="toggleSideBar" :isActive="sidebar.opened"></hamburger>
 
     <breadcrumb class="breadcrumb-container"></breadcrumb>
-    <a class="navbar-brand" href="/">数据融合工具</a>
-    <a href="/#/login/" style="float:right;margin-right: 50px;">登录</a>
+    <a class="navbar-brand" href="/">数据整合工具</a>
+    <a href="/#/login/" style="float:right;margin-right: 250px;">登录</a>
   </el-menu>
 </template>
 

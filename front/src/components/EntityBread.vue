@@ -598,7 +598,7 @@
       sureEdit() {      //确定之后先是删除一条之后再插入一条
         var id;
         id=this.entityLi[this.nowEditCol].id;
-        axios.get("kjb/entity/delete", {
+        axios.get("/kjb/entity/delete", {
           params: {
             "entityId": id
           }
@@ -620,7 +620,7 @@
       deleteEntity(index){
         var id;
         id=this.entityLi[index].id;
-        axios.get("kjb/entity/delete", {
+        axios.get("/kjb/entity/delete", {
           params: {
             "entityId": id
           }
@@ -663,7 +663,7 @@
         this.$store.dispatch('GetEntity');
       },
       insertEntity(params){
-        axios.post("kjb/entity/create", params).then(
+        axios.post("/kjb/entity/create", params).then(
           (response) => {
             let res = response.data;
             if (res.status == 1) {

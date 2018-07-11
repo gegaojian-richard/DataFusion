@@ -2,7 +2,7 @@
   <div class="login-container" :style="note">
     <el-form class="login-form" autoComplete="on" :model="loginForm" :rules="loginRules" ref="loginForm" label-position="left">
       <div class="title-container">
-        <h3 class="title">数据融合工具</h3>
+        <h3 class="title">数据整合工具</h3>
       </div>
       <div class="form-window">
         <el-form-item prop="username">

@@ -1,6 +1,6 @@
 <template>
 <div style="height:100%;">
-  <fusion-side  @selectentity="selectEntity" style="height:100%;width:180px;position:fixed;"></fusion-side>
+  <fusion-side  @selectentity="selectEntity" style="height:100%;width:180px;position:fixed;overflow: auto"></fusion-side>
   <div style="padding: 20px;margin-left:180px;overflow: visible;">
     <div style="border:1px solid #ccc;padding: 0 20px 50px 20px;background-color:#fff;">
       <el-tabs v-model="activeName2" type="card" @tab-click="handleClick" style="margin-top:20px;">
