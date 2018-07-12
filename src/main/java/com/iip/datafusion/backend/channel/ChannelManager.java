@@ -6,9 +6,12 @@ import com.iip.datafusion.backend.job.algorithm.TFIDFJob;
 import com.iip.datafusion.backend.job.algorithm.TextRankJob;
 import com.iip.datafusion.backend.job.algorithm.TopicModelJob;
 import com.iip.datafusion.backend.job.consistency.ConsistencyJob;
+import com.iip.datafusion.backend.job.consistency.UpdateConsistencyJob;
 import com.iip.datafusion.backend.job.integrity.IntegrityJob;
 import com.iip.datafusion.backend.job.join.JoinJob;
 import com.iip.datafusion.backend.job.test.TestJob;
+import com.iip.datafusion.dgs.model.UpdateIntegrityJob;
+
 public class ChannelManager {
 
     private WorkStealingEnabledChannel<JoinJob> joinChannel;
@@ -17,7 +20,11 @@ public class ChannelManager {
 
     private WorkStealingEnabledChannel<ConsistencyJob> consistencyChannel;
 
+    private WorkStealingEnabledChannel<UpdateConsistencyJob> updateconsistencyChannel;
+
     private WorkStealingEnabledChannel<IntegrityJob> integrityChannel;
+
+    private WorkStealingEnabledChannel<UpdateIntegrityJob> updateIntegrityChannel;
 
 
     private final static ChannelManager singleInstance = new ChannelManager();
@@ -52,8 +59,16 @@ public class ChannelManager {
         this.consistencyChannel = consistencyChannel;
     }
 
+    public void setUpdateConsistencyChannel(WorkStealingEnabledChannel<UpdateConsistencyJob> updateconsistencyChannel) {
+        this.updateconsistencyChannel = updateconsistencyChannel;
+    }
+
     public void setIntegrityChannel(WorkStealingEnabledChannel<IntegrityJob> integrityChannel) {
         this.integrityChannel = integrityChannel;
+    }
+
+    public void setUpdateIntegrityChannel(WorkStealingEnabledChannel<UpdateIntegrityJob> updateIntegrityChannel) {
+        this.updateIntegrityChannel = updateIntegrityChannel;
     }
 
     public WorkStealingEnabledChannel<JoinJob> getJoinChannel() {
@@ -68,8 +83,16 @@ public class ChannelManager {
         return consistencyChannel;
     }
 
+    public WorkStealingEnabledChannel<UpdateConsistencyJob> getUpdateConsistencyChannel() {
+        return updateconsistencyChannel;
+    }
+
     public WorkStealingEnabledChannel<IntegrityJob> getIntegrityChannel() {
         return integrityChannel;
+    }
+
+    public WorkStealingEnabledChannel<UpdateIntegrityJob> getUpdateIntegrityChannel() {
+        return updateIntegrityChannel;
     }
 
     // ganjun add TestJob

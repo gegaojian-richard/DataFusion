@@ -41,11 +41,11 @@ public class ConsistencyParser {
             ConsistencyJob.setmainDatasourceID(mainDataSourceId);
             ConsistencyJob.setmainTableName(mainTableName);
             ConsistencyJob.setmainColumnName(mainColumnName);
-            ConsistencyJob.setPrimary_key1(mainPrimary_key);
-            ConsistencyJob.setPrimary_key2(followPrimary_key);
+            ConsistencyJob.setmainPrimary_key(mainPrimary_key);
+            ConsistencyJob.setfollowPrimary_key(followPrimary_key);
             ConsistencyJob.setfollowDatasourceID(followDataSourceID);
             ConsistencyJob.setfollowTableName(followTableName);
-            ConsistencyJob.setfollowColumnName(followPrimary_key);
+            ConsistencyJob.setfollowColumnName(followColumnName);
             ArrayList<String> sqlList = new ArrayList<>();
             sqlList.add(sql1);
             sqlList.add(sql2);
