@@ -11,6 +11,11 @@ import com.iip.datafusion.backend.job.join.JoinJob;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
+/**
+ * 数据整合后台功能入口
+ * 单例(饿汉)
+ * Created by GeGaojian on 2018/01/19.
+ */
 public class JoinManager {
     private final TerminationToken token= new TerminationToken();
 

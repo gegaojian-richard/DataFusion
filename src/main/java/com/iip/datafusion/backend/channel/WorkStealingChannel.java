@@ -1,6 +1,5 @@
 package com.iip.datafusion.backend.channel;
 
-import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.BlockingQueue;
 
 public class WorkStealingChannel<J> implements WorkStealingEnabledChannel<J> {
@@ -19,7 +18,6 @@ public class WorkStealingChannel<J> implements WorkStealingEnabledChannel<J> {
         }
 
         int queueIndex = -1;
-        //todo:不太懂
         while (job == null){
             queueIndex = (queueIndex + 1) % managedQueues.length;
             targetQueue = managedQueues[queueIndex];

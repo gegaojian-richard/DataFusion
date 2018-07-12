@@ -40,6 +40,7 @@ public class DataSourceRouter extends AbstractRoutingDataSource {
 
     @Autowired // 注入主数据库配置信息
     public DataSourceRouter(MainDataSourceProperties mainDataSourceProperties){
+        // 此构造函数由Spring容器调用，需要在构造函数执行时，添加主数据库
         // 创建主数据库DataSource
         customDataSourceProperties.put("primary", mainDataSourceProperties);
         customDataSource.put("primary", createDataSource(mainDataSourceProperties));
@@ -189,4 +190,7 @@ public class DataSourceRouter extends AbstractRoutingDataSource {
         return result;
     }
 
+    public DataSourceProperties getDataSourcePropertiesByID(String dataSourceId){
+        return customDataSourceProperties.get(dataSourceId);
+    }
 }

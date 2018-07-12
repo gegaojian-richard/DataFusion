@@ -1,6 +1,5 @@
 package com.iip.datafusion.dfs.controller;
 
-import com.iip.datafusion.backend.JoinManager;
 import com.iip.datafusion.dfs.model.JoinConfiguration;
 import com.iip.datafusion.dfs.service.DataFusionService;
 import com.iip.datafusion.util.dbutil.DataSourceRouterManager;
@@ -33,47 +32,43 @@ public class DfsController {
     @Autowired
     UserManager userManager;
 
-    @RequestMapping(path={"/commitjob"},method = RequestMethod.POST)
+    @RequestMapping(path = {"/commitjob"}, method = RequestMethod.POST)
     @ResponseBody
-    public Result commitJob(@RequestBody JoinConfiguration joinConfiguration){
+    public Result commitJob(@RequestBody JoinConfiguration joinConfiguration) {
+        try {
+            Map map = dataFusionService.commitJob(joinConfiguration, userManager.getUserId());
+            Result res = new Result(1, "Task Submitted successfully", null);
 
-        //        todo: 测试
-        try{
-//        JoinManager.getInstance().init();
-        Map map = dataFusionService.commitJob(joinConfiguration,userManager.getUserId());
-        Result res = new Result(1,"Task Submitted successfully",null);;
-        //res.setMsg(integrityJob.getJobId());
-        return res;
-    }catch (Exception e){
-        return new Result(0,e.getMessage(),null);
-    }
-//        return new Result();
-//        return joinConfiguration.toString();
+            return res;
+        } catch (Exception e) {
+            return new Result(0, e.getMessage(), null);
+        }
     }
 
-    @RequestMapping(path={"/initdata"},method={RequestMethod.GET})
+    // todo: 测试
+    @RequestMapping(path = {"/initdata"}, method = {RequestMethod.GET})
     @ResponseBody
-    public String initdata(){
+    public String initdata() {
         String sql = "INSERT INTO t1 " +
                 "(id, f11, f12, f13) VALUES (?, ?, ?, ?)";
         DataSourceRouterManager.setCurrentDataSourceKey("primary");
         List<Object[]> parameters = new ArrayList<Object[]>();
         for (int i = 0; i < 1000; i++) {
-            parameters.add(new Object[] {i,
-                    "f11"+i, "f12"+i, "f13"+i}
+            parameters.add(new Object[]{i,
+                    "f11" + i, "f12" + i, "f13" + i}
             );
         }
         jdbcTemplate.batchUpdate(sql, parameters);
         return "ok";
     }
 
-    @RequestMapping(path={"/testjoin"},method={RequestMethod.GET})
+    // todo: 测试
+    @RequestMapping(path = {"/testjoin"}, method = {RequestMethod.GET})
     @ResponseBody
-    public String testjoin(){
+    public String testjoin() {
         String sql = "select * from t1";
         DataSourceRouterManager.setCurrentDataSourceKey("primary");
         SqlRowSet resultSet = jdbcTemplate.queryForRowSet(sql);
-
 
 
         return "ok";
