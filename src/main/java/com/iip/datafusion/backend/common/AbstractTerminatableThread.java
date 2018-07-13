@@ -33,7 +33,6 @@ public abstract class AbstractTerminatableThread extends Thread implements Termi
      * @param cause
      */
     protected void doCleanup(Exception cause){
-
     }
 
     /**

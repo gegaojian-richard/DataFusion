@@ -118,9 +118,4 @@ public class JoinJobExecutor extends AbstractTerminatableThread implements JobEx
             }
         });
     }
-
-    @Override
-    protected void doCleanup(Exception cause) {
-        super.doCleanup(cause);
-    }
 }
