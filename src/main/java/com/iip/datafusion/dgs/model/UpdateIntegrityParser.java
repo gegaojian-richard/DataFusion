@@ -14,12 +14,11 @@ import java.util.Map;
 public class UpdateIntegrityParser {
 
     public static UpdateIntegrityJob parse(UpdateIntegrityConfiguration updateIntegrityConfiguration)throws Exception{
-        System.out.println("here no problem");
         IntegrityJob job = (IntegrityJob) JobRegistry.getInstance().getJob(updateIntegrityConfiguration.getUserId(),updateIntegrityConfiguration.getJobId());
         String dataSourceId = job.getDataSourceId();
         String tableName = job.getTableName();
         List<Map<String,String>> valueMaps = updateIntegrityConfiguration.getMapEntries();
-        System.out.println("here no problem");
+
         UpdateIntegrityJob updateIntegrityJob = new UpdateIntegrityJob();
         updateIntegrityJob.setDataSourceId(dataSourceId);
         updateIntegrityJob.setTableName(tableName);

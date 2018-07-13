@@ -83,14 +83,11 @@ public class JobRegistry {
     public JobBase getJob(int userID, int jobID){
         List<JobBase> userJobs = this.userJobList.get(userID);
         if (userJobs != null){
-            System.out.println("Jobs");
             for(int i=0;i<userJobs.size();i++) {
-                System.out.println(userJobs.get(i).getJobID()+""+jobID+userID);
                 if (userJobs.get(i).getJobID() == jobID)
                     return userJobs.get(i);
             }
         }
-        System.out.println("null get");
         return null;
     }
 

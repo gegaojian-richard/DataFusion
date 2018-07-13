@@ -30,7 +30,6 @@ public class UpdateIntegrityController {
     @ResponseBody
     public Result update(@RequestBody UpdateIntegrityConfiguration updateIntegrityConfiguration) {
         try{
-            System.out.println("contoller");
             UpdateIntegrityJob updateIntegrityJob = updateIntegrityService.commitJob(updateIntegrityConfiguration);
 
             return new Result(1,"Task finished successfully!",null);
