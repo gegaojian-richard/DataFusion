@@ -116,9 +116,7 @@
       <el-button type="primary" @click="submit()">确认提交</el-button>
     </div>
     </div>
-    </div>
-  </div>
-</template>
+    </template>
 <style rel="stylesheet/scss" lang="scss" scoped>
   .imagetable {
     border:none;
