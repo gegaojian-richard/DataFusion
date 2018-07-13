@@ -116,9 +116,7 @@
       <el-button type="primary" @click="submit()">确认提交</el-button>
     </div>
     </div>
-    </div>
-  </div>
-</template>
+    </template>
 <style rel="stylesheet/scss" lang="scss" scoped>
   .imagetable {
     border:none;
@@ -381,7 +379,7 @@
         let edittype = 0;
         var integrity = {};
         var commit_ReferRule=[];
-        var commit_DefaultRule=[];
+        var commit_DefaultRule={};
         if (!this.editRule) {
 //            debugger;
             for(let i =0;i<this.rulesforRefer.length;i++){
@@ -407,16 +405,16 @@
                 });
               }else{
 //                  debugger;
-                  let temp={};
-                  temp[this.rulesforDefault[j].name]=this.rulesforDefault[j].value;
-                  commit_DefaultRule.push(temp);
+
+                commit_DefaultRule[this.rulesforDefault[j].name]=this.rulesforDefault[j].value;
+
 //                  debugger;
               }
             }
           edittype = 1; //规则更新
           integrity = {
-            'userId': this.$route.query.nowUserId,
-            'jobID': this.$route.query.nowEditJob,
+            'userId': parseInt(this.$route.query.nowUserId),
+            'jobID': parseInt(this.$route.query.nowEditJob),
             'type': edittype,
             'mapEntries': commit_ReferRule,
             'unifyMap': commit_DefaultRule,
@@ -424,8 +422,8 @@
 //          debugger;
         } else {
           integrity = {    //手动更新
-            'userId': this.$route.query.nowUserId,
-            'jobID': this.$route.query.nowEditJob,
+            'userId': parseInt(this.$route.query.nowUserId),
+            'jobID': parseInt(this.$route.query.nowEditJob),
             'type': edittype,
             'mapEntries': this.haschanged,
             'unifyMap': null,
