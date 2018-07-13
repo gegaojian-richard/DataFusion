@@ -4,7 +4,6 @@ package com.iip.datafusion.backend.job;
  * Job类型
  * Created by GeGaojian on 2018/01/18.
  */
-//aaaaa
 public enum JobType {
     CONSISTENCY("一致性检查"),
     ACCURACY("准确性检查"),

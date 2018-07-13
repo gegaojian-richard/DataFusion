@@ -7,12 +7,7 @@ import com.iip.datafusion.ums.model.MD5;
 import com.iip.datafusion.ums.model.User;
 import com.iip.datafusion.util.jsonutil.Result;
 import com.iip.datafusion.util.userutil.UserManager;
-import com.sun.org.apache.regexp.internal.RE;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.context.annotation.ScopedProxyMode;
-import org.springframework.jdbc.support.rowset.SqlRowSet;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 

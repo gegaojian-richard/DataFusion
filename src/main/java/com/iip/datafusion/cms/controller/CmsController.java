@@ -8,12 +8,9 @@ import com.iip.datafusion.ums.service.UmsService;
 import com.iip.datafusion.util.dbutil.DataSourceProperties;
 import com.iip.datafusion.util.jsonutil.Result;
 import com.iip.datafusion.util.userutil.UserManager;
-import com.sun.org.apache.regexp.internal.RE;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpSession;
-import java.util.Map;
 
 /**
  * Created by jingwei on 2017/12/12.

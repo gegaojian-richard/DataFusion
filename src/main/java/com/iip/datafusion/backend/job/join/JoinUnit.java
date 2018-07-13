@@ -2,6 +2,10 @@ package com.iip.datafusion.backend.job.join;
 
 import java.util.*;
 
+/**
+ * 数据整合单元
+ * Created by GeGaojian on 2018/01/18.
+ */
 public class JoinUnit {
 
     private Map<String, String> s2tMap = new HashMap<>(); // 该joinunit需要映射到目标表的字段

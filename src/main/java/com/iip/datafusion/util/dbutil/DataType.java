@@ -1,5 +1,9 @@
 package com.iip.datafusion.util.dbutil;
 
+/**
+ * Created by GeGaojian on 2017/03/15.
+ * 数据类型枚举类
+ */
 public enum DataType {
     TINYTEXT("varchar(255)"), // 0
     TEXT("text"),             // 1

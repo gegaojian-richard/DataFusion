@@ -26,12 +26,22 @@ import java.util.List;
 public class DatafusionApplication {
 
 	public static void main(String[] args) {
+
+		Runtime.getRuntime().addShutdownHook(new Thread() {
+			@Override
+			public void run() {
+				System.out.println("System Stoped");
+				// todo: 曾成：清空Redis缓存
+			}
+		});
+
 		SpringApplication.run(DatafusionApplication.class, args);
 
 		// 初始化底层功能模块
 		JoinManager.getInstance().init();
 		AccuracyManager.getInstance().init();
 		ConsistencyManager.getInstance().init();
+		UpdateConsistencyManager.getInstance().init();
 		IntegrityManager.getInstance().init();
 		UpdateIntegrityManager.getInstance().init();
 

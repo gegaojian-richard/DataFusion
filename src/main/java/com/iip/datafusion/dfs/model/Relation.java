@@ -3,6 +3,10 @@ package com.iip.datafusion.dfs.model;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+/**
+ * Created by GeGaojian on 2017/12/22.
+ */
+
 public class Relation {
     @JsonProperty("left")
     String left;

@@ -2,6 +2,10 @@ package com.iip.datafusion.backend.job.join;
 
 import java.util.ArrayList;
 
+/**
+ * SQL任务
+ * Created by GeGaojian on 2018/01/18.
+ */
 public class SQLTask {
     String sql;
     String whereFieldName;

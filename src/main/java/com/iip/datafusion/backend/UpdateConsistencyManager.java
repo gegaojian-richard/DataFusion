@@ -4,47 +4,42 @@ import com.iip.datafusion.backend.channel.ChannelManager;
 import com.iip.datafusion.backend.channel.WorkStealingChannel;
 import com.iip.datafusion.backend.common.TerminationToken;
 import com.iip.datafusion.backend.config.Capabilities;
-import com.iip.datafusion.backend.executor.JoinJobExecutor;
+import com.iip.datafusion.backend.executor.UpdateConsistencyJobExecutor;
 import com.iip.datafusion.backend.job.JobType;
-import com.iip.datafusion.backend.job.join.JoinJob;
+import com.iip.datafusion.backend.job.consistency.UpdateConsistencyJob;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
-/**
- * 数据整合后台功能入口
- * 单例(饿汉)
- * Created by GeGaojian on 2018/01/19.
- */
-public class JoinManager {
+public class UpdateConsistencyManager {
     private final TerminationToken token= new TerminationToken();
 
     // 关闭标识
     private volatile boolean shutdownRequested = false;
 
-    private final static JoinManager singleInstance = new JoinManager();
+    private final static UpdateConsistencyManager singleInstance = new UpdateConsistencyManager();
 
-    private JoinJobExecutor[] joinJobExecutors = new JoinJobExecutor[Capabilities.JOBEXECUTOR_COUNT];
+    private UpdateConsistencyJobExecutor[] updateConsistencyJobExecutors = new UpdateConsistencyJobExecutor[Capabilities.JOBEXECUTOR_COUNT];
 
-    private JoinManager(){
+    private UpdateConsistencyManager(){
         @SuppressWarnings("unchecked")
-        BlockingQueue<JoinJob>[] managedQueues = new LinkedBlockingQueue[Capabilities.JOBEXECUTOR_COUNT];
+        BlockingQueue<UpdateConsistencyJob>[] managedQueues = new LinkedBlockingQueue[Capabilities.JOBEXECUTOR_COUNT];
 
-        ChannelManager.getInstance().setJoinChannel(new WorkStealingChannel<>(managedQueues));
+        ChannelManager.getInstance().setUpdateConsistencyChannel(new WorkStealingChannel<>(managedQueues));
 
         for (int i = 0; i < Capabilities.JOBEXECUTOR_COUNT; ++i){
             managedQueues[i] = new LinkedBlockingQueue<>();
-            joinJobExecutors[i] = new JoinJobExecutor(token, managedQueues[i]);
+            updateConsistencyJobExecutors[i] = new UpdateConsistencyJobExecutor(token, managedQueues[i]);
         }
     }
 
-    public static JoinManager getInstance(){
+    public static UpdateConsistencyManager getInstance(){
         return singleInstance;
     }
 
     public void init(){
         for (int i = 0; i < Capabilities.JOBEXECUTOR_COUNT; ++i){
-            joinJobExecutors[i].start();
+            updateConsistencyJobExecutors[i].start();
         }
     }
 
@@ -54,15 +49,15 @@ public class JoinManager {
         }
 
         for (int i = 0; i < Capabilities.JOBEXECUTOR_COUNT; ++i){
-            joinJobExecutors[i].terminate();
+            updateConsistencyJobExecutors[i].terminate();
         }
 
         shutdownRequested = true;
     }
 
-    public void commitJob(JoinJob joinJob){
+    public void commitJob(UpdateConsistencyJob UpdateConsistencyJob){
         try {
-            ChannelManager.getInstance().getJoinChannel().put(joinJob);
+            ChannelManager.getInstance().getUpdateConsistencyChannel().put(UpdateConsistencyJob);
             token.reservations.incrementAndGet();
         }catch (Exception e){
             e.printStackTrace();
