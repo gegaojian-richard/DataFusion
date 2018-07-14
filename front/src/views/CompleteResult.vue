@@ -381,17 +381,18 @@
         let edittype = 0;
         var integrity = {};
         var commit_ReferRule=[];
-        var commit_DefaultRule=[];
+        var commit_DefaultRule={};
         if (!this.editRule) {
 //            debugger;
             for(let i =0;i<this.rulesforRefer.length;i++){
 //                debugger;
-                if(!this.rulesforRefer[i].primary_key || !this.rulesforRefer[i].primary_column|| !this.rulesforRefer[i].source_key ||!this.rulesforRefer[i].source_column ){
+                if(this.rulesforRefer[i].primary_key &&( !this.rulesforRefer[i].primary_column|| !this.rulesforRefer[i].source_key ||!this.rulesforRefer[i].source_column )){
+                  const h = this.$createElement;
                   this.$notify({
                     title: '提示',
                     message: h('i', {style: 'color: teal'}, "填充规则配置不完整")
                   });
-                }else{
+                }else if(this.rulesforRefer[i].primary_key){
 //                    debugger;
                     let temp_column=this.rulesforRefer[i].source_column.join(',');
                     let temp_key=this.rulesforRefer[i].source_key[0];
@@ -400,23 +401,22 @@
                 }
             }
             for(let j=0;j<this.rulesforDefault.length;j++){
-              if(!this.rulesforDefault[j].name || !this.rulesforDefault[j].value){
+              if(this.rulesforDefault[j].name && !this.rulesforDefault[j].value){
+                const h = this.$createElement;
                 this.$notify({
                   title: '提示',
                   message: h('i', {style: 'color: teal'}, "填充规则配置不完整")
                 });
-              }else{
+              }else if(this.rulesforDefault[j].name){
 //                  debugger;
-                  let temp={};
-                  temp[this.rulesforDefault[j].name]=this.rulesforDefault[j].value;
-                  commit_DefaultRule.push(temp);
+                 commit_DefaultRule[this.rulesforDefault[j].name]=this.rulesforDefault[j].value;
 //                  debugger;
               }
             }
           edittype = 1; //规则更新
           integrity = {
-            'userId': this.$route.query.nowUserId,
-            'jobID': this.$route.query.nowEditJob,
+            'userId': parseInt(this.$route.query.nowUserId),
+            'jobID': parseInt(this.$route.query.nowEditJob),
             'type': edittype,
             'mapEntries': commit_ReferRule,
             'unifyMap': commit_DefaultRule,
@@ -424,8 +424,8 @@
 //          debugger;
         } else {
           integrity = {    //手动更新
-            'userId': this.$route.query.nowUserId,
-            'jobID': this.$route.query.nowEditJob,
+            'userId': parseInt(this.$route.query.nowUserId),
+            'jobID': parseInt(this.$route.query.nowEditJob),
             'type': edittype,
             'mapEntries': this.haschanged,
             'unifyMap': null,
@@ -433,11 +433,11 @@
         }
 //        debugger;
         this.fortest=integrity;
-        axios.post("/kjb/integrity/updateIntegrity", integrity).then((response) => {
+        console.log(integrity);
+        axios.post("/kjb/dgs/update", integrity).then((response) => {
           var res = response.data;
           if (res.status == 1) {
-//                    this.$message('任务提交成功，请在任务管理处查看进度');
-//            debugger;
+            this.$message('提交成功');
             this.haschanged = [];
             const h = this.$createElement;
             this.$notify({
