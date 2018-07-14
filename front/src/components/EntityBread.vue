@@ -193,9 +193,10 @@
                 </div>
                 <div class="input-group">
                   <span style="style:inline-block;width:55px"> 数据库:</span>
-                  <el-select  v-model="editArr.dbPosition"  style="width:380px;">
-                    <el-option v-for="item in conns.displayName" :key="item" :value="item" :label="item"></el-option>
-                  </el-select>
+                  <!--<el-select  v-model="editArr.dbPosition"  style="width:380px;">-->
+                    <!--<el-option v-for="item in conns.displayName" :key="item" :value="item" :label="item"></el-option>-->
+                  <!--</el-select>-->
+                  <input v-model="editArr.dbPosition" disabled="true" type="text" class="inputEntity">
                 </div>
                 <div class="input-group">
                   <span style="style:inline-block;width:55px"> 表格名:</span>
@@ -260,7 +261,7 @@
                 </div>
               </div>
               <div class="btn-wrap">
-                <a href="javascript:;" class="btn-login" @click="sureEdit">提交</a>
+                <a href="javascript:;" class="btn-login" @click="sureEdit(editArr.dbID)">提交</a>
               </div>
             </div>
           </div>
@@ -479,7 +480,7 @@
         optionsType:[{"label":"短文本","value":"0"},{"label":"长文本","value":"1"},{"label":"整数","value":"2"},{"label":"小数","value":"3"},
           {"label":"日期","value":"4"},{"label":"日期时间","value":"5"}],
         editingRow: null,
-        editArr:{'displayName':'','dbPosition':'','tableName':'','entityType':'','properties':[]},
+        editArr:{'displayName':'','dbPosition':'','tableName':'','entityType':'','dbID':'','properties':[]},
         addMySql:false ,//添加连接
         dataUrl:"",//添加连接地址
         displayName:"",
@@ -500,9 +501,9 @@
         this.entityLi = val.filter(function (item) {
           return item.entityType == 0;
         });
-        this.eventLi = val.filter(function (item) {
-          return item.entityType == 1;
-        })
+//        this.eventLi = val.filter(function (item) {
+//          return item.entityType == 1;
+//        })
       },
       nowEditCol:function(val) {
         if (!(val<0)) {
@@ -511,6 +512,7 @@
           this.editArr.dbPosition = this.entityLi[val].dbPosition ;
           this.editArr.tableName = this.entityLi[val].tableName;
           this.editArr.entityType = this.entityLi[val].entityType;
+          this.editArr.dbID=this.entityLi[val].dbID;
           this.editArr.properties = JSON.parse(this.entityLi[val].properties);
         }else{
           this.editArr={'id':'','displayName':'','dbPosition':'','tableName':'','entityType':'','properties':[]}
@@ -595,7 +597,7 @@
       cancelEdit() {
         this.nowEditCol = -1;
       },
-      sureEdit() {      //确定之后先是删除一条之后再插入一条
+      sureEdit(dbID) {      //确定之后先是删除一条之后再插入一条
         var id;
         id=this.entityLi[this.nowEditCol].id;
         axios.get("/kjb/entity/delete", {
@@ -607,7 +609,7 @@
           if (res.status == 1) {
               var insertE={
                 'displayName': this.editArr.displayName,
-                'dbPosition': this.editArr.dbPosition,
+                'dbPosition': dbID,
                 'tableName':this.editArr.tableName,
                 'entityType': this.editArr.entityType,
                  'properties': JSON.stringify(this.editArr.properties)
@@ -655,7 +657,7 @@
           'displayName':'',
           'dbPosition':'',
           'tableName':'',
-          'entityType':1,
+          'entityType':0,
           'properties':''
         }
       },

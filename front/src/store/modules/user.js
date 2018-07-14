@@ -24,7 +24,7 @@ const user = {
         axios.post("/kjb/ums/login",param).then(response => {
           const data = response.data;
           if(data.status==1){
-            commit('SET_NAME', data.data)
+            commit('SET_NAME', "已登录");
             resolve()
           }else{
             reject(error)

@@ -1,24 +1,25 @@
 <template>
-  <div class="entity-event" style="color:#605F5F">
+  <div class="entity-event">
     <div class="entity">
       <div class="entity-title">
         <p style="height: 50px;text-align: left;border-bottom: 1px solid #bfcbd9;line-height: 60px;color:#698EC3;font-size: 16px;">
           <span style="display: inline-block;height:20px;width:5px;background: #698EC3;margin-bottom:-5px;margin-right: 5px;"></span>
           <span>事件库</span>
         </p>
+
       </div>
       <div class="entity-item">
         <div class="entity-item-head">
           <ul>
             <li style="width:25%;">事件名</li>
-            <li style="width:35%;">数据库地址</li>
+            <li>数据库地址</li>
             <li>表名</li>
             <li>属性</li>
             <li>管理</li>
           </ul>
         </div>
         <ul class="entity-item-list" style="height: 678px;overflow-y: auto;">
-          <li v-for="(item,index) in eventLi">
+          <li v-for="(item,index) in entityLi" v-bind:class="{blue:item.dbID}">
             <div class="entity-tab">
               {{item.displayName}}
             </div>
@@ -32,14 +33,15 @@
               ... ...
             </div>
             <div class="entity-tab">
-              <a href="javascript:void(0);" v-on:click="startEdit(index)" >编辑</a>
-              <a href="javascript:void(0);" v-on:click="deleteEntity(index)">删除</a>
+              <a href="javascript:void(0);" v-on:click="startEdit(index)" v-if="item.dbID" >编辑</a>
+              <a href="javascript:void(0);" v-on:click="deleteEntity(index)" v-if="item.dbID">删除</a>
+              <a href="javascript:void(0)"  v-if="!item.dbID" v-on:click="connectDB(item.dbPosition)" style="color: #2bc4e2">连接</a>
             </div>
           </li>
         </ul>
       </div>
       <div style="height: 40px;margin-top:30px;">
-        <button style="background:#A5CE64;color:#fff;line-height: 23px;float:right;" type="button" class="btn btn-small" aria-label="Left Align" @click="getEntity" id="load">
+        <button style="background: #A5CE64;color:#fff;line-height: 23px;float:right;" type="button" class="btn btn-small" aria-label="Left Align" @click="getEntity" id="load">
           <span class="glyphicon glyphicon-repeat" style="top:0px;" aria-hidden="true">刷新</span>
         </button>
         <button style="background: #82C4FB;color:#fff;line-height: 23px;float:right;" type="button" class="btn btn-small" aria-label="Left Align" @click="showAdd" id="add">
@@ -47,7 +49,7 @@
         </button>
       </div>
       <!--添加连接的遮罩层-->
-      <div class="md-modal modal-msg md-modal-transition" style="width:400px;"  v-bind:class="{'md-show':addMySql}">
+      <div class="md-modal modal-msg md-modal-transition" style="width:400px"  v-bind:class="{'md-show':addMySql}">
         <div class="md-modal-inner">
           <div class="md-top">
             <div class="md-title">添加mysql连接</div>
@@ -77,6 +79,7 @@
                   <i class="icon IconPwd"></i>
                   <input type="password" tabindex="4"  name="dataPassword" v-model="dataPassword" class="regi_login_input regi_login_input_left login-input-no input_text" placeholder="密码">
                 </li>
+
               </ul>
             </div>
             <div class="login-wrap">
@@ -87,20 +90,21 @@
       </div>
       <!--添加一条实体的遮罩层-->
       <div>
-        <div class="md-modal modal-msg md-modal-transition" style="width:500px;" v-bind:class="{'md-show':addShow}">
+        <div class="md-modal modal-msg md-modal-transition" style="width:500px" v-bind:class="{'md-show':addShow}">
           <div class="md-modal-inner">
             <div class="md-top">
+              <div class="md-title">添加事件</div>
               <button class="md-close" @click="addShow=false">Close</button>
             </div>
             <div class="md-content">
               <div class="confirm-tips">
                 <div class="input-group">
-                  <span  style="width:50px"> 实体名:</span>
+                  <span  style="width:50px"> 事件名:</span>
                   <input v-model="addOne.displayName" type="text" class="inputEntity" >
                 </div>
                 <div class="input-group">
                   <span style="width:50px"> 数据库:</span>
-                  <el-select  v-model="addOne.dbPosition" style="height:8px;width:380px">
+                  <el-select  v-model="addOne.dbPosition" style="height:8px;width:380px;">
                     <el-option v-for="item in conns" :key="item.displayName" :value="item.id" :label="item.displayName"></el-option>
                   </el-select>
                 </div>
@@ -113,57 +117,57 @@
                     <span style="height: 40px;line-height: 40px;display: inline-block" >具体信息</span>
                     <span  role="button" @click="addProperty" style="padding: 0 5px;color:#fff;margin-left: 250px;display: inline-block;height: 40px;background: #7CC1FC;"> <i class="el-icon-circle-plus">增加属性</i> </span>
                   </div>
-                    <el-table
-                      :data="addOnepro"
-                      class="entity-table"
-                      border
-                      style="margin-top:20px;width: 100%">
-                      <el-table-column
-                        align="center"
-                        label="字段名"
-                        width="100">
-                        <template slot-scope="scope">
-                          <span class="blockspan" v-if="editingRow!=scope.$index" @click="handleEdit(scope.$index)">{{ scope.row.name }}</span>
-                          <span v-if="editingRow==scope.$index" class="cell-edit-input"><el-input
-                            v-model="scope.row.name" style="border:1px solid #ccc !important;
-    border-radius: 3px !important;"></el-input></span>
-                        </template>
-                      </el-table-column>
-                      <el-table-column
-                        align="center"
-                        label="类型"
-                        width="100">
-                        <template slot-scope="scope">
-                          <span class="blockspan" v-if="editingRow!=scope.$index" @click="handleEdit(scope.$index)">{{ typetoShow[scope.row.type] }}</span>
-                          <el-select v-if="editingRow==scope.$index" v-model="scope.row.type" >
-                            <el-option v-for="item in optionsType" :key="item.value" :value="item.value" :label="item.label"></el-option>
-                          </el-select>
-                        </template>
-                      </el-table-column>
-                      <el-table-column
-                        align="center"
-                        label="主键"
-                        width="100px">
-                        <template slot-scope="scope">
-                          <span class="blockspan" v-if="editingRow!=scope.$index" @click="handleEdit(scope.$index)">{{ primetoShow[scope.row.prime] }}</span>
-                          <el-select v-if="editingRow==scope.$index" v-model="scope.row.prime" >
-                            <el-option v-for="item in optionsPrim" :key="item.value" :value="item.value" :label="item.label"></el-option>
-                          </el-select>
-                        </template>
-                      </el-table-column>
-                      <el-table-column
-                        align="center"
-                        label="操作"
-                        width="100px">
-                        <template slot-scope="scope">
-                          <!--<span v-if="editingRow!=scope.$index" class="cell-icon" @click="handleEdit(scope.$index)">  <i-->
-                          <!--class="el-icon-edit"></i> </span>-->
-                          <span v-if="editingRow!=scope.$index" class="cell-icon" @click="handleDelete(scope.$index)">  <i class="el-icon-delete"></i> </span>
-                          <!--<span v-if="editingRow==scope.$index" class="cell-icon" @click="handleSave(scope.$index)">  <i-->
+                  <el-table
+                    :data="addOnepro"
+                    class="entity-table"
+                    border
+                    style="width: 100%;margin-top:20px;">
+                    <el-table-column
+                      align="center"
+                      label="字段名"
+                      width="100">
+                      <template slot-scope="scope">
+                        <span class="blockspan" v-if="editingRow!=scope.$index" @click="handleEdit(scope.$index)">{{ scope.row.name }}</span>
+                        <span v-if="editingRow==scope.$index" class="cell-edit-input"><el-input
+                          v-model="scope.row.name" style="border:1px solid #ccc !important;
+    border-radius: 3px !important;" ></el-input></span>
+                      </template>
+                    </el-table-column>
+                    <el-table-column
+                      align="center"
+                      label="类型"
+                      width="100">
+                      <template slot-scope="scope">
+                        <span class="blockspan" v-if="editingRow!=scope.$index" @click="handleEdit(scope.$index)">{{ typetoShow[scope.row.type] }}</span>
+                        <el-select v-if="editingRow==scope.$index" v-model="scope.row.type" >
+                          <el-option v-for="item in optionsType" :key="item.value" :value="item.value" :label="item.label"></el-option>
+                        </el-select>
+                      </template>
+                    </el-table-column>
+                    <el-table-column
+                      align="center"
+                      label="主键"
+                      width="100px">
+                      <template slot-scope="scope">
+                        <span class="blockspan" v-if="editingRow!=scope.$index" @click="handleEdit(scope.$index)">{{ primetoShow[scope.row.prime] }}</span>
+                        <el-select v-if="editingRow==scope.$index" v-model="scope.row.prime" >
+                          <el-option v-for="item in optionsPrim" :key="item.value" :value="item.value" :label="item.label"></el-option>
+                        </el-select>
+                      </template>
+                    </el-table-column>
+                    <el-table-column
+                      align="center"
+                      label="操作"
+                      width="100px">
+                      <template slot-scope="scope">
+                         <!--<span v-if="editingRow!=scope.$index" class="cell-icon" @click="handleEdit(scope.$index)">  <i-->
+                                  <!--class="el-icon-edit"></i> </span>-->
+                        <span v-if="editingRow!=scope.$index" class="cell-icon" @click="handleDelete(scope.$index)">  <i class="el-icon-delete"></i> </span>
+                        <!--<span v-if="editingRow==scope.$index" class="cell-icon" @click="handleSave(scope.$index)">  <i-->
                           <!--class="el-icon-document"></i> </span>-->
-                        </template>
-                      </el-table-column>
-                    </el-table>
+                      </template>
+                    </el-table-column>
+                  </el-table>
                 </div>
               </div>
               <div class="btn-wrap">
@@ -176,7 +180,7 @@
       </div>
       <!--修改一条实体的遮罩层-->
       <div>
-        <div class="md-modal modal-msg md-modal-transition" style="width:500px;color:#605F5F;" v-bind:class="{'md-show':editShow}">
+        <div class="md-modal modal-msg md-modal-transition" style="width:500px" v-bind:class="{'md-show':editShow}">
           <div class="md-modal-inner">
             <div class="md-top">
               <button class="md-close" @click="editShow=false">Close</button>
@@ -184,14 +188,15 @@
             <div class="md-content">
               <div class="confirm-tips">
                 <div class="input-group">
-                  <span  style="style:inline-block;width:55px"> 实体名:</span>
+                  <span  style="style:inline-block;width:55px"> 事件名:</span>
                   <input v-model="editArr.displayName" type="text" class="inputEntity" >
                 </div>
                 <div class="input-group">
                   <span style="style:inline-block;width:55px"> 数据库:</span>
-                  <el-select  v-model="editArr.dbPosition"  style="width:380px;">
-                    <el-option v-for="item in conns.displayName" :key="item" :value="item" :label="item"></el-option>
-                  </el-select>
+                  <!--<el-select  v-model="editArr.dbPosition"  style="width:380px;">-->
+                    <!--<el-option v-for="item in conns.displayName" :key="item" :value="item" :label="item"></el-option>-->
+                  <!--</el-select>-->
+                  <input v-model="editArr.dbPosition" disabled="true" type="text" class="inputEntity">
                 </div>
                 <div class="input-group">
                   <span style="style:inline-block;width:55px"> 表格名:</span>
@@ -206,7 +211,7 @@
                     :data="editArr.properties"
                     class="entity-table"
                     border
-                    style="width: 100%;margin-top:20px;">
+                    style="width: 100%;">
                     <el-table-column
                       align="center"
                       label="字段名"
@@ -215,7 +220,7 @@
                         <span class="blockspan" v-if="editingRow!=scope.$index" @click="handleEdit(scope.$index)">{{ scope.row.name }}</span>
                         <span v-if="editingRow==scope.$index" class="cell-edit-input"><el-input
                           v-model="scope.row.name" style="color:#1f2d3d;border:1px solid #ccc !important;
-    border-radius: 3px !important;"></el-input></span>
+    border-radius: 3px !important; "></el-input></span>
                       </template>
                     </el-table-column>
                     <el-table-column
@@ -245,28 +250,35 @@
                       label="操作"
                       width="100px">
                       <template slot-scope="scope">
-                        <!--<span v-if="editingRow!=scope.$index" class="cell-icon" @click="handleEdit(scope.$index)">  <i-->
-                        <!--class="el-icon-edit"></i> </span>-->
+                         <!--<span v-if="editingRow!=scope.$index" class="cell-icon" @click="handleEdit(scope.$index)">  <i-->
+                           <!--class="el-icon-edit"></i> </span>-->
                         <span v-if="editingRow!=scope.$index" class="cell-icon" @click="handleDelete(scope.$index)">  <i class="el-icon-delete"></i> </span>
                         <!--<span v-if="editingRow==scope.$index" class="cell-icon" @click="handleSave(scope.$index)">  <i-->
-                        <!--class="el-icon-document"></i> </span>-->
+                          <!--class="el-icon-document"></i> </span>-->
                       </template>
                     </el-table-column>
                   </el-table>
                 </div>
               </div>
               <div class="btn-wrap">
-                <a href="javascript:;" class="btn-login" @click="sureEdit">提交</a>
+                <a href="javascript:;" class="btn-login" @click="sureEdit(editArr.dbID)">提交</a>
               </div>
             </div>
           </div>
         </div>
-        <div class="md-overlay" v-if="editShow" @click="editShow=false"></div>
+        <div class="md-overlay" v-if="editShow || addShow || addMySql" @click="editShow=false"></div>
       </div>
     </div>
   </div>
 </template>
 <style rel="stylesheet/scss" lang="scss" scoped>
+   /*.el-input__inner{*/
+     /*border:1px solid #ccc !important;*/
+     /*border-radius: 3px !important;*/
+  /*}*/
+  /*.el-select{*/
+    /*height:30px;*/
+  /*}*/
   .entity-table{
     height:300px !important;
     overflow: auto;
@@ -295,12 +307,11 @@
   }
   .el-input input{
     color: #0c0709;
-    border:1px solid #7a7775 !important;
-    border-radius: 2px !important;
   }
   .el-input__inner{
     height:30px;
     margin-top: 5px;
+
   }
   .inputEntity{
     height:50px;
@@ -422,12 +433,12 @@
   }
   .md-modal .md-modal-inner .md-content {
     padding: 30px 30px 50px 30px;
-    .btn-login {
-      height: 50px;
-      line-height: 50px;
-      border: 2px solid  #5ACD70;
-      background: #5ACD70;
-    }
+  .btn-login {
+    height: 50px;
+    line-height: 50px;
+    border: 2px solid  #5ACD70;
+    background: #5ACD70;
+  }
   }
   .inputEntity {
     height: 40px;
@@ -446,40 +457,38 @@
     width: 380px!important;
     margin-bottom: 10px;
   }
+
 </style>
 <script>
   import axios from 'axios'
   import {mapGetters} from 'vuex'
   export default{
-      data(){
-        return{
-          //  entityEvent:[],
-          entityLi:[],
-          eventLi:[],
-          editStatus:false,
-          nowEditCol:-1,
-          addOnepro:[{"name":'',"type":'',"prime":''}],
-          addOne:{'displayName':'','dbPosition':'','tableName':'','entityType':'','properties':''},
-          editShow:false,
-          addShow:false,
-          primetoShow:{"1":"Y","0":"N"},
-          typetoShow:{"0":"短文本","1":"长文本","2":"整数","3":"小数","4":"日期","5":"日期时间"},
-          optionsPrim:[{'label':'Y','value':'1'},{'label':'N',"value":'0'}],
-          optionsType:[{"label":"短文本","value":"0"},{"label":"长文本","value":"1"},{"label":"整数","value":"2"},{"label":"小数","value":"3"},
-            {"label":"日期","value":"4"},{"label":"日期时间","value":"5"}],
-          editingRow: null,
-          editArr:{'displayName':'','dbPosition':'','tableName':'','entityType':'','properties':[]},
-          addMySql:false ,//添加连接
-          dataUrl:"",//添加连接地址
-          displayName:"",
-          dataPassword:"",
-          dataUserName:"",
-          errorTip:false,
-          createError:false,
-        }
-      },
-    mounted(){
-      this.getEntity();
+    data(){
+      return{
+      //  entityEvent:[],
+        entityLi:[],
+        eventLi:[],
+        editStatus:false,
+        nowEditCol:-1,
+        addOnepro:[{"name":'',"type":'',"prime":''}],
+        addOne:{'displayName':'','dbPosition':'','tableName':'','entityType':'','properties':''},
+        editShow:false,
+        addShow:false,
+        primetoShow:{"1":"Y","0":"N"},
+        typetoShow:{"0":"短文本","1":"长文本","2":"整数","3":"小数","4":"日期","5":"日期时间"},
+        optionsPrim:[{'label':'Y','value':'1'},{'label':'N',"value":'0'}],
+        optionsType:[{"label":"短文本","value":"0"},{"label":"长文本","value":"1"},{"label":"整数","value":"2"},{"label":"小数","value":"3"},
+          {"label":"日期","value":"4"},{"label":"日期时间","value":"5"}],
+        editingRow: null,
+        editArr:{'displayName':'','dbPosition':'','tableName':'','entityType':'','dbID':'','properties':[]},
+        addMySql:false ,//添加连接
+        dataUrl:"",//添加连接地址
+        displayName:"",
+        dataPassword:"",
+        dataUserName:"",
+        errorTip:false,
+        createError:false,
+      }
     },
     computed: {
       ...mapGetters(['entityevent','conns']),
@@ -488,35 +497,37 @@
       this.getEntity();
     },
     watch:{
-      entityEvent:function(val) {
+      entityevent:function(val) {
         this.entityLi = val.filter(function (item) {
-          return item.entityType == 0;
-        });
-        this.eventLi = val.filter(function (item) {
           return item.entityType == 1;
-        })
+        });
+//        this.eventLi = val.filter(function (item) {
+//          return item.entityType ==0;
+//        })
       },
       nowEditCol:function(val) {
         if (!(val<0)) {
-          this.editArr.id = this.eventLi[val].id ;
-          this.editArr.displayName = this.eventLi[val].displayName;
-          this.editArr.dbPosition = this.eventLi[val].dbPosition ;
-          this.editArr.tableName = this.eventLi[val].tableName;
-          this.editArr.entityType = this.eventLi[val].entityType;
-          this.editArr.properties = JSON.parse(this.eventLi[val].properties);
+          this.editArr.id = this.entityLi[val].id ;
+          this.editArr.displayName = this.entityLi[val].displayName;
+          this.editArr.dbPosition = this.entityLi[val].dbPosition ;
+          this.editArr.tableName = this.entityLi[val].tableName;
+          this.editArr.entityType = this.entityLi[val].entityType;
+          this.editArr.dbID=this.entityLi[val].dbID;
+          this.editArr.properties = JSON.parse(this.entityLi[val].properties);
         }else{
           this.editArr={'id':'','displayName':'','dbPosition':'','tableName':'','entityType':'','properties':[]}
         }
       }
     },
     methods: {
+        //连接数据库
       connectDB:function (db) {
-        this.addMySql=true;
-        if(db.indexOf("//")>0){
-          this.dataUrl=db.split("//")[1];
-        }else{
-          this.dataUrl=db ;
-        }
+          this.addMySql=true;
+          if(db.indexOf("//")>0){
+            this.dataUrl=db.split("//")[1];
+          }else{
+             this.dataUrl=db ;
+          }
 
       },
       addMysqlConnect(){
@@ -545,6 +556,7 @@
         })
 
       },
+        //弹出addEntity框
       showAdd:function(){
         this.addShow=true;
       },
@@ -575,9 +587,9 @@
         this.editArr.properties.push(newpiece);
       },
       //实体属性保存
-      handleSave: function (index) {
-        this.editingRow = null;
-      },
+//      handleSave: function (index) {
+//        this.editingRow = null;
+//      },
       startEdit(index) {
         this.nowEditCol = index;
         this.editShow=true;
@@ -585,9 +597,9 @@
       cancelEdit() {
         this.nowEditCol = -1;
       },
-      sureEdit() {      //确定之后先是删除一条之后再插入一条
+      sureEdit(dbID) {      //确定之后先是删除一条之后再插入一条
         var id;
-        id=this.eventLi[this.nowEditCol].id;
+        id=this.entityLi[this.nowEditCol].id;
         axios.get("/kjb/entity/delete", {
           params: {
             "entityId": id
@@ -595,21 +607,21 @@
         }).then((response) => {
           let res = response.data;
           if (res.status == 1) {
-            var insertE={
-              'displayName': this.editArr.displayName,
-              'dbPosition': this.editArr.dbPosition,
-              'tableName':this.editArr.tableName,
-              'entityType': this.editArr.entityType,
-              'properties': JSON.stringify(this.editArr.properties)
-            };
+              var insertE={
+                'displayName': this.editArr.displayName,
+                'dbPosition': dbID,
+                'tableName':this.editArr.tableName,
+                'entityType': this.editArr.entityType,
+                 'properties': JSON.stringify(this.editArr.properties)
+              };
             this.insertEntity(insertE);
           }
         })
-
+        this.editShow=false;
       },
       deleteEntity(index){
         var id;
-        id=this.eventLi[index].id;
+        id=this.entityLi[index].id;
         axios.get("/kjb/entity/delete", {
           params: {
             "entityId": id
@@ -622,11 +634,10 @@
         })
       },
       addEntity(){
-        this.addShow=true;
         for(var i=0;i<this.addOnepro.length;i++){
-          if(this.addOnepro[i].name==null){
-            this.addOnepro.splice(i,1);
-          }
+            if(this.addOnepro[i].name==null){
+                this.addOnepro.splice(i,1);
+            }
         }
         var addOne={
           'displayName':this.addOne.displayName,
@@ -639,7 +650,7 @@
         this.addShow=false;
       },
       resetAddOnepro:function(){
-        this.addOnepro=[{"name":'',"type":'',"prime":''}];
+         this.addOnepro=[{"name":'',"type":'',"prime":''}];
       },
       resetEntity:function(){
         this.addOne={
@@ -651,19 +662,13 @@
         }
       },
       getEntity(){
-        axios.get("/kjb/entity/show").then((response) => {
-          let res = response.data;
-          if (res.status == 1) {
-            this.entityEvent=JSON.parse(res.data);
-          }
-        })
+        this.$store.dispatch('GetEntity');
       },
       insertEntity(params){
-        axios.post("kjb/entity/insert", params).then(
+        axios.post("/kjb/entity/create", params).then(
           (response) => {
             let res = response.data;
             if (res.status == 1) {
-              this.editShow=false;
               this.nowEditCol = -1;
               this.getEntity();
               this.resetEntity();
@@ -671,9 +676,9 @@
             }
           }
         );
-
       },
     }
   }
 </script>
+
 

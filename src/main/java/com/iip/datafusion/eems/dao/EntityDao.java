@@ -58,7 +58,7 @@ public class EntityDao{
         DataSourceRouterManager.setCurrentDataSourceKey("primary");
         Entity result=null;
         result=(Entity)jdbcTemplate.queryForObject(
-                "select id,displayName.tableName,dbPosition,entityType,properties from entity where id=? ",
+                "select id,displayName,tableName,dbPosition,entityType,properties from entity where id=? ",
                 new Object[]{id},new RowMapper(){
                     @Override
                     public Object mapRow(ResultSet rs, int rowNum)
