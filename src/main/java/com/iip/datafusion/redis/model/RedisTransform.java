@@ -41,7 +41,7 @@ public class RedisTransform {
         //System.out.println(lists);
         String id = jobId;
         //System.out.println(id);
-        redisTemplate.opsForList().leftPushAll(id, lists);
+        redisTemplate.opsForList().rightPushAll(id, lists);
         //System.out.println(redisTemplate.opsForList().range(id,0,2));
 
         return true;

@@ -414,7 +414,7 @@
           edittype = 1; //规则更新
           integrity = {
             'userId': parseInt(this.$route.query.nowUserId),
-            'jobID': parseInt(this.$route.query.nowEditJob),
+            'jobId': parseInt(this.$route.query.nowEditJob),
             'type': edittype,
             'mapEntries': commit_ReferRule,
             'unifyMap': commit_DefaultRule,
@@ -423,7 +423,7 @@
         } else {
           integrity = {    //手动更新
             'userId': parseInt(this.$route.query.nowUserId),
-            'jobID': parseInt(this.$route.query.nowEditJob),
+            'jobId': parseInt(this.$route.query.nowEditJob),
             'type': edittype,
             'mapEntries': this.haschanged,
             'unifyMap': null,

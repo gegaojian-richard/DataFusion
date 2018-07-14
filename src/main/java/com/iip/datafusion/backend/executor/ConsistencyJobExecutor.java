@@ -7,6 +7,8 @@ import com.iip.datafusion.backend.common.TerminationToken;
 import com.iip.datafusion.backend.jdbchelper.JDBCHelper;
 import com.iip.datafusion.backend.job.JobStatusType;
 import com.iip.datafusion.backend.job.consistency.ConsistencyJob;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import com.iip.datafusion.util.dbutil.DataSourceRouterManager;
@@ -25,6 +27,7 @@ public class ConsistencyJobExecutor extends AbstractTerminatableThread implement
     @Autowired
     private final JdbcTemplate jdbcTemplate = JDBCHelper.getJdbcTemplate();
     private final BlockingQueue<ConsistencyJob> workQueue;
+    private static Logger logger = LoggerFactory.getLogger(ConsistencyJobExecutor.class);
 
     private RedisTemplate<String, String> redisTemplate = RedisHelper.getRedisTemplate();
 
@@ -38,7 +41,6 @@ public class ConsistencyJobExecutor extends AbstractTerminatableThread implement
     protected void doRun() throws Exception {
         ConsistencyJob consistencyJob = ChannelManager.getInstance().getConsistencyChannel().take(workQueue);
         JobRegistry.getInstance().update(consistencyJob, JobStatusType.EXECUTING);
-        System.out.println("1111");
         try{
             doJob(consistencyJob);
             JobRegistry.getInstance().update(consistencyJob, JobStatusType.SUCCESS);
@@ -52,35 +54,32 @@ public class ConsistencyJobExecutor extends AbstractTerminatableThread implement
 
     @Override
     public void doJob(ConsistencyJob job) throws Exception {
-        System.out.println("heere");
         DataSourceRouterManager.setCurrentDataSourceKey(job.getmainDataSourceID());
-        System.out.println(job.getSqlList().size());
+        logger.info(String.valueOf(job.getSqlList().size()));
         try{
             if(job.getSqlList().size()>0) {
                 if(job.getInnerJobType().equals("query")) {
                     SqlRowSet sqlRowSet1 = jdbcTemplate.queryForRowSet(job.getSqlList().get(0));
                     DataSourceRouterManager.setCurrentDataSourceKey(job.getfollowDataSourceID());
                     SqlRowSet sqlRowSet2 = jdbcTemplate.queryForRowSet(job.getSqlList().get(1));
-                    System.out.println(job.getSqlList().get(0));
-                    System.out.println(job.getSqlList().get(1));
+                    logger.info(job.getSqlList().get(0));
+                    logger.info(job.getSqlList().get(1));
                     //JSONArray json = new JSONArray();
                     ArrayList<String> lists = new ArrayList<>();
                     String key = job.getUserID() + "-" + job.getJobID();
-                    System.out.println(key);
-//                    while (sqlRowSet2.next()) {
-//                        System.out.println(sqlRowSet2.isLast());
-//                        System.out.println(sqlRowSet2.getString(1));}
+                    logger.info(key);
+
                     while (sqlRowSet1.next()) {
                         int count=0;
                         String key1=sqlRowSet1.getString(1);
                         String value1=sqlRowSet1.getString(2);
-                        System.out.println("key1："+key1);
-                        System.out.println("value1："+value1);
+                        logger.info("key1："+key1);
+                        logger.info("value1："+value1);
                         while (sqlRowSet2.next()) {
                             String key2=sqlRowSet2.getString(1);
-                            System.out.println("key2："+key2);
+                            logger.info("key2："+key2);
                             String value2=sqlRowSet2.getString(2);
-                            System.out.println("value2："+value2);
+                            logger.info("value2："+value2);
                             if(value1==null||value2==null) break;
                             if(key1.compareTo(key2)!=0) ;//相等返回0，小于返回-1，大于返回1
                             if(key1.compareTo(key2)==0){
@@ -109,7 +108,7 @@ public class ConsistencyJobExecutor extends AbstractTerminatableThread implement
                                 break;}
                         }
                     }
-                    redisTemplate.opsForList().leftPushAll(key, lists);
+                    redisTemplate.opsForList().rightPushAll(key, lists);
                     JSONObject jo2 = new JSONObject();
                     jo2.put("userid-jobid",key);
                     jo2.put("mainDataSourceId",job.getmainDataSourceID());
@@ -122,8 +121,7 @@ public class ConsistencyJobExecutor extends AbstractTerminatableThread implement
                     jo2.put("followColumnName",job.getfollowColumnName());
                     lists.add(jo2.toString());
                     Result result = new Result(0,"数据不一致",lists.toString());
-                    System.out.println("aaaa");
-                    System.out.println(result);
+                    logger.info(result.toString());
                 }
             }
         }catch (Exception e){

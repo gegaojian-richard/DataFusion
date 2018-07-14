@@ -16,9 +16,7 @@ public class BTM_PreProceed {
                 new OutputStreamWriter(new FileOutputStream(new File("./toNormal.txt")), "UTF-8"));
 
         for(String file : filelist){
-//            System.out.println("读入的文档"+file);
             ArrayList<String> cutwords = TF_IDF.cutWords(file); //get cut words for one file
-//            System.out.println("cutwords"+cutwords);
             for(String word: cutwords){
                 bw.write(word);
                 bw.write(" ");

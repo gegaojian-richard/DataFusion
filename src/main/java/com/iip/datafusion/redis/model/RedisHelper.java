@@ -1,5 +1,7 @@
 package com.iip.datafusion.redis.model;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -19,13 +21,14 @@ import javax.annotation.PostConstruct;
 
 @Component
 public class RedisHelper implements ApplicationContextAware {
+    private static Logger logger = LoggerFactory.getLogger(RedisHelper.class);
     private static StringRedisTemplate redisTemplate;
 
     private static ApplicationContext applicationContext;
 
     @PostConstruct
     private void flushRedisWhenStart(){
-        System.out.println("Flush RedisDB");
+        logger.info("Flush RedisDB");
         // todo: 曾成：清空Redis缓存
         RedisHelper.getRedisTemplate().execute(new RedisCallback() {
             @Override
@@ -34,7 +37,7 @@ public class RedisHelper implements ApplicationContextAware {
                 return null;
             }
         });
-        System.out.println("RedisDB Flushed");
+        logger.info("RedisDB Flushed");
     }
 
     @Override

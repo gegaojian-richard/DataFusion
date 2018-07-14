@@ -28,6 +28,16 @@ public class IntegrityJob extends JobBase implements Job {
     private List<String> sqlList;
     private String innerJobType;
 
+    public List<String> getColumnNames() {
+        return columnNames;
+    }
+
+    public void setColumnNames(List<String> columnNames) {
+        this.columnNames = columnNames;
+    }
+
+    private List<String> columnNames;
+
     @JsonIgnore
     public String getInnerJobType() {
         return innerJobType;
