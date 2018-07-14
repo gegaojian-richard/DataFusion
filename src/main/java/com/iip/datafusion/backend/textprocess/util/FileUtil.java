@@ -4,6 +4,9 @@ package com.iip.datafusion.backend.textprocess.util;
  * @Author Junnor.G
  * @Date 2018/1/31 下午9:34
  */
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.HashSet;
@@ -13,10 +16,11 @@ import java.io.File;
 import java.util.Set;
 
 public class FileUtil {
+    private static Logger logger = LoggerFactory.getLogger(FileUtil.class);
     public static void test(){
         List<File> files = getAllFilePath(new ArrayList<>() , "ganjun_testdata");
         for(File file : files){
-            System.out.println(file.getPath());
+            logger.info(file.getPath());
         }
     }
 
@@ -30,9 +34,9 @@ public class FileUtil {
     public static List<File> getAllFilePath(List<File> files , String dirPath){
         File file = new File(dirPath);  //File can represent as file or directory
         try{
-            System.out.println("AbsoutePath: " + file.getAbsolutePath());
+            logger.info("AbsoutePath: " + file.getAbsolutePath());
         }catch(Exception ex){
-            System.out.println("AbsoutePath: error");
+            logger.info("AbsoutePath: error");
             ex.printStackTrace();
         }
         File[] fileList = file.listFiles();
@@ -71,7 +75,7 @@ public class FileUtil {
             }
             return true;
         }catch (Exception ex){
-            System.out.println(ex.getMessage());
+            logger.info(ex.getMessage());
             return false;
         }
     }
@@ -94,7 +98,7 @@ public class FileUtil {
             }
             return file;
         }catch (Exception ex){
-            System.out.println(ex.getMessage());
+            logger.info(ex.getMessage());
             return null;
         }
     }

@@ -1,5 +1,7 @@
 package com.iip.datafusion.interceptor;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
@@ -13,6 +15,7 @@ import java.util.List;
  */
 @Component
 public class ProcessInterceptor implements HandlerInterceptor {
+    private static Logger logger = LoggerFactory.getLogger(ProcessInterceptor.class);
     @Override
     public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o) throws Exception {
 
@@ -38,7 +41,7 @@ public class ProcessInterceptor implements HandlerInterceptor {
             return false;
         }
 
-        System.out.println(method);
+        logger.info(method);
 
         return true;
     }

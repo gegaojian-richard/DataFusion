@@ -32,7 +32,6 @@ public class TF_IDF {
         Pattern pattern = Pattern.compile("[\\d]");
         Matcher matcher = pattern.matcher(str);
         String newword=matcher.replaceAll("").trim();
-//        System.out.println(newword);
         return newword;
     }
 
@@ -86,11 +85,9 @@ public class TF_IDF {
         for(String word : cutwords){
             if(resTF.get(word) == null){
                 resTF.put(word, 1);
-//                System.out.println(word);
             }
             else{
                 resTF.put(word, resTF.get(word) + 1);
-//                System.out.println(word.toString());
             }
         }
         return resTF;
