@@ -46,7 +46,7 @@
         <span v-if="algorithms==3">主题数:</span> <input v-model="topicNum"  v-if="algorithms==3" style="width:200px;margin-left: 20px;border-radius: 3px;border: 1px solid #ccc;height: 40px;padding-left: 20px;font-size: 16px;color:#333;" >
       </div>
     </div>
-    <el-Button @click="submit" class="submit" style="background: #78BDF8;color:#fff;">提交</el-Button>
+    <el-Button @click="submit" class="submit" style="background: #78BDF8;color:#fff;margin-right: 300px">提交</el-Button>
     </div>
   </div>
 </template>
