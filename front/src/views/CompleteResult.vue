@@ -31,7 +31,7 @@
     </div>
     <div class="select-method">
       <el-button @click="handleRefresh()">手动更新</el-button>
-      <el-button @click="methodRule=!methodRule">规则更新</el-button>
+      <el-button @click="methodRule=!methodRule" v-show="!this.editRule">规则更新</el-button>
       <div v-show="methodRule" style="border-top:2px solid #bbbbbb;margin:20px 0px;padding-top: 20px;display:flex;">
         <div style="width:400px">
           <p>
@@ -224,12 +224,12 @@
     },
     data(){
       return {
-        editingRow: null,
+        editingRow: null, //当前定位的行
         resultData: [],
         currentPage: 0,
         totalCount: 10,
-        editRule: false,
-        methodRule: false,
+        editRule: false,   //选择手动修改
+        methodRule: false,  //选择规则修改
         rulesforDefault: [{name: "", value: ""}],
         options_default_column: [{value: '', label: '', disable: null}],//设置默认值的可选属性
         rulesforRefer: [{primary_column: '', primary_key: '', source_column: '', source_key: ''}],
@@ -243,6 +243,7 @@
       }
     },
     created(){
+      this.fillSource();
       console.log(this.$route.query.nowUserId);
       var redisParam = {
         "key": this.$route.query.nowUserId + "-" + this.$route.query.nowEditJob,
@@ -257,7 +258,6 @@
           this.getData();
         }
       })
-      this.fillSource();
     },
     computed: {
       ...mapGetters(['conns']),
@@ -265,6 +265,9 @@
     methods: {
       handleRefresh(){
           this.editRule=!this.editRule;
+          if(this.editRule){
+              this.methodRule=false;
+          }
           if(this.haschanged.length>0){
               this.submit();
           }
@@ -287,6 +290,7 @@
       },
       handleCurrentChange(val){
         this.currentPage = val;
+        this.editingRow=null;
         this.getData(val);
         if (this.haschanged.length > 0) {
           this.submit();
@@ -382,6 +386,7 @@
       submit(){
 //        debugger;
         let edittype = 0;
+        this.editingRow=null;
         var integrity = {};
         var commit_ReferRule=[];
         var commit_DefaultRule={};
@@ -395,6 +400,7 @@
                     title: '提示',
                     message: h('i', {style: 'color: teal'}, "填充规则配置不完整")
                   });
+                  return;
                 }else if(this.rulesforRefer[i].primary_key){
 //                    debugger;
                     let temp_column=this.rulesforRefer[i].source_column.join(',');
@@ -410,10 +416,9 @@
                   title: '提示',
                   message: h('i', {style: 'color: teal'}, "填充规则配置不完整")
                 });
+                return;
               }else if(this.rulesforDefault[j].name){
-//                  debugger;
                  commit_DefaultRule[this.rulesforDefault[j].name]=this.rulesforDefault[j].value;
-//                  debugger;
               }
             }
           edittype = 1; //规则更新
@@ -440,7 +445,6 @@
         axios.post("/kjb/integrity/updateIntegrity", integrity).then((response) => {
           var res = response.data;
           if (res.status == 1) {
-            this.$message('提交成功');
             this.haschanged = [];
             const h = this.$createElement;
             this.$notify({
