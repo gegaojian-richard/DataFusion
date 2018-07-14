@@ -8,11 +8,11 @@
       <div style="text-align: left;margin-left: 50px;margin-top: 20px;display: flex">
         <div>
           <span>文档路径</span>
-          <input v-model="position" style="width:200px;margin-left: 20px;border-radius: 3px;border: 1px solid #ccc;height: 47px;padding-left: 20px;font-size: 16px;color:#333;" >
+          <input v-model="position" style="width:200px;margin-left: 20px;border-radius: 3px;border: 1px solid #ccc;height: 40px;padding-left: 20px;font-size: 16px;color:#333;" >
         </div>
         <div style="margin-left: 100px">
           <span>算法选择</span>
-          <el-select v-model="algorithms" style="margin-left: 20px;width:200px;" >
+          <el-select v-model="algorithms" style="margin-left: 20px;width:200px;height:40px" >
             <el-option label="中文人名识别" value="0"></el-option>
             <el-option label="TextRank关键词抽取" value="1"></el-option>
             <el-option label="TFIDF关键词抽取" value="2"></el-option>
@@ -27,7 +27,7 @@
       <div style="text-align: left;margin-left: 40px;margin-top: 20px;display: flex">
         <div>
           <span>目标数据库</span>
-          <el-select v-model="database" @change="chooseDatabase()" style="margin-left: 15px;width:200px;">
+          <el-select v-model="database" @change="chooseDatabase()" style="margin-left: 15px;width:200px;height:40px">
             <el-option
               v-for="item in conns"
               :key="item.id"
@@ -38,12 +38,12 @@
         </div>
         <div style="margin-left: 120px">
           <span>目标表</span>
-          <input v-model="table" style="width:200px;margin-left: 20px;border-radius: 3px;border: 1px solid #ccc;height: 47px;padding-left: 20px;font-size: 16px;color:#333;" >
+          <input v-model="table" style="width:200px;margin-left: 20px;border-radius: 3px;border: 1px solid #ccc;height: 40px;padding-left: 20px;font-size: 16px;color:#333;" >
         </div>
       </div>
       <div style="margin-top: 20px;text-align: left;margin-left: 40px;">
-        <span v-if="algorithms==1||algorithms==2">TOP-K:</span><input v-model="topK" v-if="algorithms==1||algorithms==2" style="width:200px;margin-left: 20px;border-radius: 3px;border: 1px solid #ccc;height: 47px;padding-left: 20px;font-size: 16px;color:#333;" >
-        <span v-if="algorithms==3">主题数:</span> <input v-model="topicNum"  v-if="algorithms==3" style="width:200px;margin-left: 20px;border-radius: 3px;border: 1px solid #ccc;height: 47px;padding-left: 20px;font-size: 16px;color:#333;" >
+        <span v-if="algorithms==1||algorithms==2">TOP-K:</span><input v-model="topK" v-if="algorithms==1||algorithms==2" style="width:200px;margin-left: 20px;border-radius: 3px;border: 1px solid #ccc;height: 40px;padding-left: 20px;font-size: 16px;color:#333;" >
+        <span v-if="algorithms==3">主题数:</span> <input v-model="topicNum"  v-if="algorithms==3" style="width:200px;margin-left: 20px;border-radius: 3px;border: 1px solid #ccc;height: 40px;padding-left: 20px;font-size: 16px;color:#333;" >
       </div>
     </div>
     <el-Button @click="submit" class="submit" style="background: #78BDF8;color:#fff;">提交</el-Button>
