@@ -100,6 +100,7 @@
   import axios from 'axios'
   import connectInfo from '@/components/Connect/ConnectInfo.vue'
   export default{
+    components:{connectInfo},
     data() {
       return {
         previewData:         //请求的表格数据{

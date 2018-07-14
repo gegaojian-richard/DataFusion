@@ -219,6 +219,9 @@
   import axios from 'axios';
   import {mapGetters} from 'vuex'
   export default{
+    mounted(){
+      this.$store.dispatch('GetConnect');
+    },
     data(){
       return {
         editingRow: null,
@@ -434,7 +437,7 @@
 //        debugger;
         this.fortest=integrity;
         console.log(integrity);
-        axios.post("/kjb/dgs/update", integrity).then((response) => {
+        axios.post("/kjb/integrity/updateIntegrity", integrity).then((response) => {
           var res = response.data;
           if (res.status == 1) {
             this.$message('提交成功');

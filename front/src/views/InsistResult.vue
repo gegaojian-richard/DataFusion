@@ -94,6 +94,9 @@
 <script>
   import axios from 'axios';
   export default{
+    mounted(){
+      this.$store.dispatch('GetConnect');
+    },
     data(){
       return{
         resultData:[],
