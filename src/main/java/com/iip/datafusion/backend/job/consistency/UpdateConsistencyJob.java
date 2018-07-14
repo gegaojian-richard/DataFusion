@@ -10,7 +10,7 @@ import java.util.List;
  * 一致性检查工作描述
  * Created by GeGaojian on 2018/01/18.
  */
-public class ConsistencyJob extends JobBase implements Job {
+public class UpdateConsistencyJob extends JobBase implements Job {
     private String mainDatasourceID;
     private String mainTableName;
     private String mainColumnName;
@@ -23,10 +23,7 @@ public class ConsistencyJob extends JobBase implements Job {
     private String innerJobType;
 
 
-    //    public ConsistencyJob(String mainDatasourceID, String mainTableName) {
-//        this.mainDatasourceID = mainDatasourceID;
-//        this.mainTableName = mainTableName;
-//    }
+
     @JsonIgnore
     public String getInnerJobType() {
         return innerJobType;
@@ -51,18 +48,11 @@ public class ConsistencyJob extends JobBase implements Job {
     }
     @JsonIgnore
     public String getmainColumnName() { return mainColumnName; }
-
     public void  setmainColumnName(String mainColumnName) { this.mainColumnName=mainColumnName; }
 
     @JsonIgnore
     public String getmainPrimary_key() { return mainPrimary_key; }
-
     public void  setmainPrimary_key(String mainPrimary_key) { this.mainPrimary_key=mainPrimary_key; }
-
-    @JsonIgnore
-    public String getfollowPrimary_key() { return followPrimary_key; }
-
-    public void  setfollowPrimary_key(String followPrimary_key) { this.followPrimary_key=followPrimary_key; }
 
     @JsonIgnore
     public String getfollowDataSourceID() {
@@ -78,12 +68,13 @@ public class ConsistencyJob extends JobBase implements Job {
     public void setfollowTableName(String followTableName) {
         this.followTableName = followTableName;
     }
-
-
     @JsonIgnore
     public String getfollowColumnName() { return followColumnName; }
+    public void  setfollowColumnName(String followColumnName) { this.followColumnName=followColumnName; }
 
-    public void  setfollowColumnName(String columnname) { this.followColumnName=columnname; }
+    @JsonIgnore
+    public String getfollowPrimary_key() { return followPrimary_key; }
+    public void  setfollowPrimary_key(String followPrimary_key) { this.followPrimary_key=followPrimary_key; }
 
     @JsonIgnore
     public List<String> getSqlList() {
@@ -92,10 +83,7 @@ public class ConsistencyJob extends JobBase implements Job {
     public void setSqlList(List<String> sqlList) {
         this.sqlList = sqlList;
     }
-    public String getDescription(){
-        return ""+mainDatasourceID+"."+mainTableName+"."+mainColumnName+"<->"+followDatasourceID+"."+followTableName+"."
-                +followColumnName;
-    }
+
 //    public String getJobType() {
 //        return jobType;
 //    }
