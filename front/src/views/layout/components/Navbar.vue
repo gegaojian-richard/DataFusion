@@ -4,8 +4,9 @@
 
     <breadcrumb class="breadcrumb-container"></breadcrumb>
     <a class="navbar-brand" href="/">数据整合工具</a>
-    <a href="/#/login/" style="float:right;margin-right: 250px;" v-show="!this.name">登录</a>
-    <a v-show="this.name">{{this.name}}</a>
+    <a href="/kjb/#/login" style="float:right;margin-right: 250px;" v-show="!this.name">登录</a>
+    <!--<router-link :to="login" style="float:right;margin-right: 250px;" v-show="!this.name" tag="span">登录</router-link>-->
+    <a v-show="this.name" style="float:right;margin-right: 250px;">{{this.name}}</a>
   </el-menu>
 </template>
 
