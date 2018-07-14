@@ -7,6 +7,8 @@ import com.iip.datafusion.backend.job.algorithm.TopicModelJob;
 import com.iip.datafusion.util.KillHandler;
 import com.iip.datafusion.util.dbutil.DataSourceRouter;
 import com.iip.datafusion.util.dbutil.DataSourceRouterManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -25,9 +27,9 @@ import java.util.List;
 @SpringBootApplication
 //@EnableAutoConfiguration(exclude = {DataSourceAutoConfiguration.class})
 public class DatafusionApplication {
-
+	private static Logger logger = LoggerFactory.getLogger(DatafusionApplication.class);
 	public static void main(String[] args) {
-
+		logger.info("enter main");
 		SpringApplication.run(DatafusionApplication.class, args);
 
 		// 初始化底层功能模块

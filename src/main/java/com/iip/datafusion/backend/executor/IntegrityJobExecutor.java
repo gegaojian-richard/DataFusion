@@ -73,9 +73,15 @@ public class IntegrityJobExecutor extends AbstractTerminatableThread implements 
 
                 String key = job.getUserID() + "-" + job.getJobID();
 
-                //rowsetToRedis(resRowset,job.getJobId());
+                ArrayList<String> names = (ArrayList<String>)job.getColumnNames();
+                StringBuilder columns = new StringBuilder("");
+                if(names!=null && names.size()>0){
+                    for (String s:names)
+                        columns.append(",").append(s);
+                }
 
                 RedisTransform.rowsetToRedis(resRowset,key,redisTemplate);
+                redisTemplate.opsForList().rightPush(key,columns.toString().substring(1));
             }else if(job.getInnerJobType().equals("execute")){
                 //todo: 更新任务
             }
@@ -108,15 +114,12 @@ public class IntegrityJobExecutor extends AbstractTerminatableThread implements 
                     jsonObj.put(columnName, value);
                 else
                     jsonObj.put(columnName, "NULL");
-                //System.out.println(columnName+" "+value+"\n");
+
             }
             lists.add(jsonObj.toString());
         }
-        //System.out.println(lists);
         String id = jobId;
-        //System.out.println(id);
-        redisTemplate.opsForList().leftPushAll(id, lists);
-        //System.out.println(redisTemplate.opsForList().range(id,0,2));
+        redisTemplate.opsForList().rightPushAll(id, lists);
 
         return true;
     }

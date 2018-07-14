@@ -5,8 +5,11 @@ import com.iip.datafusion.backend.config.Capabilities;
 import com.iip.datafusion.backend.job.Job;
 import com.iip.datafusion.backend.job.JobBase;
 import com.iip.datafusion.backend.job.JobStatusType;
+import com.iip.datafusion.dgs.controller.UpdateIntegrityController;
 import com.iip.datafusion.util.dbutil.DataSourceRouter;
 import com.iip.datafusion.util.jsonutil.JsonParse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -22,6 +25,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * Created by GeGaojian on 2018/01/19.
  */
 public class JobRegistry {
+    protected static Logger logger= LoggerFactory.getLogger(JobRegistry.class);
 
     // 内存缓存CACHESIZE条job
     private final ConcurrentMap<Integer, List<JobBase>> userJobList; // key: userID, value: list of this user's job
@@ -55,7 +59,7 @@ public class JobRegistry {
 
         //test
         try {
-            System.out.print(JsonParse.getMapper().writeValueAsString(userJobList.get(job.getUserID())));
+            logger.info(JsonParse.getMapper().writeValueAsString(userJobList.get(job.getUserID())));
         }
         catch (JsonProcessingException e ){
             e.printStackTrace();
@@ -81,6 +85,7 @@ public class JobRegistry {
     }
 
     public JobBase getJob(int userID, int jobID){
+        logger.info("enter getJob with arguments: userID/" + userID +" jobID/"+jobID);
         List<JobBase> userJobs = this.userJobList.get(userID);
         if (userJobs != null){
             for(int i=0;i<userJobs.size();i++) {

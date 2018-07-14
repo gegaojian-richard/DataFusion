@@ -22,6 +22,7 @@ public class IntegrityParser implements Parser{
 
         ArrayList<String> inputColumnNames = integrityConfiguration.getColumnNames();
 
+
         if (inputColumnNames == null || inputColumnNames.size() <= 0) {
             throw new Exception("传入参数属性值不能为空");
             //return null;
@@ -41,7 +42,6 @@ public class IntegrityParser implements Parser{
         whereClause = whereClause.substring(0, whereClause.lastIndexOf("or"));
         String sql = String.format("SELECT %s FROM %s where %s"," * ",tableName,whereClause);
 
-        //System.out.println(sql);
 
 
         IntegrityJob integrityJob = new IntegrityJob();
@@ -51,6 +51,7 @@ public class IntegrityParser implements Parser{
         sqlList.add(sql);
         integrityJob.setSqlList(sqlList);
         integrityJob.setJobType(JobType.INTEGRITY);
+        integrityJob.setColumnNames(inputColumnNames);
 
         integrityJob.setInnerJobType("query");
         //JobRegistry.getInstance().regist(integrityJob);

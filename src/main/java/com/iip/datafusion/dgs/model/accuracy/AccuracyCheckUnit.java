@@ -59,7 +59,7 @@ public class AccuracyCheckUnit {
             }
             JSONObject result_data = new JSONObject();
             result_data.put("items", data_items);
-            redisTemplate.opsForList().leftPushAll(key,lists);
+            redisTemplate.opsForList().rightPushAll(key,lists);
 
             Result result = new Result(1,null,result_data.toString());
             return result;
@@ -114,7 +114,7 @@ public class AccuracyCheckUnit {
             JSONObject result_data = new JSONObject();
             result_data.put("items",data_items);
 
-            redisTemplate.opsForList().leftPushAll(key,lists);
+            redisTemplate.opsForList().rightPushAll(key,lists);
 
             Result result = new Result(1,null,result_data.toString());
             return result;
@@ -204,7 +204,7 @@ public class AccuracyCheckUnit {
         JSONObject result_data = new JSONObject();
         result_data.put("items",data_items);
 
-        redisTemplate.opsForList().leftPushAll(key,lists);
+        redisTemplate.opsForList().rightPushAll(key,lists);
 
         return result_data;
     }

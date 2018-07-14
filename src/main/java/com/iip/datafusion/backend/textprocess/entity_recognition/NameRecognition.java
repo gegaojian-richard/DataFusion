@@ -4,6 +4,8 @@ import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.seg.Segment;
 import com.hankcs.hanlp.seg.common.Term;
 import com.iip.datafusion.backend.textprocess.util.FileUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -12,15 +14,16 @@ import java.util.List;
 import java.util.Map;
 
 public class NameRecognition {
+    private static Logger logger = LoggerFactory.getLogger(NameRecognition.class);
     public static void main(String[] args){
-        System.out.println("Test github");
+        logger.info("Test github");
         Map<String , List<String>> ret = getNameFromDir("ganjun_testdata");
         for(String path : ret.keySet()){
-            System.out.print(path + "-> ");
+            logger.info(path + "-> ");
             for(String str : ret.get(path)){
-                System.out.print(str + " " );
+                logger.info(str + " " );
             }
-            System.out.println("");
+            logger.info("");
         }
 
     }
@@ -34,7 +37,6 @@ public class NameRecognition {
             String[] tmp = termList.get(i).toString().split("/");
             if (tmp[tmp.length-1].equals("nr")){
                 nameList.add(tmp[0]);
-//                System.out.println(tmp[0]);
             }
         }
         return nameList;
