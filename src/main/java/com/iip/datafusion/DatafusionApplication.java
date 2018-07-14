@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.iip.datafusion.backend.*;
 import com.iip.datafusion.backend.job.algorithm.TextRankJob;
 import com.iip.datafusion.backend.job.algorithm.TopicModelJob;
+import com.iip.datafusion.util.KillHandler;
 import com.iip.datafusion.util.dbutil.DataSourceRouter;
 import com.iip.datafusion.util.dbutil.DataSourceRouterManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,7 @@ import java.util.List;
 public class DatafusionApplication {
 
 	public static void main(String[] args) {
+
 		SpringApplication.run(DatafusionApplication.class, args);
 
 		// 初始化底层功能模块
@@ -42,6 +44,7 @@ public class DatafusionApplication {
 		NameRecognitionManager.getInstance().init();
 		TFIDFManager.getInstance().init();
 		TopicModelManager.getInstance().init();
+
 	}
 
 }

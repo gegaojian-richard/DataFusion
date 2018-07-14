@@ -26,10 +26,11 @@ public class UpdateIntegrityController {
     @Autowired
     UpdateIntegrityService updateIntegrityService;
 
-    @RequestMapping(path = {"/dgs/update"}, method = RequestMethod.POST)
+    @RequestMapping(path = {"/integrity/updateIntegrity"}, method = RequestMethod.POST)
     @ResponseBody
     public Result update(@RequestBody UpdateIntegrityConfiguration updateIntegrityConfiguration) {
         try{
+            System.out.println("contoller");
             UpdateIntegrityJob updateIntegrityJob = updateIntegrityService.commitJob(updateIntegrityConfiguration);
 
             return new Result(1,"Task finished successfully!",null);

@@ -1,10 +1,9 @@
 package com.iip.datafusion.backend.job;
 
-import com.iip.datafusion.util.userutil.UserManager;
-import javafx.print.PrinterJob;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
+/**
+ * 工作基类
+ * @Author Ge GaoJian
+ */
 public class JobBase implements Job{
 
     Integer JobID=0;

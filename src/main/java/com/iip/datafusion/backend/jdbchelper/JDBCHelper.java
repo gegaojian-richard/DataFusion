@@ -6,6 +6,11 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
+/**
+ * JDBCTemplate帮助类
+ * getJdbcTemplate方法用以获得在应用程序上下文中的JDBCTemplate实例对象
+ * @Author Ge GaoJian
+ */
 @Component
 public class JDBCHelper implements ApplicationContextAware {
     private static JdbcTemplate jdbcTemplate;

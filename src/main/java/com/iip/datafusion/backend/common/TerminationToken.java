@@ -5,6 +5,9 @@ import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.atomic.AtomicInteger;
 
+/**
+ * @Author Ge GaoJian
+ */
 public class TerminationToken {
 
     protected volatile boolean toShutdown = false;

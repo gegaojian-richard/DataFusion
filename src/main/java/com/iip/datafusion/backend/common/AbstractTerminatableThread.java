@@ -1,5 +1,9 @@
 package com.iip.datafusion.backend.common;
 
+/**
+ * 可终止线程抽象类
+ * @Author Ge GaoJian
+ */
 public abstract class AbstractTerminatableThread extends Thread implements Terminatable{
     public final TerminationToken terminationToken;
 
@@ -29,7 +33,6 @@ public abstract class AbstractTerminatableThread extends Thread implements Termi
      * @param cause
      */
     protected void doCleanup(Exception cause){
-
     }
 
     /**

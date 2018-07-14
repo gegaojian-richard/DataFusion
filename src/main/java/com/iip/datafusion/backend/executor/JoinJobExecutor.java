@@ -9,11 +9,9 @@ import com.iip.datafusion.backend.job.JobStatusType;
 import com.iip.datafusion.backend.job.join.JoinJob;
 import com.iip.datafusion.backend.job.join.SQLTask;
 import com.iip.datafusion.util.dbutil.DataSourceRouterManager;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.rowset.SqlRowSet;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -23,6 +21,10 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.BlockingQueue;
 
+/**
+ * 数据整合工作执行器（消费者）
+ * @Author Ge GaoJian
+ */
 public class JoinJobExecutor extends AbstractTerminatableThread implements JobExecutor<JoinJob>{
     private final BlockingQueue<JoinJob> workQueue;
 
