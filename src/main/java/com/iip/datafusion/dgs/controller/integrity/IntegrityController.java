@@ -21,7 +21,6 @@ public class IntegrityController {
     @RequestMapping(path = {"/dgs/integrity/commitjob"}, method = RequestMethod.POST)
     @ResponseBody
     public Result checkIntegrity(@RequestBody IntegrityConfiguration integrityConfiguration) {
-        //System.out.println("Get checkIntegrity message");
         try{
             IntegrityJob integrityJob = integrityService.commitJob(integrityConfiguration,userManager.getUserId());
 

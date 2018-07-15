@@ -94,6 +94,9 @@
 <script>
   import axios from 'axios';
   export default{
+    mounted(){
+      this.$store.dispatch('GetConnect');
+    },
     data(){
       return{
         resultData:[],
@@ -142,6 +145,7 @@
           var res = response.data;
           if (res.status == 1) {
             this.resultData = JSON.parse(res.data).items;
+            console.log(this.resultData);
             for(var i=0;i<this.resultData.length;i++){
                 this.selectResult.push("1");
             }

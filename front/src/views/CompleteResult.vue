@@ -31,7 +31,7 @@
     </div>
     <div class="select-method">
       <el-button @click="handleRefresh()">手动更新</el-button>
-      <el-button @click="methodRule=!methodRule">规则更新</el-button>
+      <el-button @click="methodRule=!methodRule" v-show="!this.editRule">规则更新</el-button>
       <div v-show="methodRule" style="border-top:2px solid #bbbbbb;margin:20px 0px;padding-top: 20px;display:flex;">
         <div style="width:400px">
           <p>
@@ -219,14 +219,17 @@
   import axios from 'axios';
   import {mapGetters} from 'vuex'
   export default{
+    mounted(){
+      this.$store.dispatch('GetConnect');
+    },
     data(){
       return {
-        editingRow: null,
+        editingRow: null, //当前定位的行
         resultData: [],
         currentPage: 0,
         totalCount: 10,
-        editRule: false,
-        methodRule: false,
+        editRule: false,   //选择手动修改
+        methodRule: false,  //选择规则修改
         rulesforDefault: [{name: "", value: ""}],
         options_default_column: [{value: '', label: '', disable: null}],//设置默认值的可选属性
         rulesforRefer: [{primary_column: '', primary_key: '', source_column: '', source_key: ''}],
@@ -240,6 +243,7 @@
       }
     },
     created(){
+      this.fillSource();
       console.log(this.$route.query.nowUserId);
       var redisParam = {
         "key": this.$route.query.nowUserId + "-" + this.$route.query.nowEditJob,
@@ -254,7 +258,6 @@
           this.getData();
         }
       })
-      this.fillSource();
     },
     computed: {
       ...mapGetters(['conns']),
@@ -262,6 +265,9 @@
     methods: {
       handleRefresh(){
           this.editRule=!this.editRule;
+          if(this.editRule){
+              this.methodRule=false;
+          }
           if(this.haschanged.length>0){
               this.submit();
           }
@@ -284,6 +290,7 @@
       },
       handleCurrentChange(val){
         this.currentPage = val;
+        this.editingRow=null;
         this.getData(val);
         if (this.haschanged.length > 0) {
           this.submit();
@@ -379,19 +386,22 @@
       submit(){
 //        debugger;
         let edittype = 0;
+        this.editingRow=null;
         var integrity = {};
         var commit_ReferRule=[];
-        var commit_DefaultRule=[];
+        var commit_DefaultRule={};
         if (!this.editRule) {
 //            debugger;
             for(let i =0;i<this.rulesforRefer.length;i++){
 //                debugger;
-                if(!this.rulesforRefer[i].primary_key || !this.rulesforRefer[i].primary_column|| !this.rulesforRefer[i].source_key ||!this.rulesforRefer[i].source_column ){
+                if(this.rulesforRefer[i].primary_key &&( !this.rulesforRefer[i].primary_column|| !this.rulesforRefer[i].source_key ||!this.rulesforRefer[i].source_column )){
+                  const h = this.$createElement;
                   this.$notify({
                     title: '提示',
                     message: h('i', {style: 'color: teal'}, "填充规则配置不完整")
                   });
-                }else{
+                  return;
+                }else if(this.rulesforRefer[i].primary_key){
 //                    debugger;
                     let temp_column=this.rulesforRefer[i].source_column.join(',');
                     let temp_key=this.rulesforRefer[i].source_key[0];
@@ -400,23 +410,21 @@
                 }
             }
             for(let j=0;j<this.rulesforDefault.length;j++){
-              if(!this.rulesforDefault[j].name || !this.rulesforDefault[j].value){
+              if(this.rulesforDefault[j].name && !this.rulesforDefault[j].value){
+                const h = this.$createElement;
                 this.$notify({
                   title: '提示',
                   message: h('i', {style: 'color: teal'}, "填充规则配置不完整")
                 });
-              }else{
-//                  debugger;
-                  let temp={};
-                  temp[this.rulesforDefault[j].name]=this.rulesforDefault[j].value;
-                  commit_DefaultRule.push(temp);
-//                  debugger;
+                return;
+              }else if(this.rulesforDefault[j].name){
+                 commit_DefaultRule[this.rulesforDefault[j].name]=this.rulesforDefault[j].value;
               }
             }
           edittype = 1; //规则更新
           integrity = {
-            'userId': this.$route.query.nowUserId,
-            'jobID': this.$route.query.nowEditJob,
+            'userId': parseInt(this.$route.query.nowUserId),
+            'jobId': parseInt(this.$route.query.nowEditJob),
             'type': edittype,
             'mapEntries': commit_ReferRule,
             'unifyMap': commit_DefaultRule,
@@ -424,8 +432,8 @@
 //          debugger;
         } else {
           integrity = {    //手动更新
-            'userId': this.$route.query.nowUserId,
-            'jobID': this.$route.query.nowEditJob,
+            'userId': parseInt(this.$route.query.nowUserId),
+            'jobId': parseInt(this.$route.query.nowEditJob),
             'type': edittype,
             'mapEntries': this.haschanged,
             'unifyMap': null,
@@ -433,11 +441,10 @@
         }
 //        debugger;
         this.fortest=integrity;
+        console.log(integrity);
         axios.post("/kjb/integrity/updateIntegrity", integrity).then((response) => {
           var res = response.data;
           if (res.status == 1) {
-//                    this.$message('任务提交成功，请在任务管理处查看进度');
-//            debugger;
             this.haschanged = [];
             const h = this.$createElement;
             this.$notify({
