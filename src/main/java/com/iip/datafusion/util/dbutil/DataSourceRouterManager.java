@@ -23,7 +23,9 @@ public class DataSourceRouterManager {
     private static DataSourceRouter dataSourceRouter; // 全局DataSource路由
 
     private static final ThreadLocal<String> currentDataSourceID = new ThreadLocal<String>(); // 每个线程会持有自己的
-    public List<String> dataSourceIds = new ArrayList<>(); // 每个session不同，保存在每个session对应的DataSourceRouterManager
+
+    // 每个session不同，保存在每个session对应的DataSourceRouterManager已注册的dataSourceId
+    public List<String> dataSourceIds = new ArrayList<>();
 
     @Autowired
     private DataSourceRouter _dataSourceRouter; // 静态变量无法自动注入，通过实例变量来协助完成注入
