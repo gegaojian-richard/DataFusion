@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -26,11 +27,14 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class DataSourceRouter extends AbstractRoutingDataSource {
     // 2017/12/29:尝试使用@Value注解将主数据库配置信息从配置文件中导入，但是@Value注解在构造函数完成后才会对成员变量注入值，失败！！
 
+    // dataSourceId生成器
     private volatile AtomicInteger DATASOURCE_COUNT = new AtomicInteger();
 
-    private Map<Object, Object> customDataSource = new HashMap<>();
+    // key:dataSourceId   value:DataSource
+    private final Map<Object, Object> customDataSource = new ConcurrentHashMap<>();
 
-    private Map<String, DataSourceProperties> customDataSourceProperties = new HashMap<>();
+    // key:dataSourceId   value:DataSourceProperties
+    private final Map<String, DataSourceProperties> customDataSourceProperties = new ConcurrentHashMap<>();
 
     // AbstractRoutingDataSource通过此方法确定当前的DataSource
     @Override
@@ -38,7 +42,8 @@ public class DataSourceRouter extends AbstractRoutingDataSource {
         return DataSourceRouterManager.getCurrentDataSourceKey(); // 返回线程当前持有的DataSource的ID
     }
 
-    @Autowired // 注入主数据库配置信息
+    // 构造函数注入主数据库配置信息
+    @Autowired
     public DataSourceRouter(MainDataSourceProperties mainDataSourceProperties){
         // 此构造函数由Spring容器调用，需要在构造函数执行时，添加主数据库
         // 创建主数据库DataSource
@@ -46,9 +51,8 @@ public class DataSourceRouter extends AbstractRoutingDataSource {
         customDataSource.put("primary", createDataSource(mainDataSourceProperties));
         setTargetDataSources(customDataSource);
 
-        // 初始化DataSource计数
+        // 初始化dataSourceId生成器
         DATASOURCE_COUNT.set(0);
-
     }
 
     // 添加数据源
@@ -72,18 +76,23 @@ public class DataSourceRouter extends AbstractRoutingDataSource {
         }
 
         if (map.get("msg") == 2) { // 其他用户已添加
-            customDataSourceProperties.put(properties.getId(), properties);
+            String dataSourceID = "db_" + DATASOURCE_COUNT.incrementAndGet();
+            customDataSource.put(dataSourceID,customDataSource.get(properties.getId()));
+            properties.setId(dataSourceID);
+            customDataSourceProperties.put(dataSourceID, properties);
+
+            setTargetDataSources(customDataSource);
+            afterPropertiesSet();
         }else{
             // 修改回应付检查之前的原始状态 --jingwei
 //            String dataSourceID = properties.getDisplayName();
             String dataSourceID = "db_" + DATASOURCE_COUNT.incrementAndGet();
             properties.setId(dataSourceID);
-            //TODO 这边有问题，应该先创建数据源再存储数据源信息。否则创建失败的数据源信息也会出现在customDataSourceProperties中
-            customDataSourceProperties.put(dataSourceID, properties);
 
             // 2. 创建DataSource并添加至TargetDataSource
 //            customDataSource.put(properties.getDisplayName(),createDataSource(properties));
             customDataSource.put(properties.getId(), createDataSource(properties));
+            customDataSourceProperties.put(dataSourceID, properties);
 
             // 3. AbstractRoutingDataSource方法,重写AbstractRoutingDataSource中的数据源
             setTargetDataSources(customDataSource);
@@ -156,6 +165,7 @@ public class DataSourceRouter extends AbstractRoutingDataSource {
                 return result;
             }
         }
+        // 检查其他用户是否已经创建了相同的DataSource
         for (DataSourceProperties dsp: customDataSourceProperties.values()
                 ) {
             if (dsp.getUrl().equals(properties.getUrl()) && dsp.getDriverClassName().equals(properties.getDriverClassName())){
