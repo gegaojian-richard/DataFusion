@@ -128,13 +128,14 @@ public class UpdateIntegrityJobExecutor extends AbstractTerminatableThread imple
 
             for(Map<String,String> maps:job.getMapEntries()){
 
-                for(String key:maps.keySet()){
+
+                    String key = maps.get("key");
                     String columnName = key.trim().split(",")[0];
                     String primaryKey = key.trim().split(",")[1];
                     String querySql = "SELECT "+key.trim()+" FROM "+job.getTableName()+String.format(" WHERE ISNULL(%s) or %s=\"\" ", columnName,columnName);
                     //System.out.println(querySql);
                     SqlRowSet sqlRowSet1 = jdbcTemplate.queryForRowSet(querySql);
-                    String[] values = maps.get(key).split(",");
+                    String[] values = maps.get("value").split(",");
                     DataSourceRouterManager.setCurrentDataSourceKey(values[0]);
                     String querySql2 = "SELECT "+values[2]+","+values[3] +" FROM "+values[1];
                     //System.out.println(querySql2);
@@ -166,7 +167,7 @@ public class UpdateIntegrityJobExecutor extends AbstractTerminatableThread imple
                                 break;
                             }
                         }
-                    }
+
 
 
 
