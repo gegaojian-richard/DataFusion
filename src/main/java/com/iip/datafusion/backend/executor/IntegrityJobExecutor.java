@@ -81,7 +81,8 @@ public class IntegrityJobExecutor extends AbstractTerminatableThread implements 
                 }
 
                 RedisTransform.rowsetToRedis(resRowset,key,redisTemplate);
-//                redisTemplate.opsForList().rightPush(key,columns.toString().substring(1));
+                key = key + "-0";
+                redisTemplate.opsForList().rightPush(key,columns.toString().substring(1));
             }else if(job.getInnerJobType().equals("execute")){
                 //todo: 更新任务
             }
