@@ -168,8 +168,6 @@ public class UpdateIntegrityJobExecutor extends AbstractTerminatableThread imple
                         }
                     }
 
-
-
                 }
             }
             for (String sql:sqlList)
