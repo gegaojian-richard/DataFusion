@@ -40,6 +40,8 @@ public class LoginTicketDao {
             Map<String, Object> map = jdbcTemplate.queryForMap(
                     "select id,userID,Expired,ticket,status from ticket where ticket=? ",
                     new Object[]{ticket});
+            if(map == null)
+                return null;
             LoginTicket loginTicket = new LoginTicket();
             loginTicket.setId(Integer.parseInt(map.get("id").toString()));
             loginTicket.setUserId(Integer.parseInt(map.get("userId").toString()));

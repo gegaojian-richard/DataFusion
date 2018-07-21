@@ -52,11 +52,13 @@ public class UmsController {
                         @CookieValue(value="DFU", defaultValue = "default") String ticket,
                         HttpServletResponse response){
         Map map;
-        if (ticket.equals("default")) {
+        /*
+        if (!ticket.equals("d1efault")) {
             map = umsService.login(username, password);
         }else {
             map = umsService.autoLogin(username,password,ticket);
-        }
+        }*///todo:登录出错
+        map = umsService.login(username, password);
         //同上
         if(map.containsKey("ticket")){
             Cookie cookie= new Cookie("DFU",map.get("ticket").toString());
