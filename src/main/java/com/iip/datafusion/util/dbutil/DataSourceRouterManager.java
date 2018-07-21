@@ -71,11 +71,11 @@ public class DataSourceRouterManager {
         return dataSourceRouter.getDataSourcePropertiesByIDs(dataSourceIds);
     }
 
-    public DataSourceProperties getDataSourceProperties(String dataSourceId){
+    public static DataSourceProperties getDataSourceProperties(String dataSourceId){
         return dataSourceRouter.getDataSourcePropertiesByID(dataSourceId);
     }
 
-    public String getDataSourceDisplayName(String dataSourceId){
+    public static String getDataSourceDisplayName(String dataSourceId){
         return getDataSourceProperties(dataSourceId).getDisplayName();
     }
 
