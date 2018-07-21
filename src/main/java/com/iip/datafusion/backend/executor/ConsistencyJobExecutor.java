@@ -7,6 +7,7 @@ import com.iip.datafusion.backend.common.TerminationToken;
 import com.iip.datafusion.backend.jdbchelper.JDBCHelper;
 import com.iip.datafusion.backend.job.JobStatusType;
 import com.iip.datafusion.backend.job.consistency.ConsistencyJob;
+import com.iip.datafusion.dgs.model.consistency.MapEntries;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,7 @@ import com.iip.datafusion.redis.model.RedisTransform;
 import com.iip.datafusion.redis.model.RedisHelper;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.BlockingQueue;
 
 public class ConsistencyJobExecutor extends AbstractTerminatableThread implements JobExecutor<ConsistencyJob> {
@@ -55,74 +57,93 @@ public class ConsistencyJobExecutor extends AbstractTerminatableThread implement
     @Override
     public void doJob(ConsistencyJob job) throws Exception {
         DataSourceRouterManager.setCurrentDataSourceKey(job.getmainDataSourceID());
-        logger.info(String.valueOf(job.getSqlList().size()));
+        String mainDisplayName=job.getmainDataSourceID();
+        mainDisplayName = DataSourceRouterManager.getDataSourceDisplayName(job.getmainDataSourceID());
+        List<MapEntries> MapEntries=job.getMapEntries();
+        String mainTableName=job.getmainTableName();
         try{
-            if(job.getSqlList().size()>0) {
-                if(job.getInnerJobType().equals("query")) {
-                    SqlRowSet sqlRowSet1 = jdbcTemplate.queryForRowSet(job.getSqlList().get(0));
-                    DataSourceRouterManager.setCurrentDataSourceKey(job.getfollowDataSourceID());
-                    SqlRowSet sqlRowSet2 = jdbcTemplate.queryForRowSet(job.getSqlList().get(1));
-                    logger.info(job.getSqlList().get(0));
-                    logger.info(job.getSqlList().get(1));
-                    //JSONArray json = new JSONArray();
-                    ArrayList<String> lists = new ArrayList<>();
-                    String key = job.getUserID() + "-" + job.getJobID();
-                    logger.info(key);
+            if(job.getInnerJobType().equals("query")) {
+                ArrayList<String> lists1 = new ArrayList<>();
+                ArrayList<String> lists2 = new ArrayList<>();
+                String key = job.getUserID() + "-" + job.getJobID();
+                logger.info(key);
+                String key_description = job.getUserID() + "-" + job.getJobID() + "-" + "description";
+                logger.info(key_description);
+                int countALL=0;
+                for (MapEntries m : MapEntries) {
+                    String[] temp = m.getKey().split(",");
+                    String mainColumnName = temp[0];
+                    String mainPrimary_key = temp[1];
+                    String[] temp2 = m.getValue().split(",");
+                    String followDataSourceID = temp2[0];
+                    String followTableName = temp2[1];
+                    String followColumnName = temp2[2];
+                    String followPrimary_key = temp2[3];
+                    String selectClause1 = mainPrimary_key + "," + mainColumnName;
+                    String selectClause2 = followPrimary_key + "," + followColumnName;
+                    String whereClause = "1=1";
+                    String sql1 = String.format("SELECT %s FROM %s where %s", selectClause1, mainTableName, whereClause);
+                    String sql2 = String.format("SELECT %s FROM %s where %s", selectClause2, followTableName, whereClause);
 
+                    SqlRowSet sqlRowSet1 = jdbcTemplate.queryForRowSet(sql1);
+                    DataSourceRouterManager.setCurrentDataSourceKey(followDataSourceID);
+                    String followDisplayName = followDataSourceID;
+                    followDisplayName = DataSourceRouterManager.getDataSourceDisplayName(followDataSourceID);
+                    SqlRowSet sqlRowSet2 = jdbcTemplate.queryForRowSet(sql2);
+                    logger.info(sql1);
+                    logger.info(sql2);
+                    //JSONArray json = new JSONArray();
+                    int count=0;
                     while (sqlRowSet1.next()) {
-                        int count=0;
-                        String key1=sqlRowSet1.getString(1);
-                        String value1=sqlRowSet1.getString(2);
-                        logger.info("key1："+key1);
-                        logger.info("value1："+value1);
+
+                        String key1 = sqlRowSet1.getString(1);
+                        String value1 = sqlRowSet1.getString(2);
+                        logger.info("key1：" + key1);
+                        logger.info("value1：" + value1);
                         while (sqlRowSet2.next()) {
-                            String key2=sqlRowSet2.getString(1);
-                            logger.info("key2："+key2);
-                            String value2=sqlRowSet2.getString(2);
-                            logger.info("value2："+value2);
-                            if(value1==null||value2==null) break;
-                            if(key1.compareTo(key2)!=0) ;//相等返回0，小于返回-1，大于返回1
-                            if(key1.compareTo(key2)==0){
-                                if(value1.compareTo(value2)!=0){
+                            String key2 = sqlRowSet2.getString(1);
+                            logger.info("key2：" + key2);
+                            String value2 = sqlRowSet2.getString(2);
+                            logger.info("value2：" + value2);
+                            if (value1 == null || value2 == null) break;
+                            if (key1.compareTo(key2) != 0) ;//相等返回0，小于返回-1，大于返回1
+                            if (key1.compareTo(key2) == 0) {
+                                if (value1.compareTo(value2) != 0) {
+                                    count=count+1;
                                     JSONObject jo = new JSONObject();
-//                                    jo.put("mainDataSourceId",job.getmainDataSourceID());
-//                                    jo.put("mainTableName",job.getmainTableName());
-//                                    jo.put("mainPrimary_key",job.getmainPrimary_key());
-//                                    jo.put("key1",key1);
-//                                    jo.put("mainColumnName",job.getmainColumnName());
-//                                    jo.put("value1",value1);
-//                                    jo.put("followDatasourceID",job.getfollowDataSourceID());
-//                                    jo.put("followTableName",job.getfollowTableName());
-//                                    jo.put("followPrimary_key",job.getfollowPrimary_key());
-//                                    jo.put("key2",key2);
-//                                    jo.put("followColumnName",job.getfollowColumnName());
-//                                    jo.put("value2",value2);
-                                    jo.put(job.getmainPrimary_key()+" from "+job.getmainTableName()+" from "+job.getmainDataSourceID(),key1);
-                                    jo.put(job.getmainColumnName()+" from "+job.getmainTableName()+" from "+job.getmainDataSourceID(),value1);
-                                    jo.put(job.getfollowColumnName()+" from "+job.getfollowTableName()+" from "+job.getfollowDataSourceID(),value2);
-                                    lists.add(jo.toString());
+                                    jo.put(mainPrimary_key + " from " + mainTableName + " from " + mainDisplayName, key1);
+                                    jo.put(mainColumnName + " from " + mainTableName + " from " + mainDisplayName, value1);
+                                    jo.put(followColumnName + " from " + followTableName + " from " + followDisplayName, value2);
+                                    lists1.add(jo.toString());
                                 }
                             }
                             if (sqlRowSet2.isLast()) {
                                 sqlRowSet2.beforeFirst();
-                                break;}
+                                break;
+                            }
                         }
                     }
-                    redisTemplate.opsForList().rightPushAll(key, lists);
+                    countALL=countALL+count;
                     JSONObject jo2 = new JSONObject();
-                    jo2.put("userid-jobid",key);
-                    jo2.put("mainDataSourceId",job.getmainDataSourceID());
-                    jo2.put("mainTableName",job.getmainTableName());
-                    jo2.put("mainPrimary_key",job.getmainPrimary_key());
-                    jo2.put("mainColumnName",job.getmainColumnName());
-                    jo2.put("followDatasourceID",job.getfollowDataSourceID());
-                    jo2.put("followTableName",job.getfollowTableName());
-                    jo2.put("followPrimary_key",job.getfollowPrimary_key());
-                    jo2.put("followColumnName",job.getfollowColumnName());
-                    lists.add(jo2.toString());
-                    Result result = new Result(0,"数据不一致",lists.toString());
-                    logger.info(result.toString());
+                    jo2.put("mainDataSourceId", job.getmainDataSourceID());
+                    jo2.put("mainDisplayName", mainDisplayName);
+                    jo2.put("mainTableName", job.getmainTableName());
+                    jo2.put("mainColumnName", mainColumnName);
+                    jo2.put("mainPrimary_key", mainPrimary_key);
+                    jo2.put("followDatasourceID", followDataSourceID);
+                    jo2.put("followDisplayName", followDisplayName);
+                    jo2.put("followTableName", followTableName);
+                    jo2.put("followColumnName", followColumnName);
+                    jo2.put("followPrimary_key", followPrimary_key);
+                    jo2.put("redisStart", countALL-count+1);
+                    jo2.put("redisEnd", countALL);
+                    lists2.add(jo2.toString());
+
                 }
+                Result result = new Result(0, "数据不一致", lists1.toString());
+                logger.info(result.toString());
+                redisTemplate.opsForList().rightPushAll(key, lists1);
+                redisTemplate.opsForList().rightPushAll(key_description, lists2);
             }
         }catch (Exception e){
             e.printStackTrace();

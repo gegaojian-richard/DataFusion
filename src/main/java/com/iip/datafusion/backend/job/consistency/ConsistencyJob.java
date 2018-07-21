@@ -3,7 +3,9 @@ package com.iip.datafusion.backend.job.consistency;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.iip.datafusion.backend.job.Job;
 import com.iip.datafusion.backend.job.JobBase;
+import com.iip.datafusion.dgs.model.consistency.MapEntries;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -13,12 +15,7 @@ import java.util.List;
 public class ConsistencyJob extends JobBase implements Job {
     private String mainDatasourceID;
     private String mainTableName;
-    private String mainColumnName;
-    private String mainPrimary_key;
-    private String followDatasourceID;
-    private String followTableName;
-    private String followColumnName;
-    private String followPrimary_key;
+    private List<MapEntries> MapEntries = new ArrayList<>();
     private List<String> sqlList;
     private String innerJobType;
 
@@ -49,41 +46,14 @@ public class ConsistencyJob extends JobBase implements Job {
     public void setmainTableName(String mainTableName) {
         this.mainTableName = mainTableName;
     }
-    @JsonIgnore
-    public String getmainColumnName() { return mainColumnName; }
 
-    public void  setmainColumnName(String mainColumnName) { this.mainColumnName=mainColumnName; }
-
-    @JsonIgnore
-    public String getmainPrimary_key() { return mainPrimary_key; }
-
-    public void  setmainPrimary_key(String mainPrimary_key) { this.mainPrimary_key=mainPrimary_key; }
-
-    @JsonIgnore
-    public String getfollowPrimary_key() { return followPrimary_key; }
-
-    public void  setfollowPrimary_key(String followPrimary_key) { this.followPrimary_key=followPrimary_key; }
-
-    @JsonIgnore
-    public String getfollowDataSourceID() {
-        return followDatasourceID;
-    }
-    public void setfollowDatasourceID(String followDatasourceID) {
-        this.followDatasourceID = followDatasourceID;
-    }
-    @JsonIgnore
-    public String getfollowTableName() {
-        return followTableName;
-    }
-    public void setfollowTableName(String followTableName) {
-        this.followTableName = followTableName;
+    public List<MapEntries> getMapEntries() {
+        return MapEntries;
     }
 
-
-    @JsonIgnore
-    public String getfollowColumnName() { return followColumnName; }
-
-    public void  setfollowColumnName(String columnname) { this.followColumnName=columnname; }
+    public void setMapEntries(List<MapEntries> MapEntries) {
+        this.MapEntries = MapEntries;
+    }
 
     @JsonIgnore
     public List<String> getSqlList() {
@@ -93,8 +63,7 @@ public class ConsistencyJob extends JobBase implements Job {
         this.sqlList = sqlList;
     }
     public String getDescription(){
-        return ""+mainDatasourceID+"."+mainTableName+"."+mainColumnName+"<->"+followDatasourceID+"."+followTableName+"."
-                +followColumnName;
+        return ""+mainDatasourceID+"."+mainTableName+"<->";
     }
 //    public String getJobType() {
 //        return jobType;
