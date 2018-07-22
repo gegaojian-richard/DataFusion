@@ -157,7 +157,7 @@ public class UpdateIntegrityJobExecutor extends AbstractTerminatableThread imple
                                 continue;
 
                             if(key2.equals(key1)){
-                                String sql = "UPDATE "+job.getTableName()+" SET "+columnName+"="+job.sqlChangeType(reference,nameType.get(columnName))+String.format(" WHERE ( ISNULL(%s) or %s=\"\" ) and %s=%s", columnName,columnName,primaryKey,job.sqlChangeType(key1,primaryKey));
+                                String sql = "UPDATE "+job.getTableName()+" SET "+columnName+"="+job.sqlChangeType(reference,nameType.get(columnName))+String.format(" WHERE ( ISNULL(%s) or %s=\"\" ) and %s=%s", columnName,columnName,primaryKey,job.sqlChangeType(key1,nameType.get(primaryKey)));
                                 //System.out.println(sql);
                                 sqlList.add(sql);
                                 break;
