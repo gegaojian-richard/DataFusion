@@ -46,6 +46,7 @@ public class DatafusionApplication {
 		NameRecognitionManager.getInstance().init();
 		TFIDFManager.getInstance().init();
 		TopicModelManager.getInstance().init();
+		Doc2VecManager.getInstance().init();
 
 	}
 

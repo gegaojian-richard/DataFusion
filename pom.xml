@@ -113,6 +113,12 @@
 			<version>2.7.3</version>
 		</dependency>
 		<!-- redis cache related.....end -->
+		<!-- add by ylx -->
+		<dependency>
+			<groupId>org.python</groupId>
+			<artifactId>jython-standalone</artifactId>
+			<version>2.7.0</version>
+		</dependency>
 
 	</dependencies>
 
