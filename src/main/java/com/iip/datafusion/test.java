@@ -5,6 +5,4 @@ package com.iip.datafusion;
  */
 public class test {
 
-    // test
-
 }

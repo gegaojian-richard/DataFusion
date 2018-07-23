@@ -12,7 +12,8 @@ public enum JobType {
     NAME_RECOGNITION("命名实体识别"),
     TEXT_RANK("TEXT_RANK"),
     TF_IDF("TF_IDF"),
-    TOPIC_MODEL("主题模型");
+    TOPIC_MODEL("主题模型"),
+    DOC2VEC("DOC2VEC");
 
     private final String name;
     private JobType(String name){
