@@ -16,9 +16,10 @@ public class UserManager {
     private String userName;
 
     public UserManager(){
-        this.state = false;
-        this.userId=0;
-        this.userName="";
+        this.state = true;
+        //TODO:改为默认登录
+        this.userId=1;
+        this.userName="admin";
     }
 
     public int getUserId() {
