@@ -1,9 +1,12 @@
 package com.iip.datafusion.dgs.controller.consistency;
 
+import com.iip.datafusion.dgs.controller.UpdateIntegrityController;
 import com.iip.datafusion.dgs.model.consistency.UpdateConsistencyConfiguration;
 import com.iip.datafusion.dgs.service.consistency.UpdateConsistencyService;
 import com.iip.datafusion.util.jsonutil.Result;
 import com.iip.datafusion.util.userutil.UserManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,6 +18,7 @@ import java.util.Map;
 
 @Controller
 public class UpdateConsistencyController {
+    protected static Logger logger= LoggerFactory.getLogger(UpdateConsistencyController.class);
     @Autowired
     UpdateConsistencyService UpdateConsistencyService;
     @Autowired
@@ -23,9 +27,9 @@ public class UpdateConsistencyController {
     @ResponseBody
     public Result commitUpdateJob(@RequestBody UpdateConsistencyConfiguration UpdateConsistencyConfiguration){
         try{
-            Map map = UpdateConsistencyService.CommitUpdateJob(UpdateConsistencyConfiguration,userManager.getUserId());
+            logger.info("enter UpdateConsistencyController.update()");
+            Map map = UpdateConsistencyService.CommitUpdateJob(UpdateConsistencyConfiguration);
             Result res = new Result(1,"Task Submitted successfully",null);;
-            //res.setMsg(integrityJob.getJobId());
             return res;
         }catch (Exception e){
             return new Result(0,e.getMessage(),null);
