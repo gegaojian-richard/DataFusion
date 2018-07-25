@@ -21,7 +21,7 @@ public class UpdateConsistencyJob extends JobBase implements Job {
     private String followPrimary_key;
     private List<String> sqlList;
     private String innerJobType;
-
+    private int beforeJobId;
 
 
     @JsonIgnore
@@ -75,6 +75,14 @@ public class UpdateConsistencyJob extends JobBase implements Job {
     @JsonIgnore
     public String getfollowPrimary_key() { return followPrimary_key; }
     public void  setfollowPrimary_key(String followPrimary_key) { this.followPrimary_key=followPrimary_key; }
+    @JsonIgnore
+    public int getBeforeJobId() {
+        return beforeJobId;
+    }
+
+    public void setBeforeJobId(int beforeJobId) {
+        this.beforeJobId = beforeJobId;
+    }
 
     @JsonIgnore
     public List<String> getSqlList() {
