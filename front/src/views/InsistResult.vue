@@ -138,6 +138,7 @@
             tempInfo.followTableName=this.description[i].followTableName;
             tempInfo.followPrimary_key=this.description[i].followPrimary_key;
             tempInfo.followColumnName=this.description[i].followColumnName;
+            tempInfo.u2r=[];
             for (let j = 0; j < this.radio[i].length; j++) {
                 if(this.radio[i][j]=='main'){
                     let temp_u2r={};
@@ -161,7 +162,7 @@
                   })
                   keyAndValue.splice(1,1);
                   temp_u2r.value=keyAndValue[0]+","+keyAndValue[1];
-                  tempInfo.u2r=temp_u2r;
+                  tempInfo.u2r.push(temp_u2r);
                 }
             }
             console.log(tempInfo);
@@ -169,7 +170,7 @@
                 var res=response.data;
                 if(res.status==1){
                     success++;
-                    if(success==(this.radio.length-1)){   //全都提交成功
+                    if(success==(this.radio.length)){   //全都提交成功
                       const h = this.$createElement;
                       this.$notify({
                         title: '提示',
