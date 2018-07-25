@@ -92,6 +92,7 @@ public class UpdateIntegrityJobExecutor extends AbstractTerminatableThread imple
                         else if(columnList.size()<=index || !columnList.get(index).equals(key)){
                             throw new Exception("传入记录属性顺序不一致");
                         }
+
                         String value = job.sqlChangeType(valueMap.get(key),nameType.get(key));
                         valueClause += value + ",";
                     } else{

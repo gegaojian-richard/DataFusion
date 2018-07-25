@@ -362,7 +362,7 @@
         var redisParam = {
           "key": this.$route.query.nowUserId + "-" + this.$route.query.nowEditJob,
           "start": this.currentPage * 10,
-          "end": this.currentPage * 10 + 10
+          "end": this.currentPage * 10 + 9
         }
         axios.post("/kjb/tvs/redisData", redisParam).then
         ((response) => {
@@ -452,6 +452,7 @@
               title: '提示',
               message: h('i', {style: 'color: teal'}, "提交成功")
             });
+            history.back(-1);
           } else {
             const h = this.$createElement;
             this.$notify({
@@ -466,7 +467,7 @@
             message: h('i', {style: 'color: teal'}, "提交失败，请再次提交")
           });
         })
-        history.back(-1);
+
       }
     }
   }
