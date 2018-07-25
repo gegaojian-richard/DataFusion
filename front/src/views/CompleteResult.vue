@@ -268,9 +268,10 @@
           if(this.editRule){
               this.methodRule=false;
           }
-          if(this.haschanged.length>0){
-              this.submit();
-          }
+
+//          if(this.haschanged.length>0){
+//              this.submit();
+//          }
       },
       add_map(){
         this.rulesforRefer.push({primary_column: "", primary_key: "", source_column: "", source_key: ""});
@@ -465,6 +466,7 @@
             message: h('i', {style: 'color: teal'}, "提交失败，请再次提交")
           });
         })
+        history.back(-1);
       }
     }
   }
