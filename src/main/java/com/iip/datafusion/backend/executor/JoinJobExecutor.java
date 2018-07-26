@@ -104,8 +104,10 @@ public class JoinJobExecutor extends AbstractTerminatableThread implements JobEx
                     String value;
                     if (resultSet.get(i).get(key)!=null)
                         value = String.valueOf(resultSet.get(i).get(key));
-                    else {
+                    else if (resultSet.get(i).get(key.split(":")[2]) != null){
                         value = String.valueOf(resultSet.get(i).get(key.split(":")[2]));
+                    }else{
+                        value = "";
                     }
                     preparedStatement.setString(j,value);
                     j++;
