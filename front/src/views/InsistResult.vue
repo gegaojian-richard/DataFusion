@@ -2,33 +2,35 @@
   <div>
     <div>
       <h2>一致性结果</h2>
-      <div  class="showtable" align="left" color="#3333" style="width:100%;margin:0px 5px 20px 5px;border: 1px solid #ccc;color: #333;height:400px;">
-        <el-collapse >
-          <el-collapse-item style="height:200px;overflow-y: auto;width:90%" v-bind:title="everyColumn[index_out]"  name="1" v-for="(item,index_out) in everyColumn" key="index">
-            <table class="imagetable quarter-div_table"  >
-              <thead>
-              <tr>
-                <th>选择</th>
-                <th  style=" text-align:center;color:#fff;" v-for="(key,item) in getBackData[0][0]" >{{item}}</th>
-              </tr>
-              </thead>
-              <tbody>
-              <tr v-for = "(item_inner,index_inner) in getBackData[index_out]">
-                <td>
-                  <el-radio style="margin-left: 20px" label="main" v-model="radio[index_out][index_inner]">{{description[index_out].mainTableName}}</el-radio>
-                  <el-radio style="margin-left: 20px" label="follow" v-model="radio[index_out][index_inner]">{{description[index_out].followTableName}}</el-radio>
-                </td>
-                <td v-for ="(it,feature) in item_inner">
-                  <span class="blockspan" >{{it}}</span>
-                </td>
-              </tr>
-              </tbody>
-            </table>
+      <div  class="showtable" align="left" color="#3333" style="width:100%;margin:0px 5px 20px 5px;border: 1px solid #ccc;color: #333;height:400px;overflow: auto">
+        <el-collapse  v-model="activeNames" @change="handleChange">
+          <el-collapse-item style="width:90%;" v-bind:title="everyColumn[index_out]"  v-bind:name="index_out" v-for="(item,index_out) in everyColumn" v-bind:key="index_out">
+            <div style="height:300px;overflow: auto">
+              <table class="imagetable quarter-div_table" >
+                <thead>
+                <tr>
+                  <th v-if="getBackData[index_out][0]">选择</th>
+                  <th  style=" text-align:center;color:#fff;" v-for="(key,item) in getBackData[index_out][0]" >{{item}}</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr v-for = "(item_inner,index_inner) in getBackData[index_out]">
+                  <td>
+                    <el-radio style="margin-left: 20px" label="main" v-model="radio[index_out][index_inner]">{{description[index_out].mainTableName}}</el-radio>
+                    <el-radio style="margin-left: 20px" label="follow" v-model="radio[index_out][index_inner]">{{description[index_out].followTableName}}</el-radio>
+                  </td>
+                  <td v-for ="(it,feature) in item_inner">
+                    <span class="blockspan" >{{it}}</span>
+                  </td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
           </el-collapse-item>
         </el-collapse>
       </div>
     </div>
-    <el-button @click="submit()">提交</el-button>
+    <el-button @click="submit()" >提交</el-button>
   </div>
 </template>
 <style rel="stylesheet/scss" lang="scss" scoped>
@@ -94,6 +96,7 @@
     },
     data(){
       return{
+        activeNames:0,
         getBackData:[],
 //        currentPage:0,
         totalCount:10,
@@ -123,6 +126,9 @@
       })
     },
     methods: {
+        handleChange(val){
+          console.log(val);
+        },
       submit(){
           var success=0; //用来计算是否全都提交成功
  //       console.log(this.getBackData);
@@ -138,6 +144,7 @@
             tempInfo.followTableName=this.description[i].followTableName;
             tempInfo.followPrimary_key=this.description[i].followPrimary_key;
             tempInfo.followColumnName=this.description[i].followColumnName;
+            tempInfo.u2r=[];
             for (let j = 0; j < this.radio[i].length; j++) {
                 if(this.radio[i][j]=='main'){
                     let temp_u2r={};
@@ -161,7 +168,7 @@
                   })
                   keyAndValue.splice(1,1);
                   temp_u2r.value=keyAndValue[0]+","+keyAndValue[1];
-                  tempInfo.u2r=temp_u2r;
+                  tempInfo.u2r.push(temp_u2r);
                 }
             }
             console.log(tempInfo);
@@ -169,7 +176,7 @@
                 var res=response.data;
                 if(res.status==1){
                     success++;
-                    if(success==(this.radio.length-1)){   //全都提交成功
+                    if(success==(this.radio.length)){   //全都提交成功
                       const h = this.$createElement;
                       this.$notify({
                         title: '提示',
