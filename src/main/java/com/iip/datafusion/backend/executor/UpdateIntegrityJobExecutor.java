@@ -37,14 +37,14 @@ public class UpdateIntegrityJobExecutor extends AbstractTerminatableThread imple
         JobRegistry.getInstance().update(integrityJob, JobStatusType.EXECUTING);
 
         try {
-//            IntegrityJob job = (IntegrityJob) JobRegistry.getInstance().getJob(integrityJob.getUserID(),integrityJob.getBeforeJobId());
-//            if(!job.getStatus().equals(JobStatusType.SUCCESS)){
-//                JobRegistry.getInstance().update(integrityJob, JobStatusType.FINISHED);
-//                return;
-//            }
+            IntegrityJob job = (IntegrityJob) JobRegistry.getInstance().getJob(integrityJob.getUserID(),integrityJob.getBeforeJobId());
+            if(!job.getStatus().equals(JobStatusType.SUCCESS)){
+                JobRegistry.getInstance().update(integrityJob, JobStatusType.FINISHED);
+                return;
+            }
             doJob(integrityJob);
             JobRegistry.getInstance().update(integrityJob, JobStatusType.FINISHED);
-//            JobRegistry.getInstance().update(job, JobStatusType.FINISHED);
+            JobRegistry.getInstance().update(job, JobStatusType.FINISHED);
 
         } catch (Exception e) {
             e.printStackTrace();
