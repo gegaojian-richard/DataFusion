@@ -41,14 +41,14 @@ public class UpdateConsistencyJobExecutor extends AbstractTerminatableThread imp
         JobRegistry.getInstance().update(updateconsistencyJob, JobStatusType.EXECUTING);
         System.out.println("1111");
         try {
-            ConsistencyJob job = (ConsistencyJob) JobRegistry.getInstance().getJob(updateconsistencyJob.getUserID(),updateconsistencyJob.getBeforeJobId());
-            if(!job.getStatus().equals(JobStatusType.SUCCESS)){
-                JobRegistry.getInstance().update(updateconsistencyJob, JobStatusType.FINISHED);
-                return;
-            }
+//            ConsistencyJob job = (ConsistencyJob) JobRegistry.getInstance().getJob(updateconsistencyJob.getUserID(),updateconsistencyJob.getBeforeJobId());
+//            if(!job.getStatus().equals(JobStatusType.SUCCESS)){
+//                JobRegistry.getInstance().update(updateconsistencyJob, JobStatusType.FINISHED);
+//                return;
+//            }
             doJob(updateconsistencyJob);
             JobRegistry.getInstance().update(updateconsistencyJob, JobStatusType.FINISHED);
-            JobRegistry.getInstance().update(job, JobStatusType.FINISHED);
+//            JobRegistry.getInstance().update(job, JobStatusType.FINISHED);
 
         } catch (Exception e) {
             e.printStackTrace();

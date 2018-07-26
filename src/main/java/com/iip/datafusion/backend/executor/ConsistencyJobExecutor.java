@@ -58,7 +58,7 @@ public class ConsistencyJobExecutor extends AbstractTerminatableThread implement
     public void doJob(ConsistencyJob job) throws Exception {
         DataSourceRouterManager.setCurrentDataSourceKey(job.getmainDataSourceID());
         String mainDisplayName=job.getmainDataSourceID();
-//        mainDisplayName = DataSourceRouterManager.getDataSourceDisplayName(job.getmainDataSourceID());
+        mainDisplayName = DataSourceRouterManager.getDataSourceDisplayName(job.getmainDataSourceID());
         List<MapEntries> MapEntries=job.getMapEntries();
         String mainTableName=job.getmainTableName();
         try{
@@ -88,7 +88,7 @@ public class ConsistencyJobExecutor extends AbstractTerminatableThread implement
                     SqlRowSet sqlRowSet1 = jdbcTemplate.queryForRowSet(sql1);
                     DataSourceRouterManager.setCurrentDataSourceKey(followDataSourceID);
                     String followDisplayName = followDataSourceID;
-//                    followDisplayName = DataSourceRouterManager.getDataSourceDisplayName(followDataSourceID);
+                    followDisplayName = DataSourceRouterManager.getDataSourceDisplayName(followDataSourceID);
                     SqlRowSet sqlRowSet2 = jdbcTemplate.queryForRowSet(sql2);
                     logger.info(sql1);
                     logger.info(sql2);
