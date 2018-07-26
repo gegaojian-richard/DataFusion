@@ -98,13 +98,11 @@ public class ConsistencyJobExecutor extends AbstractTerminatableThread implement
 
                         String key1 = sqlRowSet1.getString(1);
                         String value1 = sqlRowSet1.getString(2);
-                        logger.info("key1：" + key1);
-                        logger.info("value1：" + value1);
+//                        logger.info("key1：" + key1);
+//                        logger.info("value1：" + value1);
                         while (sqlRowSet2.next()) {
                             String key2 = sqlRowSet2.getString(1);
-                            logger.info("key2：" + key2);
                             String value2 = sqlRowSet2.getString(2);
-                            logger.info("value2：" + value2);
 //                            if (value1 == null || value2 == null) break;
                             if (key1.compareTo(key2) != 0) ;//相等返回0，小于返回-1，大于返回1
                             if (key1.compareTo(key2) == 0) {
