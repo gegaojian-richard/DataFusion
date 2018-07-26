@@ -87,6 +87,8 @@ public class UpdateIntegrityJob extends JobBase{
     }
 
     public String sqlChangeType(String raw,String type){
+        if(raw == null || raw.equals("NULL") || raw.equals("null"))
+            return null;
         Map<String,Integer> typeMap = new HashMap<>();
         //String 0 int 1
         typeMap.put("CHAR",0);

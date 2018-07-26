@@ -1,6 +1,7 @@
 package com.iip.datafusion.dgs.model;
 
 import com.iip.datafusion.backend.JobRegistry;
+import com.iip.datafusion.backend.job.JobStatusType;
 import com.iip.datafusion.backend.job.integrity.IntegrityJob;
 import com.iip.datafusion.dgs.controller.UpdateIntegrityController;
 import org.slf4j.Logger;
@@ -20,6 +21,9 @@ public class UpdateIntegrityParser {
     public static UpdateIntegrityJob parse(UpdateIntegrityConfiguration updateIntegrityConfiguration)throws Exception{
         logger.info("enter parse updateIntegrityJob");
         IntegrityJob job = (IntegrityJob) JobRegistry.getInstance().getJob(updateIntegrityConfiguration.getUserId(),updateIntegrityConfiguration.getJobId());
+        logger.info("Job Status: " + job.getStatus());
+        if(!job.getStatus().equals(JobStatusType.SUCCESS))
+            return null;
         String dataSourceId = job.getDataSourceId();
         String tableName = job.getTableName();
         List<Map<String,String>> valueMaps = updateIntegrityConfiguration.getMapEntries();

@@ -31,6 +31,24 @@
             </div>
             <el-button style="margin-top:10px;position:relative;background: #A6CF65;color:#fff;float:right;" type="primary" plain @click="clearChoose">重置</el-button>
             <el-button style="margin-top:10px;position:relative;background-color: #7BC2F8;color:#fff;float:right;margin-right: 20px;" type="primary" plain @click="addFusiondata">添加整合单元</el-button>
+            <router-link to="/entity">
+              <el-button style="margin-top:10px;position:relative;background-color: #426ab3;color:#fff;float:right;margin-right: 20px;" type="primary">实体管理</el-button>
+            </router-link>
+            <router-link to="/connect">
+            <el-button style="margin-top:10px;position:relative;background-color: #426ab3;color:#fff;float:right;margin-right: 20px;" type="primary">连接管理</el-button>
+            </router-link>
+            <router-link to="/algorithm">
+              <el-button style="margin-top:10px;position:relative;background-color: #426ab3;color:#fff;float:right;margin-right: 200px;" type="primary">算法</el-button>
+            </router-link>
+
+            <select name="selected" style="margin-top:10px;position:relative;background-color: #426ab3;color:#fff;float:right;margin-right: 20px;font-size:18px;" type="primary" onclick="window.location=this.value;">
+              <option value="/kjb/#/fusion">&nbsp;&nbsp;&nbsp;数据检查  </option>
+              <option value="/kjb/#/check/complete">&nbsp;&nbsp;&nbsp;完整性检查  </option>
+              <option value="/kjb/#/check/insist">&nbsp;&nbsp;&nbsp;一致性检查</option>
+              <option value="/kjb/#/check/accuracy">&nbsp;&nbsp;&nbsp;准确性检查</option>
+            </select>
+            <label style="margin-top:10px;position:relative;color:#426ab3;float:right;margin-right: 20px;font-size:18px;" type="primary"> 预处理</label>
+
           </div>
           <div style="margin-top:50px;">
             <p style="height: 50px;text-align: left;border-bottom: 1px solid #bfcbd9;line-height: 60px;color:#698EC3;font-size: 16px;">
