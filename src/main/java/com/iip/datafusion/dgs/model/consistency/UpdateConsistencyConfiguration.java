@@ -8,10 +8,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UpdateConsistencyConfiguration {
-    @JsonProperty("userId")
-    private int userId;
-    @JsonProperty("jobId")
-    private int jobId;
+//    @JsonProperty("userId")
+//    private int userId;
+//    @JsonProperty("jobId")
+//    private int jobId;
     @JsonProperty("mainDataSourceId")
     private String mainDataSourceId;
     @JsonProperty("mainTableName")
@@ -46,8 +46,8 @@ public class UpdateConsistencyConfiguration {
             @JsonProperty("followPrimary_key") String followPrimary_key,
             @JsonProperty("u2r") List<MapEntries2> MapEntries
     ) {
-        this.userId = userId;
-        this.jobId = jobId;
+//        this.userId = userId;
+//        this.jobId = jobId;
         this.mainDataSourceId = mainDataSourceId;
         this.mainTableName = mainTableName;
         this.mainColumnName = mainColumnName;
@@ -58,21 +58,21 @@ public class UpdateConsistencyConfiguration {
         this.followPrimary_key = followPrimary_key;
         this.MapEntries = MapEntries;
     }
-    public int getUserId() {
-        return userId;
-    }
-
-    public void setUserId(int userId) {
-        this.userId = userId;
-    }
-
-    public int getJobId() {
-        return jobId;
-    }
-
-    public void setJobId(int jobId) {
-        this.jobId = jobId;
-    }
+//    public int getUserId() {
+//        return userId;
+//    }
+//
+//    public void setUserId(int userId) {
+//        this.userId = userId;
+//    }
+//
+//    public int getJobId() {
+//        return jobId;
+//    }
+//
+//    public void setJobId(int jobId) {
+//        this.jobId = jobId;
+//    }
 
     public String getmainDataSourceId() {
         return mainDataSourceId;
