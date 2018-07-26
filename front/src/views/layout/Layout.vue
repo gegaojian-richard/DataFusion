@@ -1,9 +1,9 @@
 <template>
   <div class="app-wrapper" :class="{hideSidebar:!sidebar.opened}">
-    <!--<sidebar class="sidebar-container" ></sidebar>-->
+    <sidebar class="sidebar-container" ></sidebar>
     <div class="main-container">
       <navbar class="nav-container"></navbar>
-      <!--<tags-view class="tag-container"></tags-view>-->
+      <tags-view class="tag-container"></tags-view>
       <app-main class="app-main"></app-main>
     </div>
   </div>
