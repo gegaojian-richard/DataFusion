@@ -56,7 +56,7 @@
         height: 0;
         width: 0;
         overflow: hidden;
-        visibility: visible;
+        visibility: hidden;
         transition: opacity .3s cubic-bezier(.55, 0, .1, 1);
         opacity: 0;
         display: inline-block;
@@ -68,7 +68,7 @@
           z-index: 1002;
           width: 140px;
           height: 56px;
-          visibility: hidden;
+          visibility: visible;
           position: absolute;
           right: -145px;
           text-align: left;

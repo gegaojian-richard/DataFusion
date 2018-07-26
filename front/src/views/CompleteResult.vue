@@ -59,7 +59,7 @@
             <label style="margin-top: 10px;margin-left:30px;color: #bbbbbb;font-size: large">设置参考值</label>
           </p>
           <el-button @click="add_map" style="margin-left:180px">添加参考值</el-button>
-          <table class="edittable" style="f5margin-top: 30px">
+          <table class="edittable" style="margin-top: 30px">
             <thead>
             <tr>
               <th > 主表中要检查的字段</th>
@@ -68,7 +68,7 @@
               <th>  该字段所在表的主键</th>
               <th>  操作</th>
             </tr>
-            </thead>f5ee
+            </thead>
             <tbody>
             <tr v-for = "(dataarray,index) in rulesforRefer">
               <td>
