@@ -19,7 +19,7 @@ public class UpdateConsistencyService {
 
         UpdateConsistencyJob UpdateConsistencyJob = UpdateConsistencyParser.parse(UpdateConsistencyConfiguration);
         UpdateConsistencyJob.setJobType(JobType.CONSISTENCY_UPDATE);
-        UpdateConsistencyJob.setBeforeJobId(UpdateConsistencyConfiguration.getJobId());
+//        UpdateConsistencyJob.setBeforeJobId(UpdateConsistencyConfiguration.getJobId());
         UpdateConsistencyJob.setUserID(UpdateConsistencyConfiguration.getUserId());
         JobRegistry.getInstance().regist(UpdateConsistencyJob);
         UpdateConsistencyManager.getInstance().commitJob(UpdateConsistencyJob);
