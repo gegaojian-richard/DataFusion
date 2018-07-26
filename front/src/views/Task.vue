@@ -27,8 +27,8 @@
 
         <el-table-column align="center" label="Actions" >
         <template slot-scope="scope">
-          <router-link :to="{path:'/task/completeresult',query:{nowUserId:scope.row.userID,nowEditJob:scope.row.jobID}}" v-show="scope.row.jobType === '完整性检查'" >查看详情</router-link>
-          <router-link :to="{path:'/task/insistresult',query:{nowUserId:scope.row.userID,nowEditJob:scope.row.jobID}}" v-show="scope.row.jobType === '一致性检查'" >查看详情</router-link>
+          <router-link :to="{path:'/task/completeresult',query:{nowUserId:scope.row.userID,nowEditJob:scope.row.jobID}}" v-show="scope.row.jobType === '完整性检查' && scope.row.status === '已完成'" >查看详情</router-link>
+          <router-link :to="{path:'/task/insistresult',query:{nowUserId:scope.row.userID,nowEditJob:scope.row.jobID}}" v-show="scope.row.jobType === '一致性检查'&& scope.row.status === '已完成' " >查看详情</router-link>
         </template>
       </el-table-column>
       </el-table>

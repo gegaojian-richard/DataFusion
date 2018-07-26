@@ -56,7 +56,7 @@ public class UpdateConsistencyParser {
         UpdateConsistencyJob.setmainDatasourceID(mainDataSourceId);
         UpdateConsistencyJob.setfollowDatasourceID(followDataSourceId);
         UpdateConsistencyJob.setSqlList(sqlList);
-        UpdateConsistencyJob.setJobType(JobType.CONSISTENCY);
+        UpdateConsistencyJob.setJobType(JobType.CONSISTENCY_UPDATE);
         UpdateConsistencyJob.setInnerJobType("update");
         return UpdateConsistencyJob;
     }

@@ -14,6 +14,7 @@ import java.util.Map;
 public class UpdateIntegrityJob extends JobBase{
 
     private String dataSourceId;
+    private int beforeJobId;
     private String tableName;
     private int type; //0代表手动更新，1代表自动更新
     private List<Map<String,String>> mapEntries;
@@ -71,6 +72,14 @@ public class UpdateIntegrityJob extends JobBase{
 
     public Map<String, String> getUnifyMap() {
         return unifyMap;
+    }
+
+    public int getBeforeJobId() {
+        return beforeJobId;
+    }
+
+    public void setBeforeJobId(int beforeJobId) {
+        this.beforeJobId = beforeJobId;
     }
 
     public void setUnifyMap(Map<String, String> unifyMap) {

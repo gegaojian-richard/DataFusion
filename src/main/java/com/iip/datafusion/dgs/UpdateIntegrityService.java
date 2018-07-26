@@ -17,7 +17,8 @@ public class UpdateIntegrityService {
 
     public UpdateIntegrityJob commitJob(UpdateIntegrityConfiguration updateIntegrityConfiguration)throws Exception{
         UpdateIntegrityJob updateIntegrityJob = UpdateIntegrityParser.parse(updateIntegrityConfiguration);
-        updateIntegrityJob.setJobType(JobType.INTEGRITY);
+        updateIntegrityJob.setJobType(JobType.INTEGRITY_UPDATE);
+        updateIntegrityJob.setBeforeJobId(updateIntegrityConfiguration.getJobId());
         updateIntegrityJob.setUserID(updateIntegrityConfiguration.getUserId());
         JobRegistry.getInstance().regist(updateIntegrityJob);
         UpdateIntegrityManager.getInstance().commitJob(updateIntegrityJob);
