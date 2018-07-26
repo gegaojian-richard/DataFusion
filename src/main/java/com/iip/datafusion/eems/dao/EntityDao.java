@@ -2,6 +2,8 @@ package com.iip.datafusion.eems.dao;
 
 import com.iip.datafusion.eems.model.Entity;
 import com.iip.datafusion.util.dbutil.DataSourceRouterManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.*;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -14,6 +16,7 @@ import java.util.List;
 
 @Repository
 public class EntityDao{
+    private static Logger logger = LoggerFactory.getLogger(EntityDao.class);
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
@@ -21,6 +24,7 @@ public class EntityDao{
         DataSourceRouterManager.setCurrentDataSourceKey("primary");
         boolean flag=false;
         KeyHolder keyHolder=new GeneratedKeyHolder();
+
         jdbcTemplate.update((new PreparedStatementCreator() {
             @Override
             public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {

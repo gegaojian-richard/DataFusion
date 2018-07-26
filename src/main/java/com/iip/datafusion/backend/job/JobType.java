@@ -8,11 +8,14 @@ public enum JobType {
     CONSISTENCY("一致性检查"),
     ACCURACY("准确性检查"),
     INTEGRITY("完整性检查"),
+    INTEGRITY_UPDATE("完整性更新"),
+    CONSISTENCY_UPDATE("一致性更新"),
     JOIN("数据整合"),
     NAME_RECOGNITION("命名实体识别"),
     TEXT_RANK("TEXT_RANK"),
     TF_IDF("TF_IDF"),
-    TOPIC_MODEL("主题模型");
+    TOPIC_MODEL("主题模型"),
+    DOC2VEC("DOC2VEC");
 
     private final String name;
     private JobType(String name){

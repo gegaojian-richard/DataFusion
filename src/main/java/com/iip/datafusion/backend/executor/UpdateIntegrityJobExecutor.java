@@ -6,6 +6,7 @@ import com.iip.datafusion.backend.common.AbstractTerminatableThread;
 import com.iip.datafusion.backend.common.TerminationToken;
 import com.iip.datafusion.backend.jdbchelper.JDBCHelper;
 import com.iip.datafusion.backend.job.JobStatusType;
+import com.iip.datafusion.backend.job.integrity.IntegrityJob;
 import com.iip.datafusion.dgs.model.UpdateIntegrityJob;
 import com.iip.datafusion.util.dbutil.DataSourceRouterManager;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -36,8 +37,15 @@ public class UpdateIntegrityJobExecutor extends AbstractTerminatableThread imple
         JobRegistry.getInstance().update(integrityJob, JobStatusType.EXECUTING);
 
         try {
+            IntegrityJob job = (IntegrityJob) JobRegistry.getInstance().getJob(integrityJob.getUserID(),integrityJob.getBeforeJobId());
+            if(!job.getStatus().equals(JobStatusType.SUCCESS)){
+                JobRegistry.getInstance().update(integrityJob, JobStatusType.FINISHED);
+                return;
+            }
             doJob(integrityJob);
-            JobRegistry.getInstance().update(integrityJob, JobStatusType.SUCCESS);
+            JobRegistry.getInstance().update(integrityJob, JobStatusType.FINISHED);
+            JobRegistry.getInstance().update(job, JobStatusType.FINISHED);
+
         } catch (Exception e) {
             e.printStackTrace();
             JobRegistry.getInstance().update(integrityJob, JobStatusType.ERROR);
@@ -84,6 +92,7 @@ public class UpdateIntegrityJobExecutor extends AbstractTerminatableThread imple
                         else if(columnList.size()<=index || !columnList.get(index).equals(key)){
                             throw new Exception("传入记录属性顺序不一致");
                         }
+
                         String value = job.sqlChangeType(valueMap.get(key),nameType.get(key));
                         valueClause += value + ",";
                     } else{
@@ -157,7 +166,7 @@ public class UpdateIntegrityJobExecutor extends AbstractTerminatableThread imple
                                 continue;
 
                             if(key2.equals(key1)){
-                                String sql = "UPDATE "+job.getTableName()+" SET "+columnName+"="+job.sqlChangeType(reference,nameType.get(columnName))+String.format(" WHERE ( ISNULL(%s) or %s=\"\" ) and %s=%s", columnName,columnName,primaryKey,job.sqlChangeType(key1,primaryKey));
+                                String sql = "UPDATE "+job.getTableName()+" SET "+columnName+"="+job.sqlChangeType(reference,nameType.get(columnName))+String.format(" WHERE ( ISNULL(%s) or %s=\"\" ) and %s=%s", columnName,columnName,primaryKey,job.sqlChangeType(key1,nameType.get(primaryKey)));
                                 //System.out.println(sql);
                                 sqlList.add(sql);
                                 break;

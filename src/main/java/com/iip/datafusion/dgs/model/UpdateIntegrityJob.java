@@ -14,6 +14,7 @@ import java.util.Map;
 public class UpdateIntegrityJob extends JobBase{
 
     private String dataSourceId;
+    private int beforeJobId;
     private String tableName;
     private int type; //0代表手动更新，1代表自动更新
     private List<Map<String,String>> mapEntries;
@@ -73,11 +74,21 @@ public class UpdateIntegrityJob extends JobBase{
         return unifyMap;
     }
 
+    public int getBeforeJobId() {
+        return beforeJobId;
+    }
+
+    public void setBeforeJobId(int beforeJobId) {
+        this.beforeJobId = beforeJobId;
+    }
+
     public void setUnifyMap(Map<String, String> unifyMap) {
         this.unifyMap = unifyMap;
     }
 
     public String sqlChangeType(String raw,String type){
+        if(raw == null || raw.equals("NULL") || raw.equals("null"))
+            return null;
         Map<String,Integer> typeMap = new HashMap<>();
         //String 0 int 1
         typeMap.put("CHAR",0);

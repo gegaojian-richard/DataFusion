@@ -84,7 +84,7 @@ public class ConsistencyJobExecutor extends AbstractTerminatableThread implement
                     String whereClause = "1=1";
                     String sql1 = String.format("SELECT %s FROM %s where %s", selectClause1, mainTableName, whereClause);
                     String sql2 = String.format("SELECT %s FROM %s where %s", selectClause2, followTableName, whereClause);
-
+                    DataSourceRouterManager.setCurrentDataSourceKey(job.getmainDataSourceID());
                     SqlRowSet sqlRowSet1 = jdbcTemplate.queryForRowSet(sql1);
                     DataSourceRouterManager.setCurrentDataSourceKey(followDataSourceID);
                     String followDisplayName = followDataSourceID;
@@ -105,10 +105,26 @@ public class ConsistencyJobExecutor extends AbstractTerminatableThread implement
                             logger.info("key2：" + key2);
                             String value2 = sqlRowSet2.getString(2);
                             logger.info("value2：" + value2);
-                            if (value1 == null || value2 == null) break;
+//                            if (value1 == null || value2 == null) break;
                             if (key1.compareTo(key2) != 0) ;//相等返回0，小于返回-1，大于返回1
                             if (key1.compareTo(key2) == 0) {
-                                if (value1.compareTo(value2) != 0) {
+                                if(value1 == null&&value2 != null){
+                                    count=count+1;
+                                    JSONObject jo = new JSONObject();
+                                    jo.put(mainPrimary_key + " from " + mainTableName + " from " + mainDisplayName, key1);
+                                    jo.put(mainColumnName + " from " + mainTableName + " from " + mainDisplayName, "NULL");
+                                    jo.put(followColumnName + " from " + followTableName + " from " + followDisplayName, value2);
+                                    lists1.add(jo.toString());
+                                }
+                                if(value1 != null&&value2 == null){
+                                    count=count+1;
+                                    JSONObject jo = new JSONObject();
+                                    jo.put(mainPrimary_key + " from " + mainTableName + " from " + mainDisplayName, key1);
+                                    jo.put(mainColumnName + " from " + mainTableName + " from " + mainDisplayName, value1);
+                                    jo.put(followColumnName + " from " + followTableName + " from " + followDisplayName, "NULL");
+                                    lists1.add(jo.toString());
+                                }
+                                if (value1 != null&&value2 != null&&value1.compareTo(value2) != 0) {
                                     count=count+1;
                                     JSONObject jo = new JSONObject();
                                     jo.put(mainPrimary_key + " from " + mainTableName + " from " + mainDisplayName, key1);
@@ -135,8 +151,8 @@ public class ConsistencyJobExecutor extends AbstractTerminatableThread implement
                     jo2.put("followTableName", followTableName);
                     jo2.put("followColumnName", followColumnName);
                     jo2.put("followPrimary_key", followPrimary_key);
-                    jo2.put("redisStart", countALL-count+1);
-                    jo2.put("redisEnd", countALL);
+                    jo2.put("redisStart", countALL-count);
+                    jo2.put("redisEnd", countALL-1);
                     lists2.add(jo2.toString());
 
                 }

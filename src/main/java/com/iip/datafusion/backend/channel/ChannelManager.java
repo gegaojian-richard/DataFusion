@@ -1,10 +1,7 @@
 package com.iip.datafusion.backend.channel;
 
 import com.iip.datafusion.backend.job.accuracy.AccuracyJob;
-import com.iip.datafusion.backend.job.algorithm.NameRecognitionJob;
-import com.iip.datafusion.backend.job.algorithm.TFIDFJob;
-import com.iip.datafusion.backend.job.algorithm.TextRankJob;
-import com.iip.datafusion.backend.job.algorithm.TopicModelJob;
+import com.iip.datafusion.backend.job.algorithm.*;
 import com.iip.datafusion.backend.job.consistency.ConsistencyJob;
 import com.iip.datafusion.backend.job.consistency.UpdateConsistencyJob;
 import com.iip.datafusion.backend.job.integrity.IntegrityJob;
@@ -39,6 +36,8 @@ public class ChannelManager {
     private WorkStealingEnabledChannel<TFIDFJob> tfidfChannel;
     // ganjun topic model
     private WorkStealingEnabledChannel<TopicModelJob> topicModeChannel;
+
+    private WorkStealingEnabledChannel<Doc2VecJob> doc2vecChannel;//
 
     private ChannelManager(){
     }
@@ -142,4 +141,10 @@ public class ChannelManager {
     public void setTopicModeChannel(WorkStealingEnabledChannel<TopicModelJob> topicModeChannel) {
         this.topicModeChannel = topicModeChannel;
     }
+
+    public void setDoc2VecChannel(WorkStealingEnabledChannel<Doc2VecJob> doc2vecChannel) {
+        this.doc2vecChannel = doc2vecChannel;
+    }
+
+    public WorkStealingEnabledChannel<Doc2VecJob> getDoc2VecChannel() {return doc2vecChannel; }
 }

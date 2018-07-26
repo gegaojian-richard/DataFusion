@@ -6,6 +6,7 @@ import com.iip.datafusion.backend.common.AbstractTerminatableThread;
 import com.iip.datafusion.backend.common.TerminationToken;
 import com.iip.datafusion.backend.jdbchelper.JDBCHelper;
 import com.iip.datafusion.backend.job.JobStatusType;
+import com.iip.datafusion.backend.job.consistency.ConsistencyJob;
 import com.iip.datafusion.backend.job.consistency.UpdateConsistencyJob;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -39,10 +40,17 @@ public class UpdateConsistencyJobExecutor extends AbstractTerminatableThread imp
         UpdateConsistencyJob updateconsistencyJob = ChannelManager.getInstance().getUpdateConsistencyChannel().take(workQueue);
         JobRegistry.getInstance().update(updateconsistencyJob, JobStatusType.EXECUTING);
         System.out.println("1111");
-        try{
+        try {
+//            ConsistencyJob job = (ConsistencyJob) JobRegistry.getInstance().getJob(updateconsistencyJob.getUserID(),updateconsistencyJob.getBeforeJobId());
+//            if(!job.getStatus().equals(JobStatusType.SUCCESS)){
+//                JobRegistry.getInstance().update(updateconsistencyJob, JobStatusType.FINISHED);
+//                return;
+//            }
             doJob(updateconsistencyJob);
-            JobRegistry.getInstance().update(updateconsistencyJob, JobStatusType.SUCCESS);
-        } catch (Exception e){
+            JobRegistry.getInstance().update(updateconsistencyJob, JobStatusType.FINISHED);
+//            JobRegistry.getInstance().update(job, JobStatusType.FINISHED);
+
+        } catch (Exception e) {
             e.printStackTrace();
             JobRegistry.getInstance().update(updateconsistencyJob, JobStatusType.ERROR);
         } finally {

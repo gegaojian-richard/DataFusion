@@ -34,6 +34,10 @@ public class UpdateIntegrityController {
         try{
             logger.info("enter UpdateIntegrityController.update()");
             UpdateIntegrityJob updateIntegrityJob = updateIntegrityService.commitJob(updateIntegrityConfiguration);
+            if(updateIntegrityJob == null) {
+                logger.info("该任务已经被更新过!");
+                return new Result(0, "该任务已经被更新过!", null);
+            }
 
             return new Result(1,"Task finished successfully!",null);
         }catch (Exception e){
