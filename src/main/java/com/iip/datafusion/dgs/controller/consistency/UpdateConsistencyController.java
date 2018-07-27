@@ -28,7 +28,7 @@ public class UpdateConsistencyController {
     public Result commitUpdateJob(@RequestBody UpdateConsistencyConfiguration UpdateConsistencyConfiguration){
         try{
             logger.info("enter UpdateConsistencyController.update()");
-            Map map = UpdateConsistencyService.CommitUpdateJob(UpdateConsistencyConfiguration);
+            Map map = UpdateConsistencyService.CommitUpdateJob(UpdateConsistencyConfiguration,userManager.getUserId());
             Result res = new Result(1,"Task Submitted successfully",null);;
             return res;
         }catch (Exception e){
