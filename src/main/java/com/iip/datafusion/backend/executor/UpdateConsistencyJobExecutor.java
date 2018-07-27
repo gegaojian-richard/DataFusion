@@ -73,9 +73,9 @@ public class UpdateConsistencyJobExecutor extends AbstractTerminatableThread imp
                     String updatetype = temp[0];
                     String sql = temp[1];
                     if(updatetype.equals("right"))
-                    {DataSourceRouterManager.setCurrentDataSourceKey(job.getfollowDataSourceID());}
-                    if(updatetype.equals("left"))
                     {DataSourceRouterManager.setCurrentDataSourceKey(job.getmainDataSourceID());}
+                    if(updatetype.equals("left"))
+                    {DataSourceRouterManager.setCurrentDataSourceKey(job.getfollowDataSourceID());}
                     jdbcTemplate.execute(sql);
                 }
                 if(i>=job.getSqlList().size()) break;

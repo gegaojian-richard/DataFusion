@@ -31,14 +31,14 @@ public class UpdateConsistencyParser {
             String updateP_key = temp2[0];
             String referValue = temp2[1];
 
-            if(updatetype.equals("left")){
+            if(updatetype.equals("right")){
                 System.out.println("111");
                 updateDataSourceId=mainDataSourceId;
                 updateTableName=mainTableName;
                 updateColumnName=mainColumnName;
                 updatePrimary_key=mainPrimary_key;
             }
-            if(updatetype.equals("right")){
+            if(updatetype.equals("left")){
                 updateDataSourceId=followDataSourceId;
                 updateTableName=followTableName;
                 updateColumnName=followColumnName;
