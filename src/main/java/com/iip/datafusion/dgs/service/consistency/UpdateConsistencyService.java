@@ -14,13 +14,13 @@ import java.util.Map;
 
 @Service
 public class UpdateConsistencyService {
-    public Map<String, Object> CommitUpdateJob(UpdateConsistencyConfiguration UpdateConsistencyConfiguration){
+    public Map<String, Object> CommitUpdateJob(UpdateConsistencyConfiguration UpdateConsistencyConfiguration,int userID){
         Map<String,Object> map = new HashMap();
 
         UpdateConsistencyJob UpdateConsistencyJob = UpdateConsistencyParser.parse(UpdateConsistencyConfiguration);
         UpdateConsistencyJob.setJobType(JobType.CONSISTENCY_UPDATE);
 //        UpdateConsistencyJob.setBeforeJobId(UpdateConsistencyConfiguration.getJobId());
-//        UpdateConsistencyJob.setUserID(UpdateConsistencyConfiguration.getUserId());
+        UpdateConsistencyJob.setUserID(userID);
         JobRegistry.getInstance().regist(UpdateConsistencyJob);
         UpdateConsistencyManager.getInstance().commitJob(UpdateConsistencyJob);
 
