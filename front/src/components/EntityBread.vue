@@ -4,7 +4,7 @@
       <div class="entity-title">
         <p style="height: 50px;text-align: left;border-bottom: 1px solid #bfcbd9;line-height: 60px;color:#698EC3;font-size: 16px;">
           <span style="display: inline-block;height:20px;width:5px;background: #698EC3;margin-bottom:-5px;margin-right: 5px;"></span>
-          <span>实体库</span>
+          <span>目标表</span>
         </p>
 
       </div>
@@ -114,8 +114,8 @@
                 </div>
                 <div class="input-group">
                   <div style="height: 40px;line-height: 40px;">
-                    <span style="height: 40px;line-height: 40px;display: inline-block" >具体信息</span>
-                    <span  role="button" @click="addProperty" style="padding: 0 5px;color:#fff;margin-left: 250px;display: inline-block;height: 40px;background: #7CC1FC;"> <i class="el-icon-circle-plus">增加属性</i> </span>
+                    <span style="height: 40px;line-height: 40px;display: inline-block;margin-left: 100px ;font-size:18px" >具体信息</span>
+                    <span  role="button" @click="addProperty" style="padding: 0 5px;color:#fff;margin-left: 70px;display: inline-block;height: 40px;background: #7CC1FC;"> <i class="el-icon-circle-plus">增加属性</i> </span>
                   </div>
                   <el-table
                     :data="addOnepro"
@@ -280,7 +280,7 @@
     /*height:30px;*/
   /*}*/
   .entity-table{
-    height:300px !important;
+    height:200px !important;
     overflow: auto;
   }
   .entity-event {
@@ -430,9 +430,12 @@
   }
   .md-modal .md-modal-inner {
     padding: 0px;
+
   }
   .md-modal .md-modal-inner .md-content {
     padding: 30px 30px 50px 30px;
+    height:400px;
+    overflow:auto;
   .btn-login {
     height: 50px;
     line-height: 50px;

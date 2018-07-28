@@ -76,7 +76,7 @@
         </div>
       </div>
     </div>
-    <div class="md-overlay" v-if="addMySql" @click="addMySql=false"></div>
+    <div class="md-overlay"  v-if="addMySql" @click="addMySql=false"></div>
   </div>
 </template>
 <style rel="stylesheet/scss" lang="scss">
@@ -134,6 +134,8 @@
   .md-modal {
     overflow: hidden;
     border-radius: 5px;
+    /*z-index:2000 !important;*/
+    top:60%
   }
   .md-modal .md-modal-inner .md-top{
     width:100%;

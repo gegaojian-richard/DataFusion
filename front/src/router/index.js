@@ -60,7 +60,7 @@ export const constantRouterMap=[
       path:'index',
       component:_import('Fusion'),
       name:'Fusion',
-      meta:{title:'数据融合',icon:'excel',noCache:true}
+      meta:{title:'任务定义',icon:'excel',noCache:true}
     }]
   },
   {

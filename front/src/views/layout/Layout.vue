@@ -1,12 +1,12 @@
 <template>
-  <div class="app-wrapper" :class="{hideSidebar:!sidebar.opened}">
-    <sidebar class="sidebar-container" ></sidebar>
-    <div class="main-container">
+  <!--<div class="app-wrapper" :class="{hideSidebar:!sidebar.opened}">-->
+    <!--<sidebar class="sidebar-container" ></sidebar>-->
+    <div class="main-container" style="width:100%;margin-left:0px">
       <navbar class="nav-container"></navbar>
       <tags-view class="tag-container"></tags-view>
       <app-main class="app-main"></app-main>
     </div>
-  </div>
+  <!--</div>-->
 </template>
 <style rel="stylesheet/scss" lang="scss" scoped>
   @import "../../assets/scss/mixin";
@@ -16,8 +16,9 @@
     height: 100%;
     width: 100%;
     .sidebar-container {
-      background-color: #1E73C4;
-      z-index: 199!important;
+      /*background-color: #1E73C4;*/
+      /*background-color: #FFFFFF;*/
+      /*z-index: 199!important;*/
     }
   }
   .nav-container{

@@ -1,9 +1,10 @@
 <template>
   <div>
-    <el-tabs v-model="activeName2" type="card" @tab-click="handleClick">
-      <el-tab-pane label="实体管理" name="first" style="height:100%"> <EntityBread></EntityBread></el-tab-pane>
-      <el-tab-pane label="事件管理" name="second" style="height:100%"> <EventBread></EventBread></el-tab-pane>
-    </el-tabs>
+    <!--<el-tabs v-model="activeName2" type="card" @tab-click="handleClick">-->
+      <!--<el-tab-pane label="实体管理" name="first" style="height:100%"> <EntityBread></EntityBread></el-tab-pane>-->
+      <!--<el-tab-pane label="事件管理" name="second" style="height:100%"> <EventBread></EventBread></el-tab-pane>-->
+    <!--</el-tabs>-->
+    <EntityBread></EntityBread>
   </div>
 </template>
 <style>

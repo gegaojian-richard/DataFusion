@@ -1,6 +1,6 @@
 <template>
   <scroll-bar>
-    <el-menu  mode="vertical" :default-active="$route.path" :collapse="isCollapse" background-color="#1E73C4" text-color="#fff" active-text-color="#fff">
+    <el-menu  mode="vertical" :default-active="$route.path" :collapse="isCollapse" background-color="#FFFFFF" text-color="#fff" active-text-color="#fff">
       <sidebar-item :routes="permission_routers"></sidebar-item>
     </el-menu>
   </scroll-bar>

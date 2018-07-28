@@ -2,20 +2,20 @@
   <div class="sidebar">
     <div class="entityinfo">
       <dl>
-        <dt><span style="width:100px;display:inline-block">实体库</span></dt>
+        <dt><span style="width:100px;display:inline-block;">目标表</span></dt>
         <dd v-for="(value,index) in entityLi" @click="emitChoose(value)">
          <a  v-bind:class="{blue:value.dbID}" >{{value.displayName}}</a>
         </dd>
       </dl>
     </div>
-    <div class="eventinfo" style="margin-top: 50px">
-      <dl>
-        <dt><span style="width:100px;display:inline-block">事件库</span></dt>
-        <dd v-for="(value,index) in eventLi">
-          <a @click="emitChoose(value)">{{value.displayName}}</a>
-        </dd>
-      </dl>
-    </div>
+    <!--<div class="eventinfo" style="margin-top: 50px">-->
+      <!--<dl>-->
+        <!--<dt><span style="width:100px;display:inline-block">事件库</span></dt>-->
+        <!--<dd v-for="(value,index) in eventLi">-->
+          <!--<a @click="emitChoose(value)">{{value.displayName}}</a>-->
+        <!--</dd>-->
+      <!--</dl>-->
+    <!--</div>-->
   </div>
 </template>
 <style>
@@ -27,8 +27,9 @@
     /*border-left:2px solid #bfcbd9;*/
     background-color: #1F5FA6;
     color:#fff;
-    font-size: large;
+    /*font-size: large;*/
     overflow: auto;
+    border-left:2px solid #DFE2EB;
   }
   .entityinfo dd {
     height: 50px;
@@ -41,11 +42,11 @@
     color:inherit;
   }
   .entityinfo dl dt, .eventinfo dl dt {
-    height: 60px;
+    height: 80px;
     text-align: center;
     font-size: 18px;
     color: #145398;
-    line-height: 60px;
+    line-height: 80px;
     background: #DFE2EB;
     font-weight: bold;
   }
