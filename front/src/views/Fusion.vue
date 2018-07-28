@@ -1,8 +1,27 @@
 <template>
 <div style="height:100%;">
-  <fusion-side  @selectentity="selectEntity" style="height:100%;width:180px;position:fixed;overflow: auto"></fusion-side>
-  <div style="padding: 20px;margin-left:180px;overflow: visible;">
-    <div style="border:1px solid #ccc;padding: 0 20px 50px 20px;background-color:#fff;">
+  <!--<connect-info  @previewtable="previewTable" class="sidecontainer"   style="height:85%;width:160px;position:fixed;overflow: auto;z-index:2;"></connect-info>-->
+  <fusion-side  @selectentity="selectEntity" style="height:85%;width:140px;position:fixed;overflow: auto"></fusion-side>
+  <div style="padding: 20px;margin-left:140px;overflow: visible;">
+    <div style="margin-bottom: 20px">
+      <router-link to="/entity">
+        <el-button style="background-color: #426ab3;color:#fff;margin-right:30px" type="primary">实体管理</el-button>
+      </router-link>
+      <router-link to="/connect">
+        <el-button style="background-color: #426ab3;color:#fff;margin-right:30px" type="primary">连接管理</el-button>
+      </router-link>
+      <router-link to="/algorithm">
+        <el-button style="background-color: #426ab3;color:#fff;margin-right:30px" type="primary">算法</el-button>
+      </router-link>
+      <select name="selected" style="margin-right:30px;background-color: #426ab3;color:#fff;height:30px;line-height:30px;border-radius: 5px;" type="primary" onclick="window.location=this.value;">
+        <option value="/kjb/#/fusion">&nbsp;&nbsp;&nbsp;数据检查  </option>
+        <option value="/kjb/#/check/complete">&nbsp;&nbsp;&nbsp;完整性检查  </option>
+        <option value="/kjb/#/check/insist">&nbsp;&nbsp;&nbsp;一致性检查</option>
+        <option value="/kjb/#/check/accuracy">&nbsp;&nbsp;&nbsp;准确性检查</option>
+      </select>
+    </div>
+
+    <div style="border:1px solid #ccc;padding: 0 20px 50px 20px;background-color:#fff;z-index:-1 !important;">
       <el-tabs v-model="activeName2" type="card" @tab-click="handleClick" style="margin-top:20px;">
         <el-tab-pane label="步骤一：数据源配置" name="first">
           <div>
@@ -31,23 +50,6 @@
             </div>
             <el-button style="margin-top:10px;position:relative;background: #A6CF65;color:#fff;float:right;" type="primary" plain @click="clearChoose">重置</el-button>
             <el-button style="margin-top:10px;position:relative;background-color: #7BC2F8;color:#fff;float:right;margin-right: 20px;" type="primary" plain @click="addFusiondata">添加整合单元</el-button>
-            <router-link to="/entity">
-              <el-button style="margin-top:10px;position:relative;background-color: #426ab3;color:#fff;float:right;margin-right: 20px;" type="primary">实体管理</el-button>
-            </router-link>
-            <router-link to="/connect">
-            <el-button style="margin-top:10px;position:relative;background-color: #426ab3;color:#fff;float:right;margin-right: 20px;" type="primary">连接管理</el-button>
-            </router-link>
-            <router-link to="/algorithm">
-              <el-button style="margin-top:10px;position:relative;background-color: #426ab3;color:#fff;float:right;margin-right: 200px;" type="primary">算法</el-button>
-            </router-link>
-
-            <select name="selected" style="margin-top:10px;position:relative;background-color: #426ab3;color:#fff;float:right;margin-right: 20px;font-size:18px;" type="primary" onclick="window.location=this.value;">
-              <option value="/kjb/#/fusion">&nbsp;&nbsp;&nbsp;数据检查  </option>
-              <option value="/kjb/#/check/complete">&nbsp;&nbsp;&nbsp;完整性检查  </option>
-              <option value="/kjb/#/check/insist">&nbsp;&nbsp;&nbsp;一致性检查</option>
-              <option value="/kjb/#/check/accuracy">&nbsp;&nbsp;&nbsp;准确性检查</option>
-            </select>
-            <label style="margin-top:10px;position:relative;color:#426ab3;float:right;margin-right: 20px;font-size:18px;" type="primary"> 预处理</label>
 
           </div>
           <div style="margin-top:50px;">
@@ -305,6 +307,8 @@
   import {mapGetters} from 'vuex'
   import axios from 'axios'
   import fusionSide from '../components/fusion/FusionSide'
+  import connectInfo from '../components/Connect/ConnectInfo.vue'
+
   export default{
     data(){
       return {
@@ -346,7 +350,8 @@
       }
     },
     components: {
-      fusionSide
+      fusionSide,
+      connectInfo
     },
     mounted(){
       this.getConnect();
@@ -373,6 +378,9 @@
 
     },
     methods: {
+      previewTable(value){
+          console.log(value);
+      },
       handleClick(tab, event) {
         console.log(tab, event);
       },

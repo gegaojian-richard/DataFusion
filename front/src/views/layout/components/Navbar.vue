@@ -30,7 +30,7 @@ export default {
   },
   methods: {
     toggleSideBar() {
-      //this.$store.dispatch('toggleSideBar')
+      this.$store.dispatch('toggleSideBar')
     },
   },
   logOut(){

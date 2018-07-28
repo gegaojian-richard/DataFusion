@@ -157,7 +157,7 @@
                     })
                     keyAndValue.splice(2,1);
                     temp_u2r.value=keyAndValue[0]+","+keyAndValue[1];
-                    tempInfo.u2r=temp_u2r;
+                    tempInfo.u2r.push(temp_u2r);
                 }else if( this.radio[i][j]=='follow'){
                   let temp_u2r={};
                   temp_u2r.key="right";
@@ -200,7 +200,8 @@
               tempstart.push(this.description[i].redisEnd);
 //              this.description[i].pop();
               this.everyStartEnd.push(tempstart);
-              this.getData(tempstart[0],tempstart[1]);
+              this.getBackData[i]={};
+              this.getData(tempstart[0],tempstart[1],i);
               this.radio.push([]);
               for(let t=0;t<tempstart[1]-tempstart[0];t++){
                   this.radio[i].push(' ');
@@ -221,7 +222,7 @@
             }
         })
       },
-      getData(start,end){    //获取每个检查属性的对应不一致情况放在getData中
+      getData(start,end,i){    //获取每个检查属性的对应不一致情况放在getData中
         var redisParam = {
           "key": this.$route.query.nowUserId+"-"+this.$route.query.nowEditJob,
           "start": start,
@@ -232,7 +233,8 @@
           var res = response.data;
           if (res.status == 1) {
             let resultData = JSON.parse(res.data).items;
-            this.getBackData.push(resultData);
+//            this.getBackData.push(resultData);
+            this.getBackData.splice(i,1,resultData);
            console.log(resultData);
 //            for(var i=0;i<this.resultData.length;i++){
 //                this.selectResult.push("1");
