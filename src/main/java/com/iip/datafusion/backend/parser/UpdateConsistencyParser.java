@@ -24,6 +24,7 @@ public class UpdateConsistencyParser {
         String updateTableName=" ";
         String updateColumnName=" ";
         String updatePrimary_key=" ";
+        String updateClause=" ";
         for (MapEntries2 m : UpdateConsistencyConfiguration.getMapEntries()) {
             String[] temp = m.getKey().split(",");
             String updatetype = temp[0];
@@ -31,20 +32,21 @@ public class UpdateConsistencyParser {
             String updateP_key = temp2[0];
             String referValue = temp2[1];
 
-            if(updatetype.equals("left")){
+            if(updatetype.equals("right")){
                 System.out.println("111");
                 updateDataSourceId=mainDataSourceId;
                 updateTableName=mainTableName;
                 updateColumnName=mainColumnName;
                 updatePrimary_key=mainPrimary_key;
             }
-            if(updatetype.equals("right")){
+            if(updatetype.equals("left")){
                 updateDataSourceId=followDataSourceId;
                 updateTableName=followTableName;
                 updateColumnName=followColumnName;
                 updatePrimary_key=followPrimary_key;
             }
-            String updateClause =  updateColumnName + "=" + "'" + referValue + "'";
+            if(referValue.equals("NULL")) { updateClause =  updateColumnName + "=" +  referValue ;}
+            else {updateClause =  updateColumnName + "=" + "'" + referValue + "'";}
             String whereClause = updatePrimary_key + "=" + "'" + updateP_key + "'";
             String sql = String.format("UPDATE %s SET %s WHERE %s",updateTableName,updateClause,whereClause);
             sql = updatetype + ","+ sql;
